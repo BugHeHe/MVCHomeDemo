@@ -1,0 +1,1717 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="ExamSysModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Answer">
+          <Key>
+            <PropertyRef Name="AnswerID" />
+          </Key>
+          <Property Name="AnswerID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AnswerContent" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="QuestionID" Type="int" Nullable="false" />
+          <Property Name="IsResult" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Chapter">
+          <Key>
+            <PropertyRef Name="ChapterID" />
+          </Key>
+          <Property Name="ChapterID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ChapterName" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="BookID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Class">
+          <Key>
+            <PropertyRef Name="ClassID" />
+          </Key>
+          <Property Name="ClassID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClassName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="MasterID" Type="int" Nullable="false" />
+          <Property Name="TeacharID" Type="int" Nullable="false" />
+          <Property Name="GradeID" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="date" />
+        </EntityType>
+        <EntityType Name="Grade">
+          <Key>
+            <PropertyRef Name="GradeID" />
+          </Key>
+          <Property Name="GradeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GradeName" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Menu">
+          <Key>
+            <PropertyRef Name="MenuID" />
+          </Key>
+          <Property Name="MenuID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MenuName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="SortCode" Type="int" Nullable="false" />
+          <Property Name="Service" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ModuleID" Type="int" Nullable="false" />
+          <Property Name="Roles" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Module">
+          <Key>
+            <PropertyRef Name="ModuleID" />
+          </Key>
+          <Property Name="ModuleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Ico" Type="varchar" MaxLength="200" />
+          <Property Name="ModuleName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="SortCode" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Paper">
+          <Key>
+            <PropertyRef Name="PaperID" />
+          </Key>
+          <Property Name="PaperID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PaperName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="GradeID" Type="int" Nullable="false" />
+          <Property Name="typeID" Type="int" Nullable="false" />
+          <Property Name="Duration" Type="int" Nullable="false" />
+          <Property Name="IsOpen" Type="bit" Nullable="false" />
+          <Property Name="ClassList" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="RuleID" Type="int" Nullable="false" />
+          <Property Name="QuestionCount" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="CreatorID" Type="int" Nullable="false" />
+        </EntityType>
+        <!--生成过程中发现错误:
+警告 6002: 表/视图“ExamSys.dbo.PaperDetail”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+        <EntityType Name="PaperDetail">
+          <Key>
+            <PropertyRef Name="PaperID" />
+            <PropertyRef Name="QuestionID" />
+            <PropertyRef Name="SortCode" />
+          </Key>
+          <Property Name="PaperID" Type="int" Nullable="false" />
+          <Property Name="QuestionID" Type="int" Nullable="false" />
+          <Property Name="SortCode" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PaperRule">
+          <Key>
+            <PropertyRef Name="RuleID" />
+          </Key>
+          <Property Name="RuleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RuleName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="GradeID" Type="int" Nullable="false" />
+          <Property Name="CreatorID" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PaperType">
+          <Key>
+            <PropertyRef Name="TypeID" />
+          </Key>
+          <Property Name="TypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TypeName" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Question">
+          <Key>
+            <PropertyRef Name="QuestionID" />
+          </Key>
+          <Property Name="QuestionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="QuestionTitle" Type="varchar" MaxLength="1000" Nullable="false" />
+          <Property Name="QuestionType" Type="bit" Nullable="false" />
+          <Property Name="QuestionLevel" Type="int" Nullable="false" />
+          <Property Name="BookID" Type="int" Nullable="false" />
+          <Property Name="ChapterID" Type="int" Nullable="false" />
+          <Property Name="IsCheck" Type="bit" Nullable="false" />
+          <Property Name="CreatorID" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="CheckID" Type="int" />
+          <Property Name="CheckTime" Type="datetime" />
+          <Property Name="Description" Type="varchar" MaxLength="500" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Result">
+          <Key>
+            <PropertyRef Name="ResultID" />
+          </Key>
+          <Property Name="ResultID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RecordID" Type="int" Nullable="false" />
+          <Property Name="Score" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleID" />
+          </Key>
+          <Property Name="RoleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoleName" Type="varchar" MaxLength="120" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RuleDetail">
+          <Key>
+            <PropertyRef Name="DetailID" />
+          </Key>
+          <Property Name="DetailID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RuleID" Type="int" Nullable="false" />
+          <Property Name="BookID" Type="int" Nullable="false" />
+          <Property Name="ChapterID" Type="int" />
+          <Property Name="QuestionCount" Type="int" Nullable="false" />
+          <Property Name="QuestionLevel" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="StudentID" />
+          </Key>
+          <Property Name="StudentID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StudentName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Gender" Type="bit" Nullable="false" />
+          <Property Name="Phone" Type="varchar" MaxLength="11" Nullable="false" />
+          <Property Name="CardID" Type="varchar" MaxLength="18" Nullable="false" />
+          <Property Name="Address" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="50" />
+          <Property Name="Borndate" Type="date" Nullable="false" />
+          <Property Name="CreateTime" Type="date" />
+          <Property Name="ClassID" Type="int" />
+        </EntityType>
+        <EntityType Name="StuQueRecord">
+          <Key>
+            <PropertyRef Name="RecordID" />
+          </Key>
+          <Property Name="RecordID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StudetnID" Type="int" Nullable="false" />
+          <Property Name="PaperID" Type="int" Nullable="false" />
+          <Property Name="RecordTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StuQueRecordDetail">
+          <Key>
+            <PropertyRef Name="RecordDetailID" />
+          </Key>
+          <Property Name="RecordDetailID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RecordID" Type="int" />
+          <Property Name="QuestionID" Type="int" Nullable="false" />
+          <Property Name="AnswerID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Teacher">
+          <Key>
+            <PropertyRef Name="TeacherID" />
+          </Key>
+          <Property Name="TeacherID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TeacherName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="TeacherImg" Type="nvarchar" MaxLength="200" />
+          <Property Name="UserName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="RoleID" Type="int" Nullable="false" />
+          <Property Name="JoinTime" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TextBook">
+          <Key>
+            <PropertyRef Name="BookID" />
+          </Key>
+          <Property Name="BookID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BookName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="GradeID" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Answer__Question__35BCFE0A">
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="Answer" Type="Self.Answer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="QuestionID" />
+            </Principal>
+            <Dependent Role="Answer">
+              <PropertyRef Name="QuestionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Chapter__BookID__182C9B23">
+          <End Role="TextBook" Type="Self.TextBook" Multiplicity="1" />
+          <End Role="Chapter" Type="Self.Chapter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TextBook">
+              <PropertyRef Name="BookID" />
+            </Principal>
+            <Dependent Role="Chapter">
+              <PropertyRef Name="BookID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Class__GradeID__25869641">
+          <End Role="Grade" Type="Self.Grade" Multiplicity="1" />
+          <End Role="Class" Type="Self.Class" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grade">
+              <PropertyRef Name="GradeID" />
+            </Principal>
+            <Dependent Role="Class">
+              <PropertyRef Name="GradeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Class__MasterID__239E4DCF">
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="1" />
+          <End Role="Class" Type="Self.Class" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="TeacherID" />
+            </Principal>
+            <Dependent Role="Class">
+              <PropertyRef Name="MasterID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Class__TeacharID__24927208">
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="1" />
+          <End Role="Class" Type="Self.Class" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="TeacherID" />
+            </Principal>
+            <Dependent Role="Class">
+              <PropertyRef Name="TeacharID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Menu__ModuleID__6383C8BA">
+          <End Role="Module" Type="Self.Module" Multiplicity="1" />
+          <End Role="Menu" Type="Self.Menu" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Module">
+              <PropertyRef Name="ModuleID" />
+            </Principal>
+            <Dependent Role="Menu">
+              <PropertyRef Name="ModuleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Paper__CreatorID__4BAC3F29">
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="1" />
+          <End Role="Paper" Type="Self.Paper" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="TeacherID" />
+            </Principal>
+            <Dependent Role="Paper">
+              <PropertyRef Name="CreatorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Paper__GradeID__47DBAE45">
+          <End Role="Grade" Type="Self.Grade" Multiplicity="1" />
+          <End Role="Paper" Type="Self.Paper" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grade">
+              <PropertyRef Name="GradeID" />
+            </Principal>
+            <Dependent Role="Paper">
+              <PropertyRef Name="GradeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Paper__RuleID__49C3F6B7">
+          <End Role="PaperRule" Type="Self.PaperRule" Multiplicity="1" />
+          <End Role="Paper" Type="Self.Paper" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaperRule">
+              <PropertyRef Name="RuleID" />
+            </Principal>
+            <Dependent Role="Paper">
+              <PropertyRef Name="RuleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Paper__typeID__48CFD27E">
+          <End Role="PaperType" Type="Self.PaperType" Multiplicity="1" />
+          <End Role="Paper" Type="Self.Paper" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaperType">
+              <PropertyRef Name="TypeID" />
+            </Principal>
+            <Dependent Role="Paper">
+              <PropertyRef Name="typeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PaperDeta__Paper__4D94879B">
+          <End Role="Paper" Type="Self.Paper" Multiplicity="1" />
+          <End Role="PaperDetail" Type="Self.PaperDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Paper">
+              <PropertyRef Name="PaperID" />
+            </Principal>
+            <Dependent Role="PaperDetail">
+              <PropertyRef Name="PaperID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PaperDeta__Quest__4E88ABD4">
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="PaperDetail" Type="Self.PaperDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="QuestionID" />
+            </Principal>
+            <Dependent Role="PaperDetail">
+              <PropertyRef Name="QuestionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PaperRule__Creat__3A81B327">
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="1" />
+          <End Role="PaperRule" Type="Self.PaperRule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="TeacherID" />
+            </Principal>
+            <Dependent Role="PaperRule">
+              <PropertyRef Name="CreatorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PaperRule__Grade__398D8EEE">
+          <End Role="Grade" Type="Self.Grade" Multiplicity="1" />
+          <End Role="PaperRule" Type="Self.PaperRule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grade">
+              <PropertyRef Name="GradeID" />
+            </Principal>
+            <Dependent Role="PaperRule">
+              <PropertyRef Name="GradeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Question__BookID__2E1BDC42">
+          <End Role="TextBook" Type="Self.TextBook" Multiplicity="1" />
+          <End Role="Question" Type="Self.Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TextBook">
+              <PropertyRef Name="BookID" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="BookID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Question__Chapte__2F10007B">
+          <End Role="Chapter" Type="Self.Chapter" Multiplicity="1" />
+          <End Role="Question" Type="Self.Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chapter">
+              <PropertyRef Name="ChapterID" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="ChapterID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Question__CheckI__31EC6D26">
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="0..1" />
+          <End Role="Question" Type="Self.Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="TeacherID" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="CheckID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Question__Creato__300424B4">
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="1" />
+          <End Role="Question" Type="Self.Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="TeacherID" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="CreatorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Result__RecordID__5AEE82B9">
+          <End Role="StuQueRecord" Type="Self.StuQueRecord" Multiplicity="1" />
+          <End Role="Result" Type="Self.Result" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StuQueRecord">
+              <PropertyRef Name="RecordID" />
+            </Principal>
+            <Dependent Role="Result">
+              <PropertyRef Name="RecordID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RuleDetai__BookI__3F466844">
+          <End Role="TextBook" Type="Self.TextBook" Multiplicity="1" />
+          <End Role="RuleDetail" Type="Self.RuleDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TextBook">
+              <PropertyRef Name="BookID" />
+            </Principal>
+            <Dependent Role="RuleDetail">
+              <PropertyRef Name="BookID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RuleDetai__Chapt__403A8C7D">
+          <End Role="Chapter" Type="Self.Chapter" Multiplicity="0..1" />
+          <End Role="RuleDetail" Type="Self.RuleDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chapter">
+              <PropertyRef Name="ChapterID" />
+            </Principal>
+            <Dependent Role="RuleDetail">
+              <PropertyRef Name="ChapterID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RuleDetai__RuleI__3E52440B">
+          <End Role="PaperRule" Type="Self.PaperRule" Multiplicity="1" />
+          <End Role="RuleDetail" Type="Self.RuleDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaperRule">
+              <PropertyRef Name="RuleID" />
+            </Principal>
+            <Dependent Role="RuleDetail">
+              <PropertyRef Name="RuleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Student__ClassID__2A4B4B5E">
+          <End Role="Class" Type="Self.Class" Multiplicity="0..1" />
+          <End Role="Student" Type="Self.Student" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Class">
+              <PropertyRef Name="ClassID" />
+            </Principal>
+            <Dependent Role="Student">
+              <PropertyRef Name="ClassID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StuQueRec__Answe__5812160E">
+          <End Role="Answer" Type="Self.Answer" Multiplicity="1" />
+          <End Role="StuQueRecordDetail" Type="Self.StuQueRecordDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Answer">
+              <PropertyRef Name="AnswerID" />
+            </Principal>
+            <Dependent Role="StuQueRecordDetail">
+              <PropertyRef Name="AnswerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StuQueRec__Paper__52593CB8">
+          <End Role="Paper" Type="Self.Paper" Multiplicity="1" />
+          <End Role="StuQueRecord" Type="Self.StuQueRecord" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Paper">
+              <PropertyRef Name="PaperID" />
+            </Principal>
+            <Dependent Role="StuQueRecord">
+              <PropertyRef Name="PaperID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StuQueRec__Quest__571DF1D5">
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="StuQueRecordDetail" Type="Self.StuQueRecordDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="QuestionID" />
+            </Principal>
+            <Dependent Role="StuQueRecordDetail">
+              <PropertyRef Name="QuestionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StuQueRec__Recor__5629CD9C">
+          <End Role="StuQueRecord" Type="Self.StuQueRecord" Multiplicity="0..1" />
+          <End Role="StuQueRecordDetail" Type="Self.StuQueRecordDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StuQueRecord">
+              <PropertyRef Name="RecordID" />
+            </Principal>
+            <Dependent Role="StuQueRecordDetail">
+              <PropertyRef Name="RecordID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StuQueRec__Stude__5165187F">
+          <End Role="Student" Type="Self.Student" Multiplicity="1" />
+          <End Role="StuQueRecord" Type="Self.StuQueRecord" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="StudentID" />
+            </Principal>
+            <Dependent Role="StuQueRecord">
+              <PropertyRef Name="StudetnID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Teacher__RoleID__1FCDBCEB">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleID" />
+            </Principal>
+            <Dependent Role="Teacher">
+              <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TextBook__GradeI__145C0A3F">
+          <End Role="Grade" Type="Self.Grade" Multiplicity="1" />
+          <End Role="TextBook" Type="Self.TextBook" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grade">
+              <PropertyRef Name="GradeID" />
+            </Principal>
+            <Dependent Role="TextBook">
+              <PropertyRef Name="GradeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ExamSysModelStoreContainer">
+          <EntitySet Name="Answer" EntityType="Self.Answer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Chapter" EntityType="Self.Chapter" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Class" EntityType="Self.Class" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Grade" EntityType="Self.Grade" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Menu" EntityType="Self.Menu" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Module" EntityType="Self.Module" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Paper" EntityType="Self.Paper" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PaperRule" EntityType="Self.PaperRule" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PaperType" EntityType="Self.PaperType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Question" EntityType="Self.Question" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Result" EntityType="Self.Result" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RuleDetail" EntityType="Self.RuleDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StuQueRecord" EntityType="Self.StuQueRecord" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StuQueRecordDetail" EntityType="Self.StuQueRecordDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Teacher" EntityType="Self.Teacher" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TextBook" EntityType="Self.TextBook" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PaperDetail" EntityType="Self.PaperDetail" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [PaperDetail].[PaperID] AS [PaperID], 
+    [PaperDetail].[QuestionID] AS [QuestionID], 
+    [PaperDetail].[SortCode] AS [SortCode]
+    FROM [dbo].[PaperDetail] AS [PaperDetail]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK__Answer__Question__35BCFE0A" Association="Self.FK__Answer__Question__35BCFE0A">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="Answer" EntitySet="Answer" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Chapter__BookID__182C9B23" Association="Self.FK__Chapter__BookID__182C9B23">
+            <End Role="TextBook" EntitySet="TextBook" />
+            <End Role="Chapter" EntitySet="Chapter" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Class__GradeID__25869641" Association="Self.FK__Class__GradeID__25869641">
+            <End Role="Grade" EntitySet="Grade" />
+            <End Role="Class" EntitySet="Class" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Class__MasterID__239E4DCF" Association="Self.FK__Class__MasterID__239E4DCF">
+            <End Role="Teacher" EntitySet="Teacher" />
+            <End Role="Class" EntitySet="Class" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Class__TeacharID__24927208" Association="Self.FK__Class__TeacharID__24927208">
+            <End Role="Teacher" EntitySet="Teacher" />
+            <End Role="Class" EntitySet="Class" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Menu__ModuleID__6383C8BA" Association="Self.FK__Menu__ModuleID__6383C8BA">
+            <End Role="Module" EntitySet="Module" />
+            <End Role="Menu" EntitySet="Menu" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Paper__CreatorID__4BAC3F29" Association="Self.FK__Paper__CreatorID__4BAC3F29">
+            <End Role="Teacher" EntitySet="Teacher" />
+            <End Role="Paper" EntitySet="Paper" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Paper__GradeID__47DBAE45" Association="Self.FK__Paper__GradeID__47DBAE45">
+            <End Role="Grade" EntitySet="Grade" />
+            <End Role="Paper" EntitySet="Paper" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Paper__RuleID__49C3F6B7" Association="Self.FK__Paper__RuleID__49C3F6B7">
+            <End Role="PaperRule" EntitySet="PaperRule" />
+            <End Role="Paper" EntitySet="Paper" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Paper__typeID__48CFD27E" Association="Self.FK__Paper__typeID__48CFD27E">
+            <End Role="PaperType" EntitySet="PaperType" />
+            <End Role="Paper" EntitySet="Paper" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PaperDeta__Paper__4D94879B" Association="Self.FK__PaperDeta__Paper__4D94879B">
+            <End Role="Paper" EntitySet="Paper" />
+            <End Role="PaperDetail" EntitySet="PaperDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PaperDeta__Quest__4E88ABD4" Association="Self.FK__PaperDeta__Quest__4E88ABD4">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="PaperDetail" EntitySet="PaperDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PaperRule__Creat__3A81B327" Association="Self.FK__PaperRule__Creat__3A81B327">
+            <End Role="Teacher" EntitySet="Teacher" />
+            <End Role="PaperRule" EntitySet="PaperRule" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PaperRule__Grade__398D8EEE" Association="Self.FK__PaperRule__Grade__398D8EEE">
+            <End Role="Grade" EntitySet="Grade" />
+            <End Role="PaperRule" EntitySet="PaperRule" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Question__BookID__2E1BDC42" Association="Self.FK__Question__BookID__2E1BDC42">
+            <End Role="TextBook" EntitySet="TextBook" />
+            <End Role="Question" EntitySet="Question" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Question__Chapte__2F10007B" Association="Self.FK__Question__Chapte__2F10007B">
+            <End Role="Chapter" EntitySet="Chapter" />
+            <End Role="Question" EntitySet="Question" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Question__CheckI__31EC6D26" Association="Self.FK__Question__CheckI__31EC6D26">
+            <End Role="Teacher" EntitySet="Teacher" />
+            <End Role="Question" EntitySet="Question" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Question__Creato__300424B4" Association="Self.FK__Question__Creato__300424B4">
+            <End Role="Teacher" EntitySet="Teacher" />
+            <End Role="Question" EntitySet="Question" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Result__RecordID__5AEE82B9" Association="Self.FK__Result__RecordID__5AEE82B9">
+            <End Role="StuQueRecord" EntitySet="StuQueRecord" />
+            <End Role="Result" EntitySet="Result" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RuleDetai__BookI__3F466844" Association="Self.FK__RuleDetai__BookI__3F466844">
+            <End Role="TextBook" EntitySet="TextBook" />
+            <End Role="RuleDetail" EntitySet="RuleDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RuleDetai__Chapt__403A8C7D" Association="Self.FK__RuleDetai__Chapt__403A8C7D">
+            <End Role="Chapter" EntitySet="Chapter" />
+            <End Role="RuleDetail" EntitySet="RuleDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RuleDetai__RuleI__3E52440B" Association="Self.FK__RuleDetai__RuleI__3E52440B">
+            <End Role="PaperRule" EntitySet="PaperRule" />
+            <End Role="RuleDetail" EntitySet="RuleDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Student__ClassID__2A4B4B5E" Association="Self.FK__Student__ClassID__2A4B4B5E">
+            <End Role="Class" EntitySet="Class" />
+            <End Role="Student" EntitySet="Student" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StuQueRec__Answe__5812160E" Association="Self.FK__StuQueRec__Answe__5812160E">
+            <End Role="Answer" EntitySet="Answer" />
+            <End Role="StuQueRecordDetail" EntitySet="StuQueRecordDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StuQueRec__Paper__52593CB8" Association="Self.FK__StuQueRec__Paper__52593CB8">
+            <End Role="Paper" EntitySet="Paper" />
+            <End Role="StuQueRecord" EntitySet="StuQueRecord" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StuQueRec__Quest__571DF1D5" Association="Self.FK__StuQueRec__Quest__571DF1D5">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="StuQueRecordDetail" EntitySet="StuQueRecordDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StuQueRec__Recor__5629CD9C" Association="Self.FK__StuQueRec__Recor__5629CD9C">
+            <End Role="StuQueRecord" EntitySet="StuQueRecord" />
+            <End Role="StuQueRecordDetail" EntitySet="StuQueRecordDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StuQueRec__Stude__5165187F" Association="Self.FK__StuQueRec__Stude__5165187F">
+            <End Role="Student" EntitySet="Student" />
+            <End Role="StuQueRecord" EntitySet="StuQueRecord" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Teacher__RoleID__1FCDBCEB" Association="Self.FK__Teacher__RoleID__1FCDBCEB">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="Teacher" EntitySet="Teacher" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TextBook__GradeI__145C0A3F" Association="Self.FK__TextBook__GradeI__145C0A3F">
+            <End Role="Grade" EntitySet="Grade" />
+            <End Role="TextBook" EntitySet="TextBook" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ExamSysModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Answer">
+          <Key>
+            <PropertyRef Name="AnswerID" />
+          </Key>
+          <Property Name="AnswerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AnswerContent" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="QuestionID" Type="Int32" Nullable="false" />
+          <Property Name="IsResult" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Question" Relationship="Self.FK__Answer__Question__35BCFE0A" FromRole="Answer" ToRole="Question" />
+          <NavigationProperty Name="StuQueRecordDetails" Relationship="Self.FK__StuQueRec__Answe__5812160E" FromRole="Answer" ToRole="StuQueRecordDetail" />
+        </EntityType>
+        <EntityType Name="Chapter">
+          <Key>
+            <PropertyRef Name="ChapterID" />
+          </Key>
+          <Property Name="ChapterID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ChapterName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="BookID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TextBook" Relationship="Self.FK__Chapter__BookID__182C9B23" FromRole="Chapter" ToRole="TextBook" />
+          <NavigationProperty Name="Questions" Relationship="Self.FK__Question__Chapte__2F10007B" FromRole="Chapter" ToRole="Question" />
+          <NavigationProperty Name="RuleDetails" Relationship="Self.FK__RuleDetai__Chapt__403A8C7D" FromRole="Chapter" ToRole="RuleDetail" />
+        </EntityType>
+        <EntityType Name="Class">
+          <Key>
+            <PropertyRef Name="ClassID" />
+          </Key>
+          <Property Name="ClassID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClassName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="MasterID" Type="Int32" Nullable="false" />
+          <Property Name="TeacharID" Type="Int32" Nullable="false" />
+          <Property Name="GradeID" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="Grade" Relationship="Self.FK__Class__GradeID__25869641" FromRole="Class" ToRole="Grade" />
+          <NavigationProperty Name="Teacher" Relationship="Self.FK__Class__MasterID__239E4DCF" FromRole="Class" ToRole="Teacher" />
+          <NavigationProperty Name="Teacher1" Relationship="Self.FK__Class__TeacharID__24927208" FromRole="Class" ToRole="Teacher" />
+          <NavigationProperty Name="Students" Relationship="Self.FK__Student__ClassID__2A4B4B5E" FromRole="Class" ToRole="Student" />
+        </EntityType>
+        <EntityType Name="Grade">
+          <Key>
+            <PropertyRef Name="GradeID" />
+          </Key>
+          <Property Name="GradeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GradeName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Classes" Relationship="Self.FK__Class__GradeID__25869641" FromRole="Grade" ToRole="Class" />
+          <NavigationProperty Name="Papers" Relationship="Self.FK__Paper__GradeID__47DBAE45" FromRole="Grade" ToRole="Paper" />
+          <NavigationProperty Name="PaperRules" Relationship="Self.FK__PaperRule__Grade__398D8EEE" FromRole="Grade" ToRole="PaperRule" />
+          <NavigationProperty Name="TextBooks" Relationship="Self.FK__TextBook__GradeI__145C0A3F" FromRole="Grade" ToRole="TextBook" />
+        </EntityType>
+        <EntityType Name="Menu">
+          <Key>
+            <PropertyRef Name="MenuID" />
+          </Key>
+          <Property Name="MenuID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MenuName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="SortCode" Type="Int32" Nullable="false" />
+          <Property Name="Service" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ModuleID" Type="Int32" Nullable="false" />
+          <Property Name="Roles" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Module" Relationship="Self.FK__Menu__ModuleID__6383C8BA" FromRole="Menu" ToRole="Module" />
+        </EntityType>
+        <EntityType Name="Module">
+          <Key>
+            <PropertyRef Name="ModuleID" />
+          </Key>
+          <Property Name="ModuleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Ico" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ModuleName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="SortCode" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Menus" Relationship="Self.FK__Menu__ModuleID__6383C8BA" FromRole="Module" ToRole="Menu" />
+        </EntityType>
+        <EntityType Name="Paper">
+          <Key>
+            <PropertyRef Name="PaperID" />
+          </Key>
+          <Property Name="PaperID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PaperName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="GradeID" Type="Int32" Nullable="false" />
+          <Property Name="typeID" Type="Int32" Nullable="false" />
+          <Property Name="Duration" Type="Int32" Nullable="false" />
+          <Property Name="IsOpen" Type="Boolean" Nullable="false" />
+          <Property Name="ClassList" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="RuleID" Type="Int32" Nullable="false" />
+          <Property Name="QuestionCount" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatorID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Grade" Relationship="Self.FK__Paper__GradeID__47DBAE45" FromRole="Paper" ToRole="Grade" />
+          <NavigationProperty Name="Teacher" Relationship="Self.FK__Paper__CreatorID__4BAC3F29" FromRole="Paper" ToRole="Teacher" />
+          <NavigationProperty Name="PaperRule" Relationship="Self.FK__Paper__RuleID__49C3F6B7" FromRole="Paper" ToRole="PaperRule" />
+          <NavigationProperty Name="PaperType" Relationship="Self.FK__Paper__typeID__48CFD27E" FromRole="Paper" ToRole="PaperType" />
+          <NavigationProperty Name="PaperDetails" Relationship="Self.FK__PaperDeta__Paper__4D94879B" FromRole="Paper" ToRole="PaperDetail" />
+          <NavigationProperty Name="StuQueRecords" Relationship="Self.FK__StuQueRec__Paper__52593CB8" FromRole="Paper" ToRole="StuQueRecord" />
+        </EntityType>
+        <EntityType Name="PaperRule">
+          <Key>
+            <PropertyRef Name="RuleID" />
+          </Key>
+          <Property Name="RuleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RuleName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="GradeID" Type="Int32" Nullable="false" />
+          <Property Name="CreatorID" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Grade" Relationship="Self.FK__PaperRule__Grade__398D8EEE" FromRole="PaperRule" ToRole="Grade" />
+          <NavigationProperty Name="Papers" Relationship="Self.FK__Paper__RuleID__49C3F6B7" FromRole="PaperRule" ToRole="Paper" />
+          <NavigationProperty Name="Teacher" Relationship="Self.FK__PaperRule__Creat__3A81B327" FromRole="PaperRule" ToRole="Teacher" />
+          <NavigationProperty Name="RuleDetails" Relationship="Self.FK__RuleDetai__RuleI__3E52440B" FromRole="PaperRule" ToRole="RuleDetail" />
+        </EntityType>
+        <EntityType Name="PaperType">
+          <Key>
+            <PropertyRef Name="TypeID" />
+          </Key>
+          <Property Name="TypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TypeName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Papers" Relationship="Self.FK__Paper__typeID__48CFD27E" FromRole="PaperType" ToRole="Paper" />
+        </EntityType>
+        <EntityType Name="Question">
+          <Key>
+            <PropertyRef Name="QuestionID" />
+          </Key>
+          <Property Name="QuestionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QuestionTitle" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="QuestionType" Type="Boolean" Nullable="false" />
+          <Property Name="QuestionLevel" Type="Int32" Nullable="false" />
+          <Property Name="BookID" Type="Int32" Nullable="false" />
+          <Property Name="ChapterID" Type="Int32" Nullable="false" />
+          <Property Name="IsCheck" Type="Boolean" Nullable="false" />
+          <Property Name="CreatorID" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CheckID" Type="Int32" />
+          <Property Name="CheckTime" Type="DateTime" Precision="3" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Answers" Relationship="Self.FK__Answer__Question__35BCFE0A" FromRole="Question" ToRole="Answer" />
+          <NavigationProperty Name="Chapter" Relationship="Self.FK__Question__Chapte__2F10007B" FromRole="Question" ToRole="Chapter" />
+          <NavigationProperty Name="PaperDetails" Relationship="Self.FK__PaperDeta__Quest__4E88ABD4" FromRole="Question" ToRole="PaperDetail" />
+          <NavigationProperty Name="TextBook" Relationship="Self.FK__Question__BookID__2E1BDC42" FromRole="Question" ToRole="TextBook" />
+          <NavigationProperty Name="Teacher" Relationship="Self.FK__Question__CheckI__31EC6D26" FromRole="Question" ToRole="Teacher" />
+          <NavigationProperty Name="Teacher1" Relationship="Self.FK__Question__Creato__300424B4" FromRole="Question" ToRole="Teacher" />
+          <NavigationProperty Name="StuQueRecordDetails" Relationship="Self.FK__StuQueRec__Quest__571DF1D5" FromRole="Question" ToRole="StuQueRecordDetail" />
+        </EntityType>
+        <EntityType Name="Result">
+          <Key>
+            <PropertyRef Name="ResultID" />
+          </Key>
+          <Property Name="ResultID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RecordID" Type="Int32" Nullable="false" />
+          <Property Name="Score" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="StuQueRecord" Relationship="Self.FK__Result__RecordID__5AEE82B9" FromRole="Result" ToRole="StuQueRecord" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleID" />
+          </Key>
+          <Property Name="RoleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoleName" Type="String" MaxLength="120" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Teachers" Relationship="Self.FK__Teacher__RoleID__1FCDBCEB" FromRole="Role" ToRole="Teacher" />
+        </EntityType>
+        <EntityType Name="RuleDetail">
+          <Key>
+            <PropertyRef Name="DetailID" />
+          </Key>
+          <Property Name="DetailID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RuleID" Type="Int32" Nullable="false" />
+          <Property Name="BookID" Type="Int32" Nullable="false" />
+          <Property Name="ChapterID" Type="Int32" />
+          <Property Name="QuestionCount" Type="Int32" Nullable="false" />
+          <Property Name="QuestionLevel" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Chapter" Relationship="Self.FK__RuleDetai__Chapt__403A8C7D" FromRole="RuleDetail" ToRole="Chapter" />
+          <NavigationProperty Name="PaperRule" Relationship="Self.FK__RuleDetai__RuleI__3E52440B" FromRole="RuleDetail" ToRole="PaperRule" />
+          <NavigationProperty Name="TextBook" Relationship="Self.FK__RuleDetai__BookI__3F466844" FromRole="RuleDetail" ToRole="TextBook" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="StudentID" />
+          </Key>
+          <Property Name="StudentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StudentName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Gender" Type="Boolean" Nullable="false" />
+          <Property Name="Phone" Type="String" MaxLength="11" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CardID" Type="String" MaxLength="18" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Borndate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="CreateTime" Type="DateTime" Precision="0" />
+          <Property Name="ClassID" Type="Int32" />
+          <NavigationProperty Name="Class" Relationship="Self.FK__Student__ClassID__2A4B4B5E" FromRole="Student" ToRole="Class" />
+          <NavigationProperty Name="StuQueRecords" Relationship="Self.FK__StuQueRec__Stude__5165187F" FromRole="Student" ToRole="StuQueRecord" />
+        </EntityType>
+        <EntityType Name="StuQueRecord">
+          <Key>
+            <PropertyRef Name="RecordID" />
+          </Key>
+          <Property Name="RecordID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StudetnID" Type="Int32" Nullable="false" />
+          <Property Name="PaperID" Type="Int32" Nullable="false" />
+          <Property Name="RecordTime" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Paper" Relationship="Self.FK__StuQueRec__Paper__52593CB8" FromRole="StuQueRecord" ToRole="Paper" />
+          <NavigationProperty Name="Results" Relationship="Self.FK__Result__RecordID__5AEE82B9" FromRole="StuQueRecord" ToRole="Result" />
+          <NavigationProperty Name="Student" Relationship="Self.FK__StuQueRec__Stude__5165187F" FromRole="StuQueRecord" ToRole="Student" />
+          <NavigationProperty Name="StuQueRecordDetails" Relationship="Self.FK__StuQueRec__Recor__5629CD9C" FromRole="StuQueRecord" ToRole="StuQueRecordDetail" />
+        </EntityType>
+        <EntityType Name="StuQueRecordDetail">
+          <Key>
+            <PropertyRef Name="RecordDetailID" />
+          </Key>
+          <Property Name="RecordDetailID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RecordID" Type="Int32" />
+          <Property Name="QuestionID" Type="Int32" Nullable="false" />
+          <Property Name="AnswerID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Answer" Relationship="Self.FK__StuQueRec__Answe__5812160E" FromRole="StuQueRecordDetail" ToRole="Answer" />
+          <NavigationProperty Name="Question" Relationship="Self.FK__StuQueRec__Quest__571DF1D5" FromRole="StuQueRecordDetail" ToRole="Question" />
+          <NavigationProperty Name="StuQueRecord" Relationship="Self.FK__StuQueRec__Recor__5629CD9C" FromRole="StuQueRecordDetail" ToRole="StuQueRecord" />
+        </EntityType>
+        <EntityType Name="Teacher">
+          <Key>
+            <PropertyRef Name="TeacherID" />
+          </Key>
+          <Property Name="TeacherID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TeacherName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TeacherImg" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="UserName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="RoleID" Type="Int32" Nullable="false" />
+          <Property Name="JoinTime" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Classes" Relationship="Self.FK__Class__MasterID__239E4DCF" FromRole="Teacher" ToRole="Class" />
+          <NavigationProperty Name="Classes1" Relationship="Self.FK__Class__TeacharID__24927208" FromRole="Teacher" ToRole="Class" />
+          <NavigationProperty Name="Papers" Relationship="Self.FK__Paper__CreatorID__4BAC3F29" FromRole="Teacher" ToRole="Paper" />
+          <NavigationProperty Name="PaperRules" Relationship="Self.FK__PaperRule__Creat__3A81B327" FromRole="Teacher" ToRole="PaperRule" />
+          <NavigationProperty Name="Questions" Relationship="Self.FK__Question__CheckI__31EC6D26" FromRole="Teacher" ToRole="Question" />
+          <NavigationProperty Name="Questions1" Relationship="Self.FK__Question__Creato__300424B4" FromRole="Teacher" ToRole="Question" />
+          <NavigationProperty Name="Role" Relationship="Self.FK__Teacher__RoleID__1FCDBCEB" FromRole="Teacher" ToRole="Role" />
+        </EntityType>
+        <EntityType Name="TextBook">
+          <Key>
+            <PropertyRef Name="BookID" />
+          </Key>
+          <Property Name="BookID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BookName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="GradeID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Chapters" Relationship="Self.FK__Chapter__BookID__182C9B23" FromRole="TextBook" ToRole="Chapter" />
+          <NavigationProperty Name="Grade" Relationship="Self.FK__TextBook__GradeI__145C0A3F" FromRole="TextBook" ToRole="Grade" />
+          <NavigationProperty Name="Questions" Relationship="Self.FK__Question__BookID__2E1BDC42" FromRole="TextBook" ToRole="Question" />
+          <NavigationProperty Name="RuleDetails" Relationship="Self.FK__RuleDetai__BookI__3F466844" FromRole="TextBook" ToRole="RuleDetail" />
+        </EntityType>
+        <EntityType Name="PaperDetail">
+          <Key>
+            <PropertyRef Name="PaperID" />
+            <PropertyRef Name="QuestionID" />
+            <PropertyRef Name="SortCode" />
+          </Key>
+          <Property Name="PaperID" Type="Int32" Nullable="false" />
+          <Property Name="QuestionID" Type="Int32" Nullable="false" />
+          <Property Name="SortCode" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Paper" Relationship="Self.FK__PaperDeta__Paper__4D94879B" FromRole="PaperDetail" ToRole="Paper" />
+          <NavigationProperty Name="Question" Relationship="Self.FK__PaperDeta__Quest__4E88ABD4" FromRole="PaperDetail" ToRole="Question" />
+        </EntityType>
+        <Association Name="FK__Answer__Question__35BCFE0A">
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="Answer" Type="Self.Answer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="QuestionID" />
+            </Principal>
+            <Dependent Role="Answer">
+              <PropertyRef Name="QuestionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StuQueRec__Answe__5812160E">
+          <End Role="Answer" Type="Self.Answer" Multiplicity="1" />
+          <End Role="StuQueRecordDetail" Type="Self.StuQueRecordDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Answer">
+              <PropertyRef Name="AnswerID" />
+            </Principal>
+            <Dependent Role="StuQueRecordDetail">
+              <PropertyRef Name="AnswerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Chapter__BookID__182C9B23">
+          <End Role="TextBook" Type="Self.TextBook" Multiplicity="1" />
+          <End Role="Chapter" Type="Self.Chapter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TextBook">
+              <PropertyRef Name="BookID" />
+            </Principal>
+            <Dependent Role="Chapter">
+              <PropertyRef Name="BookID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Question__Chapte__2F10007B">
+          <End Role="Chapter" Type="Self.Chapter" Multiplicity="1" />
+          <End Role="Question" Type="Self.Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chapter">
+              <PropertyRef Name="ChapterID" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="ChapterID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RuleDetai__Chapt__403A8C7D">
+          <End Role="Chapter" Type="Self.Chapter" Multiplicity="0..1" />
+          <End Role="RuleDetail" Type="Self.RuleDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chapter">
+              <PropertyRef Name="ChapterID" />
+            </Principal>
+            <Dependent Role="RuleDetail">
+              <PropertyRef Name="ChapterID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Class__GradeID__25869641">
+          <End Role="Grade" Type="Self.Grade" Multiplicity="1" />
+          <End Role="Class" Type="Self.Class" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grade">
+              <PropertyRef Name="GradeID" />
+            </Principal>
+            <Dependent Role="Class">
+              <PropertyRef Name="GradeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Class__MasterID__239E4DCF">
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="1" />
+          <End Role="Class" Type="Self.Class" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="TeacherID" />
+            </Principal>
+            <Dependent Role="Class">
+              <PropertyRef Name="MasterID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Class__TeacharID__24927208">
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="1" />
+          <End Role="Class" Type="Self.Class" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="TeacherID" />
+            </Principal>
+            <Dependent Role="Class">
+              <PropertyRef Name="TeacharID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Student__ClassID__2A4B4B5E">
+          <End Role="Class" Type="Self.Class" Multiplicity="0..1" />
+          <End Role="Student" Type="Self.Student" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Class">
+              <PropertyRef Name="ClassID" />
+            </Principal>
+            <Dependent Role="Student">
+              <PropertyRef Name="ClassID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Paper__GradeID__47DBAE45">
+          <End Role="Grade" Type="Self.Grade" Multiplicity="1" />
+          <End Role="Paper" Type="Self.Paper" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grade">
+              <PropertyRef Name="GradeID" />
+            </Principal>
+            <Dependent Role="Paper">
+              <PropertyRef Name="GradeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PaperRule__Grade__398D8EEE">
+          <End Role="Grade" Type="Self.Grade" Multiplicity="1" />
+          <End Role="PaperRule" Type="Self.PaperRule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grade">
+              <PropertyRef Name="GradeID" />
+            </Principal>
+            <Dependent Role="PaperRule">
+              <PropertyRef Name="GradeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TextBook__GradeI__145C0A3F">
+          <End Role="Grade" Type="Self.Grade" Multiplicity="1" />
+          <End Role="TextBook" Type="Self.TextBook" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grade">
+              <PropertyRef Name="GradeID" />
+            </Principal>
+            <Dependent Role="TextBook">
+              <PropertyRef Name="GradeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Menu__ModuleID__6383C8BA">
+          <End Role="Module" Type="Self.Module" Multiplicity="1" />
+          <End Role="Menu" Type="Self.Menu" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Module">
+              <PropertyRef Name="ModuleID" />
+            </Principal>
+            <Dependent Role="Menu">
+              <PropertyRef Name="ModuleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Paper__CreatorID__4BAC3F29">
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="1" />
+          <End Role="Paper" Type="Self.Paper" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="TeacherID" />
+            </Principal>
+            <Dependent Role="Paper">
+              <PropertyRef Name="CreatorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Paper__RuleID__49C3F6B7">
+          <End Role="PaperRule" Type="Self.PaperRule" Multiplicity="1" />
+          <End Role="Paper" Type="Self.Paper" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaperRule">
+              <PropertyRef Name="RuleID" />
+            </Principal>
+            <Dependent Role="Paper">
+              <PropertyRef Name="RuleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Paper__typeID__48CFD27E">
+          <End Role="PaperType" Type="Self.PaperType" Multiplicity="1" />
+          <End Role="Paper" Type="Self.Paper" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaperType">
+              <PropertyRef Name="TypeID" />
+            </Principal>
+            <Dependent Role="Paper">
+              <PropertyRef Name="typeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PaperDeta__Paper__4D94879B">
+          <End Role="Paper" Type="Self.Paper" Multiplicity="1" />
+          <End Role="PaperDetail" Type="Self.PaperDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Paper">
+              <PropertyRef Name="PaperID" />
+            </Principal>
+            <Dependent Role="PaperDetail">
+              <PropertyRef Name="PaperID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StuQueRec__Paper__52593CB8">
+          <End Role="Paper" Type="Self.Paper" Multiplicity="1" />
+          <End Role="StuQueRecord" Type="Self.StuQueRecord" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Paper">
+              <PropertyRef Name="PaperID" />
+            </Principal>
+            <Dependent Role="StuQueRecord">
+              <PropertyRef Name="PaperID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PaperRule__Creat__3A81B327">
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="1" />
+          <End Role="PaperRule" Type="Self.PaperRule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="TeacherID" />
+            </Principal>
+            <Dependent Role="PaperRule">
+              <PropertyRef Name="CreatorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RuleDetai__RuleI__3E52440B">
+          <End Role="PaperRule" Type="Self.PaperRule" Multiplicity="1" />
+          <End Role="RuleDetail" Type="Self.RuleDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaperRule">
+              <PropertyRef Name="RuleID" />
+            </Principal>
+            <Dependent Role="RuleDetail">
+              <PropertyRef Name="RuleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PaperDeta__Quest__4E88ABD4">
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="PaperDetail" Type="Self.PaperDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="QuestionID" />
+            </Principal>
+            <Dependent Role="PaperDetail">
+              <PropertyRef Name="QuestionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Question__BookID__2E1BDC42">
+          <End Role="TextBook" Type="Self.TextBook" Multiplicity="1" />
+          <End Role="Question" Type="Self.Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TextBook">
+              <PropertyRef Name="BookID" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="BookID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Question__CheckI__31EC6D26">
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="0..1" />
+          <End Role="Question" Type="Self.Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="TeacherID" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="CheckID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Question__Creato__300424B4">
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="1" />
+          <End Role="Question" Type="Self.Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="TeacherID" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="CreatorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StuQueRec__Quest__571DF1D5">
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="StuQueRecordDetail" Type="Self.StuQueRecordDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="QuestionID" />
+            </Principal>
+            <Dependent Role="StuQueRecordDetail">
+              <PropertyRef Name="QuestionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Result__RecordID__5AEE82B9">
+          <End Role="StuQueRecord" Type="Self.StuQueRecord" Multiplicity="1" />
+          <End Role="Result" Type="Self.Result" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StuQueRecord">
+              <PropertyRef Name="RecordID" />
+            </Principal>
+            <Dependent Role="Result">
+              <PropertyRef Name="RecordID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Teacher__RoleID__1FCDBCEB">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleID" />
+            </Principal>
+            <Dependent Role="Teacher">
+              <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RuleDetai__BookI__3F466844">
+          <End Role="TextBook" Type="Self.TextBook" Multiplicity="1" />
+          <End Role="RuleDetail" Type="Self.RuleDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TextBook">
+              <PropertyRef Name="BookID" />
+            </Principal>
+            <Dependent Role="RuleDetail">
+              <PropertyRef Name="BookID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StuQueRec__Stude__5165187F">
+          <End Role="Student" Type="Self.Student" Multiplicity="1" />
+          <End Role="StuQueRecord" Type="Self.StuQueRecord" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="StudentID" />
+            </Principal>
+            <Dependent Role="StuQueRecord">
+              <PropertyRef Name="StudetnID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StuQueRec__Recor__5629CD9C">
+          <End Role="StuQueRecord" Type="Self.StuQueRecord" Multiplicity="0..1" />
+          <End Role="StuQueRecordDetail" Type="Self.StuQueRecordDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StuQueRecord">
+              <PropertyRef Name="RecordID" />
+            </Principal>
+            <Dependent Role="StuQueRecordDetail">
+              <PropertyRef Name="RecordID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ExamSysEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Answers" EntityType="Self.Answer" />
+          <EntitySet Name="Chapters" EntityType="Self.Chapter" />
+          <EntitySet Name="Classes" EntityType="Self.Class" />
+          <EntitySet Name="Grades" EntityType="Self.Grade" />
+          <EntitySet Name="Menus" EntityType="Self.Menu" />
+          <EntitySet Name="Modules" EntityType="Self.Module" />
+          <EntitySet Name="Papers" EntityType="Self.Paper" />
+          <EntitySet Name="PaperRules" EntityType="Self.PaperRule" />
+          <EntitySet Name="PaperTypes" EntityType="Self.PaperType" />
+          <EntitySet Name="Questions" EntityType="Self.Question" />
+          <EntitySet Name="Results" EntityType="Self.Result" />
+          <EntitySet Name="Roles" EntityType="Self.Role" />
+          <EntitySet Name="RuleDetails" EntityType="Self.RuleDetail" />
+          <EntitySet Name="Students" EntityType="Self.Student" />
+          <EntitySet Name="StuQueRecords" EntityType="Self.StuQueRecord" />
+          <EntitySet Name="StuQueRecordDetails" EntityType="Self.StuQueRecordDetail" />
+          <EntitySet Name="Teachers" EntityType="Self.Teacher" />
+          <EntitySet Name="TextBooks" EntityType="Self.TextBook" />
+          <EntitySet Name="PaperDetails" EntityType="Self.PaperDetail" />
+          <AssociationSet Name="FK__Answer__Question__35BCFE0A" Association="Self.FK__Answer__Question__35BCFE0A">
+            <End Role="Question" EntitySet="Questions" />
+            <End Role="Answer" EntitySet="Answers" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StuQueRec__Answe__5812160E" Association="Self.FK__StuQueRec__Answe__5812160E">
+            <End Role="Answer" EntitySet="Answers" />
+            <End Role="StuQueRecordDetail" EntitySet="StuQueRecordDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Chapter__BookID__182C9B23" Association="Self.FK__Chapter__BookID__182C9B23">
+            <End Role="TextBook" EntitySet="TextBooks" />
+            <End Role="Chapter" EntitySet="Chapters" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Question__Chapte__2F10007B" Association="Self.FK__Question__Chapte__2F10007B">
+            <End Role="Chapter" EntitySet="Chapters" />
+            <End Role="Question" EntitySet="Questions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RuleDetai__Chapt__403A8C7D" Association="Self.FK__RuleDetai__Chapt__403A8C7D">
+            <End Role="Chapter" EntitySet="Chapters" />
+            <End Role="RuleDetail" EntitySet="RuleDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Class__GradeID__25869641" Association="Self.FK__Class__GradeID__25869641">
+            <End Role="Grade" EntitySet="Grades" />
+            <End Role="Class" EntitySet="Classes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Class__MasterID__239E4DCF" Association="Self.FK__Class__MasterID__239E4DCF">
+            <End Role="Teacher" EntitySet="Teachers" />
+            <End Role="Class" EntitySet="Classes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Class__TeacharID__24927208" Association="Self.FK__Class__TeacharID__24927208">
+            <End Role="Teacher" EntitySet="Teachers" />
+            <End Role="Class" EntitySet="Classes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Student__ClassID__2A4B4B5E" Association="Self.FK__Student__ClassID__2A4B4B5E">
+            <End Role="Class" EntitySet="Classes" />
+            <End Role="Student" EntitySet="Students" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Paper__GradeID__47DBAE45" Association="Self.FK__Paper__GradeID__47DBAE45">
+            <End Role="Grade" EntitySet="Grades" />
+            <End Role="Paper" EntitySet="Papers" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PaperRule__Grade__398D8EEE" Association="Self.FK__PaperRule__Grade__398D8EEE">
+            <End Role="Grade" EntitySet="Grades" />
+            <End Role="PaperRule" EntitySet="PaperRules" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TextBook__GradeI__145C0A3F" Association="Self.FK__TextBook__GradeI__145C0A3F">
+            <End Role="Grade" EntitySet="Grades" />
+            <End Role="TextBook" EntitySet="TextBooks" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Menu__ModuleID__6383C8BA" Association="Self.FK__Menu__ModuleID__6383C8BA">
+            <End Role="Module" EntitySet="Modules" />
+            <End Role="Menu" EntitySet="Menus" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Paper__CreatorID__4BAC3F29" Association="Self.FK__Paper__CreatorID__4BAC3F29">
+            <End Role="Teacher" EntitySet="Teachers" />
+            <End Role="Paper" EntitySet="Papers" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Paper__RuleID__49C3F6B7" Association="Self.FK__Paper__RuleID__49C3F6B7">
+            <End Role="PaperRule" EntitySet="PaperRules" />
+            <End Role="Paper" EntitySet="Papers" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Paper__typeID__48CFD27E" Association="Self.FK__Paper__typeID__48CFD27E">
+            <End Role="PaperType" EntitySet="PaperTypes" />
+            <End Role="Paper" EntitySet="Papers" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PaperDeta__Paper__4D94879B" Association="Self.FK__PaperDeta__Paper__4D94879B">
+            <End Role="Paper" EntitySet="Papers" />
+            <End Role="PaperDetail" EntitySet="PaperDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StuQueRec__Paper__52593CB8" Association="Self.FK__StuQueRec__Paper__52593CB8">
+            <End Role="Paper" EntitySet="Papers" />
+            <End Role="StuQueRecord" EntitySet="StuQueRecords" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PaperRule__Creat__3A81B327" Association="Self.FK__PaperRule__Creat__3A81B327">
+            <End Role="Teacher" EntitySet="Teachers" />
+            <End Role="PaperRule" EntitySet="PaperRules" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RuleDetai__RuleI__3E52440B" Association="Self.FK__RuleDetai__RuleI__3E52440B">
+            <End Role="PaperRule" EntitySet="PaperRules" />
+            <End Role="RuleDetail" EntitySet="RuleDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PaperDeta__Quest__4E88ABD4" Association="Self.FK__PaperDeta__Quest__4E88ABD4">
+            <End Role="Question" EntitySet="Questions" />
+            <End Role="PaperDetail" EntitySet="PaperDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Question__BookID__2E1BDC42" Association="Self.FK__Question__BookID__2E1BDC42">
+            <End Role="TextBook" EntitySet="TextBooks" />
+            <End Role="Question" EntitySet="Questions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Question__CheckI__31EC6D26" Association="Self.FK__Question__CheckI__31EC6D26">
+            <End Role="Teacher" EntitySet="Teachers" />
+            <End Role="Question" EntitySet="Questions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Question__Creato__300424B4" Association="Self.FK__Question__Creato__300424B4">
+            <End Role="Teacher" EntitySet="Teachers" />
+            <End Role="Question" EntitySet="Questions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StuQueRec__Quest__571DF1D5" Association="Self.FK__StuQueRec__Quest__571DF1D5">
+            <End Role="Question" EntitySet="Questions" />
+            <End Role="StuQueRecordDetail" EntitySet="StuQueRecordDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Result__RecordID__5AEE82B9" Association="Self.FK__Result__RecordID__5AEE82B9">
+            <End Role="StuQueRecord" EntitySet="StuQueRecords" />
+            <End Role="Result" EntitySet="Results" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Teacher__RoleID__1FCDBCEB" Association="Self.FK__Teacher__RoleID__1FCDBCEB">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="Teacher" EntitySet="Teachers" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RuleDetai__BookI__3F466844" Association="Self.FK__RuleDetai__BookI__3F466844">
+            <End Role="TextBook" EntitySet="TextBooks" />
+            <End Role="RuleDetail" EntitySet="RuleDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StuQueRec__Stude__5165187F" Association="Self.FK__StuQueRec__Stude__5165187F">
+            <End Role="Student" EntitySet="Students" />
+            <End Role="StuQueRecord" EntitySet="StuQueRecords" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StuQueRec__Recor__5629CD9C" Association="Self.FK__StuQueRec__Recor__5629CD9C">
+            <End Role="StuQueRecord" EntitySet="StuQueRecords" />
+            <End Role="StuQueRecordDetail" EntitySet="StuQueRecordDetails" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ExamSysModelStoreContainer" CdmEntityContainer="ExamSysEntities">
+          <EntitySetMapping Name="Answers">
+            <EntityTypeMapping TypeName="ExamSysModel.Answer">
+              <MappingFragment StoreEntitySet="Answer">
+                <ScalarProperty Name="AnswerID" ColumnName="AnswerID" />
+                <ScalarProperty Name="AnswerContent" ColumnName="AnswerContent" />
+                <ScalarProperty Name="QuestionID" ColumnName="QuestionID" />
+                <ScalarProperty Name="IsResult" ColumnName="IsResult" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Chapters">
+            <EntityTypeMapping TypeName="ExamSysModel.Chapter">
+              <MappingFragment StoreEntitySet="Chapter">
+                <ScalarProperty Name="ChapterID" ColumnName="ChapterID" />
+                <ScalarProperty Name="ChapterName" ColumnName="ChapterName" />
+                <ScalarProperty Name="BookID" ColumnName="BookID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Classes">
+            <EntityTypeMapping TypeName="ExamSysModel.Class">
+              <MappingFragment StoreEntitySet="Class">
+                <ScalarProperty Name="ClassID" ColumnName="ClassID" />
+                <ScalarProperty Name="ClassName" ColumnName="ClassName" />
+                <ScalarProperty Name="MasterID" ColumnName="MasterID" />
+                <ScalarProperty Name="TeacharID" ColumnName="TeacharID" />
+                <ScalarProperty Name="GradeID" ColumnName="GradeID" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Grades">
+            <EntityTypeMapping TypeName="ExamSysModel.Grade">
+              <MappingFragment StoreEntitySet="Grade">
+                <ScalarProperty Name="GradeID" ColumnName="GradeID" />
+                <ScalarProperty Name="GradeName" ColumnName="GradeName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Menus">
+            <EntityTypeMapping TypeName="ExamSysModel.Menu">
+              <MappingFragment StoreEntitySet="Menu">
+                <ScalarProperty Name="MenuID" ColumnName="MenuID" />
+                <ScalarProperty Name="MenuName" ColumnName="MenuName" />
+                <ScalarProperty Name="SortCode" ColumnName="SortCode" />
+                <ScalarProperty Name="Service" ColumnName="Service" />
+                <ScalarProperty Name="ModuleID" ColumnName="ModuleID" />
+                <ScalarProperty Name="Roles" ColumnName="Roles" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Modules">
+            <EntityTypeMapping TypeName="ExamSysModel.Module">
+              <MappingFragment StoreEntitySet="Module">
+                <ScalarProperty Name="ModuleID" ColumnName="ModuleID" />
+                <ScalarProperty Name="Ico" ColumnName="Ico" />
+                <ScalarProperty Name="ModuleName" ColumnName="ModuleName" />
+                <ScalarProperty Name="SortCode" ColumnName="SortCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Papers">
+            <EntityTypeMapping TypeName="ExamSysModel.Paper">
+              <MappingFragment StoreEntitySet="Paper">
+                <ScalarProperty Name="PaperID" ColumnName="PaperID" />
+                <ScalarProperty Name="PaperName" ColumnName="PaperName" />
+                <ScalarProperty Name="GradeID" ColumnName="GradeID" />
+                <ScalarProperty Name="typeID" ColumnName="typeID" />
+                <ScalarProperty Name="Duration" ColumnName="Duration" />
+                <ScalarProperty Name="IsOpen" ColumnName="IsOpen" />
+                <ScalarProperty Name="ClassList" ColumnName="ClassList" />
+                <ScalarProperty Name="RuleID" ColumnName="RuleID" />
+                <ScalarProperty Name="QuestionCount" ColumnName="QuestionCount" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="CreatorID" ColumnName="CreatorID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaperRules">
+            <EntityTypeMapping TypeName="ExamSysModel.PaperRule">
+              <MappingFragment StoreEntitySet="PaperRule">
+                <ScalarProperty Name="RuleID" ColumnName="RuleID" />
+                <ScalarProperty Name="RuleName" ColumnName="RuleName" />
+                <ScalarProperty Name="GradeID" ColumnName="GradeID" />
+                <ScalarProperty Name="CreatorID" ColumnName="CreatorID" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaperTypes">
+            <EntityTypeMapping TypeName="ExamSysModel.PaperType">
+              <MappingFragment StoreEntitySet="PaperType">
+                <ScalarProperty Name="TypeID" ColumnName="TypeID" />
+                <ScalarProperty Name="TypeName" ColumnName="TypeName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Questions">
+            <EntityTypeMapping TypeName="ExamSysModel.Question">
+              <MappingFragment StoreEntitySet="Question">
+                <ScalarProperty Name="QuestionID" ColumnName="QuestionID" />
+                <ScalarProperty Name="QuestionTitle" ColumnName="QuestionTitle" />
+                <ScalarProperty Name="QuestionType" ColumnName="QuestionType" />
+                <ScalarProperty Name="QuestionLevel" ColumnName="QuestionLevel" />
+                <ScalarProperty Name="BookID" ColumnName="BookID" />
+                <ScalarProperty Name="ChapterID" ColumnName="ChapterID" />
+                <ScalarProperty Name="IsCheck" ColumnName="IsCheck" />
+                <ScalarProperty Name="CreatorID" ColumnName="CreatorID" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="CheckID" ColumnName="CheckID" />
+                <ScalarProperty Name="CheckTime" ColumnName="CheckTime" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Results">
+            <EntityTypeMapping TypeName="ExamSysModel.Result">
+              <MappingFragment StoreEntitySet="Result">
+                <ScalarProperty Name="ResultID" ColumnName="ResultID" />
+                <ScalarProperty Name="RecordID" ColumnName="RecordID" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="ExamSysModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RuleDetails">
+            <EntityTypeMapping TypeName="ExamSysModel.RuleDetail">
+              <MappingFragment StoreEntitySet="RuleDetail">
+                <ScalarProperty Name="DetailID" ColumnName="DetailID" />
+                <ScalarProperty Name="RuleID" ColumnName="RuleID" />
+                <ScalarProperty Name="BookID" ColumnName="BookID" />
+                <ScalarProperty Name="ChapterID" ColumnName="ChapterID" />
+                <ScalarProperty Name="QuestionCount" ColumnName="QuestionCount" />
+                <ScalarProperty Name="QuestionLevel" ColumnName="QuestionLevel" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Students">
+            <EntityTypeMapping TypeName="ExamSysModel.Student">
+              <MappingFragment StoreEntitySet="Student">
+                <ScalarProperty Name="StudentID" ColumnName="StudentID" />
+                <ScalarProperty Name="StudentName" ColumnName="StudentName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="CardID" ColumnName="CardID" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Borndate" ColumnName="Borndate" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="ClassID" ColumnName="ClassID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StuQueRecords">
+            <EntityTypeMapping TypeName="ExamSysModel.StuQueRecord">
+              <MappingFragment StoreEntitySet="StuQueRecord">
+                <ScalarProperty Name="RecordID" ColumnName="RecordID" />
+                <ScalarProperty Name="StudetnID" ColumnName="StudetnID" />
+                <ScalarProperty Name="PaperID" ColumnName="PaperID" />
+                <ScalarProperty Name="RecordTime" ColumnName="RecordTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StuQueRecordDetails">
+            <EntityTypeMapping TypeName="ExamSysModel.StuQueRecordDetail">
+              <MappingFragment StoreEntitySet="StuQueRecordDetail">
+                <ScalarProperty Name="RecordDetailID" ColumnName="RecordDetailID" />
+                <ScalarProperty Name="RecordID" ColumnName="RecordID" />
+                <ScalarProperty Name="QuestionID" ColumnName="QuestionID" />
+                <ScalarProperty Name="AnswerID" ColumnName="AnswerID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Teachers">
+            <EntityTypeMapping TypeName="ExamSysModel.Teacher">
+              <MappingFragment StoreEntitySet="Teacher">
+                <ScalarProperty Name="TeacherID" ColumnName="TeacherID" />
+                <ScalarProperty Name="TeacherName" ColumnName="TeacherName" />
+                <ScalarProperty Name="TeacherImg" ColumnName="TeacherImg" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="JoinTime" ColumnName="JoinTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TextBooks">
+            <EntityTypeMapping TypeName="ExamSysModel.TextBook">
+              <MappingFragment StoreEntitySet="TextBook">
+                <ScalarProperty Name="BookID" ColumnName="BookID" />
+                <ScalarProperty Name="BookName" ColumnName="BookName" />
+                <ScalarProperty Name="GradeID" ColumnName="GradeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaperDetails">
+            <EntityTypeMapping TypeName="ExamSysModel.PaperDetail">
+              <MappingFragment StoreEntitySet="PaperDetail">
+                <ScalarProperty Name="PaperID" ColumnName="PaperID" />
+                <ScalarProperty Name="QuestionID" ColumnName="QuestionID" />
+                <ScalarProperty Name="SortCode" ColumnName="SortCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

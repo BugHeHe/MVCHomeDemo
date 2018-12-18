@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewBag.Title = "登录";
+    Layout = null;
+}
+@Styles.Render("~/Content/css")
+@Scripts.Render("~/bundles/modernizr")
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+<style>
+    ul li {
+        list-style: none;
+    }
+
+    .zuo {
+        margin-left: 30px;
+    }
+</style>
+<body style="overflow: auto;overflow-x:hidden ">
+    <div class=" text-center" style="margin-top:50px;">
+        <div>
+            <div>
+                <img src="~/Images/Logo.png" width="300" />
+            </div>
+            <h5>欢迎使用邯郸翱翔教务平台</h5>
+
+            <form method="post" action="~/LoginExamGou/Dian">
+                <div class="row">
+                    <div class="col-md-4" style="margin-left:50px;"></div>
+                    <div class="form-group zuo col-md-6">
+                        <input type="text" name="LoginDeng" class="form-control" placeholder="用户名">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4" style="margin-left:50px;"></div>
+                    <div class="form-group zuo col-md-6">
+                        <input type="password" name="LognPwd" class="form-control" placeholder="密码">
+                    </div>
+                </div>
+                <input type="submit" value="登录" class="form-control btn btn-success" />
+            </form>
+        </div>
+    </div>
+</body>
+
+
+
+
