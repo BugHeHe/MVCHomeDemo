@@ -1,4 +1,5 @@
 ﻿@using Exam.Models;
+@*左侧模块表 连接到总页面  母版中*@
 @{
     Layout = null;
 }
@@ -6,7 +7,7 @@
     //从session中获取 当前登录的对象
     Teacher te = ViewData["MoKuai"] as Teacher;
     ExamSysEntities ef = new ExamSysEntities();
-    //获取当前登陆用户的身份
+    //获取当前登陆用户的身份 获得当前登录人的身份
     Role HuoDeng= ef.Roles.ToList().Find(a=>a.RoleID==te.RoleID);
     //获取所有功能的集合  根据功能判断哪个模块的
     List<Menu> Menuli = ef.Menus.ToList();
@@ -26,7 +27,7 @@
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#" id="dropdownMenu1" aria-haspopup="true" aria-expanded="true">
                         <span class="clear">
                             <span class="block m-t-xs"><strong class="font-bold">@te.UserName</strong></span>
-                            <span class="text-muted text-xs block">@HuoDeng<b class="caret"></b></span>
+                            <span class="text-muted text-xs block">@HuoDeng.RoleName<b class="caret"></b></span>
                         </span>
                     </a>
                     <ul class="dropdown-menu animated fadeInRight m-t-xs" aria-labelledby="dropdownMenu1">
@@ -80,13 +81,10 @@
                     foreach (var item in MoKuaiId)
                     {
                        Module DaMoKuai=ef.Modules.ToList().Find(x=>x.ModuleID==item);
-                   
-                    <li>
-                            <a href="#">
-
-
-                                <i class="@DaMoKuai.Ico"></i> <span class="nav-label">@DaMoKuai.ModuleName</span> <span class="fa arrow"></span>
-                    </a>
+                         <li>
+                                <a href="#">
+                                    <i class="@DaMoKuai.Ico"></i> <span class="nav-label">@DaMoKuai.ModuleName</span> <span class="fa arrow"></span>
+                                </a>
                             <ul class="nav nav-second-level">
 
                                 @{
@@ -101,7 +99,6 @@
 
                             </ul>
                     </li>
-
                 }
             }
         </ul>
