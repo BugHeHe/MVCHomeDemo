@@ -12,17 +12,51 @@
 <div class="container">
     <h3>教材列表</h3>
     <hr />
-    <form class="form-inline">
+    <div class="form-inline">
         教材名称：
         <div class="form-group" style="margin-left:10px;">
             <label class="sr-only" for="exampleInputEmail3"></label>
-            <input type="text" class="form-control" v-model="SeleName" id="exampleInputEmail3" placeholder="请输入教材名称">
+            <input type="text" class="form-control"  id="exampleInputEmail3" placeholder="请输入教材名称">
         </div>
         年级：@*@Html.DropDownList("name")*@
         <button class="btn btn-primary" style="margin-left:10px;">查询</button>
         <button class="btn btn-primary" style="margin-left:10px;">重置</button>
         <button class="btn btn-success" style="margin-left:10px;">添加</button>
         <button class="btn btn-danger" style="margin-left:10px;">批量删除</button>
-    </form>
+    </div>
+    <table class="table table-bordered">
+        <tr>
+            <td><input type="checkbox" name="name" value="" /></td>
+            <td>编号</td>
+            <td>教材名称</td>
+            <td>年级</td>
+            <td>操作</td>
+        </tr>
+        <tr v-for="s in TextBooks">
+            <td><input type="checkbox" name="name" value="" /></td>
+            <td>{{s.BookID}}</td>
+            <td>{{s.BookName}}</td>
+            <td>{{s.GradeName}}</td>
+            <td><span class="glyphicon glyphicon-pencil"  data-target="#AddModa2" style="cursor:pointer"></span><span class="glyphicon glyphicon-remove"  style="margin-left:5px; cursor:pointer"></span></td>
+        </tr>
+    </table>
 </div>
+<script>
+    var a = new Vue({
+        el: '.container',
+        data: {
+            TextBooks:[],
+        },
+        created(){
+            this.Init();
+        },
+        methods:{
+            Init() {
+                axios.post('/Book/List').then(Response => {
+                    this.TextBooks = Response.data;
+                })
+            },
+        }
+    });
+</script>
 

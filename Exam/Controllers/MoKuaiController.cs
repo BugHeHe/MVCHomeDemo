@@ -9,8 +9,8 @@ namespace Exam.Controllers
 {
     public class MoKuaiController : Controller
     {
-        ExamSysEntities ef = new ExamSysEntities();
-      
+        ExamSysEntities1 ef = new ExamSysEntities1();
+
         // GET: MoKuai
         public ActionResult Index()
         {

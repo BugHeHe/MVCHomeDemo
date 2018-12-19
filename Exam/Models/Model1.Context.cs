@@ -13,10 +13,10 @@ namespace Exam.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class ExamSysEntities : DbContext
+    public partial class ExamSysEntities1 : DbContext
     {
-        public ExamSysEntities()
-            : base("name=ExamSysEntities")
+        public ExamSysEntities1()
+            : base("name=ExamSysEntities1")
         {
         }
     

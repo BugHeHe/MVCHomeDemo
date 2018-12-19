@@ -9,7 +9,7 @@ namespace Exam.Controllers
 {
     public class LoginExamGouController : Controller
     {
-        ExamSysEntities ef = new ExamSysEntities();
+        ExamSysEntities1 ef = new ExamSysEntities1();
         // GET: LoginExamGou
         public ActionResult Index()
         {

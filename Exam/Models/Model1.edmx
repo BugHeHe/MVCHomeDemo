@@ -263,7 +263,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Menu__ModuleID__6383C8BA">
+        <Association Name="FK__Menu__ModuleID__693CA210">
           <End Role="Module" Type="Self.Module" Multiplicity="1" />
           <End Role="Menu" Type="Self.Menu" Multiplicity="*" />
           <ReferentialConstraint>
@@ -609,7 +609,7 @@
             <End Role="Teacher" EntitySet="Teacher" />
             <End Role="Class" EntitySet="Class" />
           </AssociationSet>
-          <AssociationSet Name="FK__Menu__ModuleID__6383C8BA" Association="Self.FK__Menu__ModuleID__6383C8BA">
+          <AssociationSet Name="FK__Menu__ModuleID__693CA210" Association="Self.FK__Menu__ModuleID__693CA210">
             <End Role="Module" EntitySet="Module" />
             <End Role="Menu" EntitySet="Menu" />
           </AssociationSet>
@@ -773,7 +773,7 @@
           <Property Name="Service" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="ModuleID" Type="Int32" Nullable="false" />
           <Property Name="Roles" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Module" Relationship="Self.FK__Menu__ModuleID__6383C8BA" FromRole="Menu" ToRole="Module" />
+          <NavigationProperty Name="Module" Relationship="Self.FK__Menu__ModuleID__693CA210" FromRole="Menu" ToRole="Module" />
         </EntityType>
         <EntityType Name="Module">
           <Key>
@@ -783,7 +783,7 @@
           <Property Name="Ico" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="ModuleName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="SortCode" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Menus" Relationship="Self.FK__Menu__ModuleID__6383C8BA" FromRole="Module" ToRole="Menu" />
+          <NavigationProperty Name="Menus" Relationship="Self.FK__Menu__ModuleID__693CA210" FromRole="Module" ToRole="Menu" />
         </EntityType>
         <EntityType Name="Paper">
           <Key>
@@ -1115,7 +1115,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Menu__ModuleID__6383C8BA">
+        <Association Name="FK__Menu__ModuleID__693CA210">
           <End Role="Module" Type="Self.Module" Multiplicity="1" />
           <End Role="Menu" Type="Self.Menu" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1331,7 +1331,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="ExamSysEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="ExamSysEntities1" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Answers" EntityType="Self.Answer" />
           <EntitySet Name="Chapters" EntityType="Self.Chapter" />
           <EntitySet Name="Classes" EntityType="Self.Class" />
@@ -1399,7 +1399,7 @@
             <End Role="Grade" EntitySet="Grades" />
             <End Role="TextBook" EntitySet="TextBooks" />
           </AssociationSet>
-          <AssociationSet Name="FK__Menu__ModuleID__6383C8BA" Association="Self.FK__Menu__ModuleID__6383C8BA">
+          <AssociationSet Name="FK__Menu__ModuleID__693CA210" Association="Self.FK__Menu__ModuleID__693CA210">
             <End Role="Module" EntitySet="Modules" />
             <End Role="Menu" EntitySet="Menus" />
           </AssociationSet>
@@ -1477,7 +1477,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="ExamSysModelStoreContainer" CdmEntityContainer="ExamSysEntities">
+        <EntityContainerMapping StorageEntityContainer="ExamSysModelStoreContainer" CdmEntityContainer="ExamSysEntities1">
           <EntitySetMapping Name="Answers">
             <EntityTypeMapping TypeName="ExamSysModel.Answer">
               <MappingFragment StoreEntitySet="Answer">

@@ -164,7 +164,7 @@
     <Compile Include="Controllers\BookController.cs" />
     <Compile Include="Controllers\CeShiController.cs" />
     <Compile Include="Controllers\ExamHouController.cs" />
-    <Compile Include="Controllers\GradeController.cs" />
+    <Compile Include="Controllers\GRadeCController.cs" />
     <Compile Include="Controllers\LoginExamGouController.cs" />
     <Compile Include="Controllers\MoKuaiController.cs" />
     <Compile Include="Global.asax.cs">
@@ -243,6 +243,7 @@
     <Compile Include="Models\TextBook.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModels\TextBooks.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -314,10 +315,8 @@
     <Content Include="Views\ExamHou\Index.cshtml" />
     <Content Include="Views\CeShi\Index.cshtml" />
     <Content Include="Views\MoKuai\Index.cshtml" />
-    <Content Include="Views\Grade\Index.cshtml" />
-    <Content Include="Views\Vue\Index.cshtml" />
-    <Content Include="Views\Vue\List1.cshtml" />
     <Content Include="Views\Book\Index.cshtml" />
+    <Content Include="Views\GRadeC\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
