@@ -1,4 +1,4 @@
-﻿
+﻿@using PagedList;
 @{
     ViewBag.Title = "Index";
     Layout = null;
@@ -16,15 +16,18 @@
         教材名称：
         <div class="form-group" style="margin-left:10px;">
             <label class="sr-only" for="exampleInputEmail3"></label>
-            <input type="text" class="form-control"  id="exampleInputEmail3" placeholder="请输入教材名称">
+            <input type="text" class="form-control" v-model="Name" id="exampleInputEmail3" placeholder="请输入教材名称">
         </div>
-        年级：@*@Html.DropDownList("name")*@
+        @{ 
+            List<SelectListItem> list = ViewData["BookGrade"] as List<SelectListItem>;
+        }
+        年级：@Html.DropDownList("BookGrade",list, new { @class = "l-text-field", @style = "height:30px;width:80px;"})
         <button class="btn btn-primary" style="margin-left:10px;">查询</button>
         <button class="btn btn-primary" style="margin-left:10px;">重置</button>
         <button class="btn btn-success" style="margin-left:10px;">添加</button>
         <button class="btn btn-danger" style="margin-left:10px;">批量删除</button>
     </div>
-    <table class="table table-bordered">
+    <table class="table table-bordered" style="margin-top:10px;">
         <tr>
             <td><input type="checkbox" name="name" value="" /></td>
             <td>编号</td>
@@ -37,25 +40,63 @@
             <td>{{s.BookID}}</td>
             <td>{{s.BookName}}</td>
             <td>{{s.GradeName}}</td>
-            <td><span class="glyphicon glyphicon-pencil"  data-target="#AddModa2" style="cursor:pointer"></span><span class="glyphicon glyphicon-remove"  style="margin-left:5px; cursor:pointer"></span></td>
+            <td><span class="glyphicon glyphicon-pencil" data-target="#AddModa2" style="cursor:pointer"></span><span class="glyphicon glyphicon-remove" style="margin-left:5px; cursor:pointer"></span></td>
         </tr>
     </table>
+    每页 10 条记录，共<span id="CuntYe"></span>页，当前第<span id="Ye">0</span>页
+    <button class="btn btn-primary" v-on:click="ShangYe">上一页</button>
+    <button class="btn btn-primary" v-on:click="XiaYe">下一页</button>
 </div>
 <script>
     var a = new Vue({
         el: '.container',
         data: {
-            TextBooks:[],
+            TextBooks: [],
+            Name:''
         },
-        created(){
+        created() {
             this.Init();
         },
-        methods:{
+        methods: {
             Init() {
-                axios.post('/Book/List').then(Response => {
-                    this.TextBooks = Response.data;
+                axios.post('/Book/List', { page:parseInt($('#Ye').text())+1}).then(Response => {
+                    this.TextBooks = Response.data.Li;
+                    $('#CuntYe').text(Response.data.Ye);
+                    $('#Ye').text(Response.data.Ye);
                 })
             },
+            XiaYe() {
+                var Grade = $('#BookGrade').val();
+                var TiName = this.Name;
+                var a = parseInt($('#Ye').text())+1;
+                if (parseInt($('#Ye').text()) > parseInt($('CountYe').text())) {
+                    alert("已经是最后一页了");
+                }
+                else
+                {
+                    axios.post('/Book/List', { page: parseInt($('#Ye').text()) + 1, GradeID: Grade, TiN:TiName }).then(Response => {
+                        this.TextBooks = Response.data.Li;
+                    })
+                    $('#Ye').text(a);
+                }
+            },
+            ShangYe() {
+                var Grade = $('#BookGrade').val();
+                var TiName = this.Name;
+                var a = parseInt($('#Ye').text()) - 1;
+                if (a <= 0)
+                {
+                    alert("已经是第一页了");
+                    $('#Ye').text(1);
+                }
+                else
+                {
+                    axios.post('/Book/List', { page: a, GradeID: Grade, TiN:TiName}).then(Response => {
+                        this.TextBooks = Response.data.Li;
+                    })
+                    $('#Ye').text(a);
+                }
+            }
         }
     });
 </script>
