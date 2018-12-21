@@ -18,86 +18,250 @@
             <label class="sr-only" for="exampleInputEmail3"></label>
             <input type="text" class="form-control" v-model="Name" id="exampleInputEmail3" placeholder="请输入教材名称">
         </div>
-        @{ 
+        @{
             List<SelectListItem> list = ViewData["BookGrade"] as List<SelectListItem>;
         }
-        年级：@Html.DropDownList("BookGrade",list, new { @class = "l-text-field", @style = "height:30px;width:80px;"})
-        <button class="btn btn-primary" style="margin-left:10px;">查询</button>
+        年级：@Html.DropDownList("BookGrade", list, new { @class = "l-text-field", @style = "height:30px;width:80px;" })
+        <button class="btn btn-primary" v-on:click="Select" style="margin-left:10px;">查询</button>
         <button class="btn btn-primary" style="margin-left:10px;">重置</button>
-        <button class="btn btn-success" style="margin-left:10px;">添加</button>
-        <button class="btn btn-danger" style="margin-left:10px;">批量删除</button>
+        <button class="btn btn-success" style="margin-left:10px;" data-toggle="modal" data-target="#AddModal">添加</button>
     </div>
     <table class="table table-bordered" style="margin-top:10px;">
         <tr>
-            <td><input type="checkbox" name="name" value="" /></td>
             <td>编号</td>
             <td>教材名称</td>
             <td>年级</td>
             <td>操作</td>
         </tr>
         <tr v-for="s in TextBooks">
-            <td><input type="checkbox" name="name" value="" /></td>
             <td>{{s.BookID}}</td>
             <td>{{s.BookName}}</td>
             <td>{{s.GradeName}}</td>
-            <td><span class="glyphicon glyphicon-pencil" data-target="#AddModa2" style="cursor:pointer"></span><span class="glyphicon glyphicon-remove" style="margin-left:5px; cursor:pointer"></span></td>
+            <td><span class="glyphicon glyphicon-pencil" data-toggle="modal" v-on:click="ChuUpdate" data-target="#AddModa2" style="cursor:pointer"></span><span class="glyphicon glyphicon-remove" v-on:click="Clear" style="margin-left:5px; cursor:pointer"></span></td>
         </tr>
     </table>
     每页 10 条记录，共<span id="CuntYe"></span>页，当前第<span id="Ye">0</span>页
+    <button class="btn btn-primary" v-on:click="ShouYe">首页</button>
     <button class="btn btn-primary" v-on:click="ShangYe">上一页</button>
     <button class="btn btn-primary" v-on:click="XiaYe">下一页</button>
+    <button class="btn btn-primary" v-on:click="MoYe">末页</button>
+
+    @*模态框 用来添加教材信息*@
+    <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">添加教材</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-inline">
+                        教材名称：
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                            <input type="text" class="form-control" v-model="TextBook.BookName" id="exampleInputEmail3" placeholder="请输入教材名称">
+                        </div>
+
+                    </div>
+                    <div class="form-inline" style="margin-top:10px;">
+                        所属年级：
+                        <div class="form-group">
+                            @Html.DropDownList("BookGrade1", list, new { @class = "l-text-field", @style = "height:30px;width:150px;" })
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" v-on:click="ADD" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*模态框 用来修改教材信息*@
+    <div class="modal fade" id="AddModa2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">修改教材信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-inline">
+                        教材名称：
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                            <input type="text" class="form-control" v-model="TextBook.BookName" id="exampleInputEmail3" placeholder="请输入教材名称">
+                        </div>
+                    </div>
+                    <div class="form-inline" style="margin-top:10px;">
+                        所属年级：
+                        <div class="form-group">
+                            @Html.DropDownList("BookGrade2", list, new { @class = "l-text-field",@style = "height:30px;width:150px;" })
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" v-on:click="Update"  class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script>
     var a = new Vue({
         el: '.container',
         data: {
             TextBooks: [],
-            Name:''
+            Name: '',
+            TextBook: {
+                BookName: '',
+                GradeID: ''
+            }
         },
         created() {
             this.Init();
         },
         methods: {
             Init() {
-                axios.post('/Book/List', { page:parseInt($('#Ye').text())+1}).then(Response => {
+                axios.post('/Book/List', { page: '0' }).then(Response => {
                     this.TextBooks = Response.data.Li;
                     $('#CuntYe').text(Response.data.Ye);
-                    $('#Ye').text(Response.data.Ye);
+                    $('#Ye').text("1");
                 })
             },
+            //首页
+            ShouYe() {
+                var Grade = $('#BookGrade').val();
+                var TiName = this.Name;
+                var a = "1";
+                axios.post('/Book/Select', { page: a, GradeID: Grade, TiN: TiName }).then(Response => {
+                    this.TextBooks = Response.data.Li;
+                })
+                $('#Ye').text(a);
+            },
+            //分页的下一页
             XiaYe() {
                 var Grade = $('#BookGrade').val();
                 var TiName = this.Name;
-                var a = parseInt($('#Ye').text())+1;
-                if (parseInt($('#Ye').text()) > parseInt($('CountYe').text())) {
+                var a = parseInt($('#Ye').text()) + 1;
+                if (parseInt($('#Ye').text()) >= parseInt($('#CuntYe').text())) {
                     alert("已经是最后一页了");
                 }
-                else
-                {
-                    axios.post('/Book/List', { page: parseInt($('#Ye').text()) + 1, GradeID: Grade, TiN:TiName }).then(Response => {
+                else {
+                    axios.post('/Book/Select', { page: parseInt($('#Ye').text()) + 1, GradeID: Grade, TiN: TiName }).then(Response => {
                         this.TextBooks = Response.data.Li;
                     })
                     $('#Ye').text(a);
                 }
             },
+            //分页的上一页
             ShangYe() {
                 var Grade = $('#BookGrade').val();
                 var TiName = this.Name;
                 var a = parseInt($('#Ye').text()) - 1;
-                if (a <= 0)
-                {
+                if (a <= 0) {
                     alert("已经是第一页了");
                     $('#Ye').text(1);
                 }
-                else
-                {
-                    axios.post('/Book/List', { page: a, GradeID: Grade, TiN:TiName}).then(Response => {
+                else {
+                    axios.post('/Book/Select', { page: a, GradeID: Grade, TiN: TiName }).then(Response => {
                         this.TextBooks = Response.data.Li;
                     })
                     $('#Ye').text(a);
                 }
+            },
+            //最后一页
+            MoYe() {
+                var Grade = $('#BookGrade').val();
+                var TiName = this.Name;
+                var a = $('#CuntYe').text();
+                axios.post('/Book/Select', { page: a, GradeID: Grade, TiN: TiName }).then(Response => {
+                    this.TextBooks = Response.data.Li;
+                })
+                $('#Ye').text(a);
+            },
+            //查询
+            Select() {
+                var Grade = $('#BookGrade').val();
+                var TiName = this.Name;
+                axios.post('/Book/Select', { page: 0, GradeID: Grade, TiN: TiName }).then(Response => {
+                    this.TextBooks = Response.data.Li;
+                    $('#CuntYe').text(Response.data.Ye);
+                    $('#Ye').text(1);
+                })
+            },
+            //添加教材
+            ADD() {
+                var GradeID = $('#BookGrade1').val();
+                if (parseInt(GradeID) > 0) {
+                    this.TextBook.GradeID = GradeID;
+                    axios.post('/Book/ADD', this.TextBook).then(Response => {
+                        if (Response.data != "失败") {
+                            alert("添加成功");
+                            this.Init();
+                        }
+                        else {
+                            alert("已经拥有该教材，请重新添加");
+                        }
+                        ModuleQ();
+
+                    })
+
+                } else
+                    alert("请选择正确的年级");
+            },
+            Clear(e) {
+                if (confirm("确定要删除吗？")) {
+                    var BookName = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(1)').text();
+                    this.TextBook.BookName = BookName;
+
+                    axios.post('/Book/Clear', this.TextBook).then(Response => {
+                        if (Response.data != "失败") {
+                            alert("删除成功");
+                            this.Init();
+                        } else {
+                            alert("删除失败");
+                        }
+                    })
+                }
+            },
+            ChuUpdate(e) {
+                Shu = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(2)').text();
+                ShuN = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(1)').text();
+                var ops = document.getElementById("BookGrade2").options;//取出下拉列表的项对象集合
+                for (var i = 0; i < ops.length; i++) {//遍历集合
+                    if (Shu == ops[i].text) {//如果该项的value等于文本框填写的值
+                        document.getElementById("BookGrade2").options[i].selected = "selected";//设定下拉列表相应的下拉项的选中
+                        break;
+                    }
+                }
+                this.TextBook.BookName = ShuN;
+                this.TextBook.GradeID = $('#BookGrade2').val();
+            },
+            Update() {
+                alert(this.TextBook.BookName);
+                alert(this.TextBook.GradeID);
+                axios.post('/Book/Update', this.TextBook).then(Response =>
+                {
+                    if (Response.data != "失败")
+                    {
+                        alert("修改成功");
+                        this.Init();
+                    } else
+                        alert("修改失败");
+                    ModuleQ();
+                })
             }
         }
     });
+    function ModuleQ() {
+        $('#AddModal').hide();
+        $('#AddModa2').hide();
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open');
+    }
 </script>
 
