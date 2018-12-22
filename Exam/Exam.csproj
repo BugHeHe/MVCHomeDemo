@@ -163,6 +163,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\BookController.cs" />
     <Compile Include="Controllers\CeShiController.cs" />
+    <Compile Include="Controllers\ChapterController.cs" />
+    <Compile Include="Controllers\ClassController.cs" />
     <Compile Include="Controllers\ExamHouController.cs" />
     <Compile Include="Controllers\GRadeCController.cs" />
     <Compile Include="Controllers\LoginExamGouController.cs" />
@@ -243,6 +245,8 @@
     <Compile Include="Models\TextBook.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModels\ChapterS.cs" />
+    <Compile Include="Models\ViewModels\ClassS.cs" />
     <Compile Include="Models\ViewModels\TextBooks.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -317,6 +321,8 @@
     <Content Include="Views\MoKuai\Index.cshtml" />
     <Content Include="Views\Book\Index.cshtml" />
     <Content Include="Views\GRadeC\Index.cshtml" />
+    <Content Include="Views\Chapter\Index.cshtml" />
+    <Content Include="Views\Class\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

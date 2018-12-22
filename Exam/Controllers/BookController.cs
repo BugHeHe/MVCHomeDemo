@@ -121,10 +121,12 @@ namespace Exam.Controllers
         [HttpPost]
         public ActionResult Update(TextBook te)
         {
-            ef.Entry(te).State = EntityState.Modified;
+            ef.Configuration.ProxyCreationEnabled = false;
+            TextBook a = new TextBook() { BookName = te.BookName, GradeID = te.GradeID,BookID=te.BookID};
+            ef.Entry(a).State = EntityState.Modified;
             if (ef.SaveChanges() > 0)
             {
-                return Json("成功",JsonRequestBehavior.AllowGet);
+                return Json(Shou(),JsonRequestBehavior.AllowGet);
             }
             return Content("失败");
         }

@@ -126,7 +126,9 @@
                     if (Response.data != "失败")
                     {
                         alert("添加成功");
+                        this.Init();
                         //去掉模态框
+                        
                         ModuleQ();
                     } else {
                         alert("已经存在，请重新输入");
