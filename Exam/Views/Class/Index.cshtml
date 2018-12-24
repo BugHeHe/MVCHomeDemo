@@ -8,6 +8,12 @@
 <script src="~/Lis/vue.js"></script>
 <script src="~/Scripts/jquery-3.3.1.js"></script>
 <script src="~/Scripts/bootstrap.js"></script>
+<script src="~/Lis/My97DatePicker/WdatePicker.js"></script>
+<style>
+    .form-inline {
+        margin-top: 10px;
+    }
+</style>
 <div class="container">
     <h3>班级列表</h3>
     <hr />
@@ -23,7 +29,7 @@
         班主任：
         <div class="form-group" style="margin-left:10px;">
             <label class="sr-only" for="exampleInputEmail3"></label>
-            <input type="text" class="form-control" id="exampleInputEmail3" placeholder="请输入班主任名称">
+            <input type="text" v-model="TeacherName" class="form-control" id="exampleInputEmail3" placeholder="请输入班主任名称">
         </div>
         年级：@Html.DropDownList("BookGrade", list, new { @class = "l-text-field", @style = "height:30px;width:150px;" })
         <button class="btn btn-primary" v-on:click="Select" style="margin-left:10px;">查询</button>
@@ -33,14 +39,20 @@
     <table class="table table-bordered" style="margin-top:10px;">
         <tr>
             <td>编号</td>
-            <td>章节名称</td>
-            <td>所属教材</td>
+            <td>班级名称</td>
+            <td>班主任</td>
+            <td>教员</td>
+            <td>年级名称</td>
+            <td>创建时间</td>
             <td>操作</td>
         </tr>
-        <tr v-for="s in ClassS">
-            <td>{{s.ChapterID}}</td>
-            <td>{{s.ChapterName}}</td>
-            <td>{{s.BookName}}</td>
+        <tr v-for="s in ClassS1">
+            <td>{{s.ClassID}}</td>
+            <td>{{s.ClassName}}</td>
+            <td>{{s.MasterName}}</td>
+            <td>{{s.TeacharName}}</td>
+            <td>{{s.GradeName}}</td>
+            <td>{{s.CreateTime}}</td>
             <td><span class="glyphicon glyphicon-pencil" data-toggle="modal" v-on:click="ChuUpdate" data-target="#AddModa2" style="cursor:pointer"></span><span class="glyphicon glyphicon-remove" v-on:click="Clear" style="margin-left:5px; cursor:pointer"></span></td>
         </tr>
     </table>
@@ -49,17 +61,127 @@
     <button class="btn btn-primary" v-on:click="ShangYe">上一页</button>
     <button class="btn btn-primary" v-on:click="XiaYe">下一页</button>
     <button class="btn btn-primary" v-on:click="MoYe">末页</button>
+    @*模态框 用来添加教材信息*@
+    <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">添加班级</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-inline">
+                        &nbsp; &nbsp; 班级名称：
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                            <input type="text" class="form-control" v-model="ClassS.ClassName" id="exampleInputEmail3" placeholder="请输入班级名称">
+                        </div>
+                    </div>
+
+                    <div class="form-inline">
+                        班主任名称：
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                            <input type="text" class="form-control" v-model="ClassS.MasterName" id="exampleInputEmail3" placeholder="请输入班主任名称">
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        &nbsp; &nbsp; 教员名称：
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                            <input type="text" class="form-control" v-model="ClassS.TeacharName" id="exampleInputEmail3" placeholder="请输入教员名称">
+                        </div>
+                    </div>
+                    <div class="form-inline" style="margin-top:10px;">
+                        &nbsp; &nbsp; 所属年级：
+                        <div class="form-group">
+                            @Html.DropDownList("BookGrade1", list, new { @class = "l-text-field", @style = "height:30px;width:150px;" })
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        &nbsp; &nbsp;创建时间：
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                            <input type="text" class="form-control" v-model="ClassS.CreateTime" id="exampleInputEmail4" OnFocus="WdatePicker()" placeholder="请选择创建时间">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" v-on:click="ADD" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*模态框 用来添加教材信息*@
+    <div class="modal fade" id="AddModa2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">添加班级</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-inline">
+                        &nbsp; &nbsp; 班级名称：
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                            <input type="text" class="form-control" v-model="ClassS.ClassName" id="exampleInputEmail3" placeholder="请输入班级名称">
+                        </div>
+                    </div>
+
+                    <div class="form-inline">
+                        班主任名称：
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                            <input type="text" class="form-control" v-model="ClassS.MasterName" id="exampleInputEmail3" placeholder="请输入班主任名称">
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        &nbsp; &nbsp; 教员名称：
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                            <input type="text" class="form-control" v-model="ClassS.TeacharName" id="exampleInputEmail3" placeholder="请输入教员名称">
+                        </div>
+                    </div>
+                    <div class="form-inline" style="margin-top:10px;">
+                        &nbsp; &nbsp; 所属年级：
+                        <div class="form-group">
+                            @Html.DropDownList("BookGrade2", list, new { @class = "l-text-field", @style = "height:30px;width:150px;" })
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        &nbsp; &nbsp;创建时间：
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                            <input type="text" class="form-control" v-model="ClassS.CreateTime" id="exampleInputEmail4" OnFocus="WdatePicker()" placeholder="请选择创建时间">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" v-on:click="Update" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </div>
 <script>
     var a = new Vue({
         el: '.container',
         data: {
-            ClassS: [],
+            ClassS1: [],
             Name: '',
-            Chapter: {
-                BookID: '',
-                ChapterName: '',
-                ChapterID: ''
+            TeacherName: '',
+            ClassS: {
+                ClassID: '',
+                ClassName: '',
+                MasterName: '',
+                TeacharName: '',
+                GradeName: '',
+                CreateTime: ''
             }
         },
         created() {
@@ -67,8 +189,8 @@
         },
         methods: {
             Init() {
-                axios.post('/Chapter/List', { page: '0' }).then(Response => {
-                    this.ChapterS = Response.data.Li;
+                axios.post('/Class/List', { page: '0' }).then(Response => {
+                    this.ClassS1 = Response.data.Li;
                     $('#CuntYe').text(Response.data.Ye);
                     $('#Ye').text("1");
                 })
@@ -78,8 +200,8 @@
                 var Grade = $('#BookGrade').val();
                 var TiName = this.Name;
                 var a = "1";
-                axios.post('/Chapter/Select', { page: a, TextBookID: Grade, ChapterName: TiName }).then(Response => {
-                    this.ChapterS = Response.data.Li;
+                axios.post('/Class/Select', { page: a, GradeID: Grade, ClassName: this.Name, TeacherName: this.TeacherName }).then(Response => {
+                    this.ClassS1 = Response.data.Li;
                 })
                 $('#Ye').text(a);
             },
@@ -92,8 +214,8 @@
                     alert("已经是最后一页了");
                 }
                 else {
-                    axios.post('/Chapter/Select', { page: parseInt($('#Ye').text()) + 1, TextBookID: Grade, ChapterName: TiName }).then(Response => {
-                        this.ChapterS = Response.data.Li;
+                    axios.post('/Class/Select', { page: parseInt($('#Ye').text()) + 1, GradeID: Grade, ClassName: this.Name, TeacherName: this.TeacherName }).then(Response => {
+                        this.ClassS1 = Response.data.Li;
                     })
                     $('#Ye').text(a);
                 }
@@ -108,8 +230,8 @@
                     $('#Ye').text(1);
                 }
                 else {
-                    axios.post('/Chapter/Select', { page: a, TextBookID: Grade, ChapterName: TiName }).then(Response => {
-                        this.ChapterS = Response.data.Li;
+                    axios.post('/Class/Select', { page: a, GradeID: Grade, ClassName: this.Name, TeacherName: this.TeacherName }).then(Response => {
+                        this.ClassS1 = Response.data.Li;
                     })
                     $('#Ye').text(a);
                 }
@@ -119,63 +241,56 @@
                 var Grade = $('#BookGrade').val();
                 var TiName = this.Name;
                 var a = $('#CuntYe').text();
-                axios.post('/Chapter/Select', { page: a, TextBookID: Grade, ChapterName: TiName }).then(Response => {
-                    this.ChapterS = Response.data.Li;
+                axios.post('/Class/Select', { page: a, GradeID: Grade, ClassName: this.Name, TeacherName: this.TeacherName }).then(Response => {
+                    this.ClassS1 = Response.data.Li;
                 })
                 $('#Ye').text(a);
             },
             //查询
             Select() {
                 var Grade = $('#BookGrade').val();
-                alert(Grade);
                 var TiName = this.Name;
-                axios.post('/Chapter/Select', { page: 0, TextBookID: Grade, ChapterName: TiName }).then(Response => {
-                    this.ChapterS = Response.data.Li;
+                axios.post('/Class/Select', { page: 0, GradeID: Grade, ClassName: this.Name, TeacherName: this.TeacherName }).then(Response => {
+                    this.ClassS1 = Response.data.Li;
                     $('#CuntYe').text(Response.data.Ye);
                     $('#Ye').text(1);
                 })
             },
-            //添加章节
+            //添加班级信息
             ADD() {
                 var BookID = $('#BookGrade1').val();
                 if (parseInt(BookID) > 0) {
-                    this.Chapter.BookID = BookID;
-                    axios.post('/Chapter/ADD', this.Chapter).then(Response => {
-                        if (Response.data != "失败") {
-                            alert("添加成功");
+                    this.ClassS.GradeName = BookID;
+                    this.ClassS.CreateTime = $('#exampleInputEmail4').val();
+                    axios.post('/Class/ADD', this.ClassS).then(Response =>
+                    {
+                        alert(Response.data);
                             this.Init();
-                        }
-                        else {
-                            alert("已经拥有该教材，请重新添加");
-                        }
-                        ModuleQ();
+                         ModuleQ();
 
                     })
 
                 } else
-                    alert("请选择正确的教材");
+                    alert("请选择正确的年级");
             },
             Clear(e) {
                 if (confirm("确定要删除吗？")) {
-                    var BookName = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(1)').text();
-                    this.Chapter.ChapterName = BookName;
-                    this.Chapter.ChapterID = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(0)').text();
-                    axios.post('/Chapter/Clear', this.Chapter).then(Response => {
-                        if (Response.data != "失败") {
-                            alert("删除成功");
+
+                    this.ClassS.ClassName = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(1)').text();
+                    this.ClassS.ClassID = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(0)').text();
+                    axios.post('/Class/Clear', this.ClassS).then(Response => {
+                        alert(Response.data);
                             this.Init();
-                        } else {
-                            alert("删除失败");
-                        }
                     })
                 }
             },
             ChuUpdate(e) {
-                Shu = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(2)').text();
-                ShuN = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(1)').text();
+                this.ClassS.MasterNames = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(2)').text();
+                this.ClassS.ClassName = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(1)').text();
+
                 var ops = document.getElementById("BookGrade2").options;//取出下拉列表的项对象集合
                 for (var i = 0; i < ops.length; i++) {//遍历集合
-                    if (Shu == ops[i].text) {//如果该项的value等于文本框填写的值
+                    if (""== ops[i].text) {//如果该项的value等于文本框填写的值
                         document.getElementById("BookGrade2").options[i].selected = "selected";//设定下拉列表相应的下拉项的选中
                         break;
                     }
@@ -197,7 +312,6 @@
             },
             //重置
             Result() {
-                this.Name = '';
                 var ops = document.getElementById("BookGrade").options;//取出下拉列表的项对象集合
                 for (var i = 0; i < ops.length; i++) {//遍历集合
                     if ("全部" == ops[i].text) {//如果该项的value等于文本框填写的值
@@ -206,7 +320,7 @@
                     }
                 }
                 this.Name = "";
-                this.Chapter.ChapterName = '';
+                this.TeacharName = "";
                 this.Init();
             }
         }

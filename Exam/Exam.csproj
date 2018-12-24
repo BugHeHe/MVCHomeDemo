@@ -268,9 +268,24 @@
     <Content Include="Lis\jquery.metisMenu.js" />
     <Content Include="Lis\jquery.slimscroll.min.js" />
     <Content Include="Lis\layer.min.js" />
+    <Content Include="Lis\My97DatePicker\calendar.js" />
+    <Content Include="Lis\My97DatePicker\config.js" />
+    <Content Include="Lis\My97DatePicker\lang\en.js" />
+    <Content Include="Lis\My97DatePicker\lang\zh-cn.js" />
+    <Content Include="Lis\My97DatePicker\lang\zh-tw.js" />
+    <Content Include="Lis\My97DatePicker\My97DatePicker.htm" />
+    <Content Include="Lis\My97DatePicker\skin\datePicker.gif" />
+    <Content Include="Lis\My97DatePicker\skin\default\datepicker.css" />
+    <Content Include="Lis\My97DatePicker\skin\default\img.gif" />
+    <Content Include="Lis\My97DatePicker\skin\WdatePicker.css" />
+    <Content Include="Lis\My97DatePicker\skin\whyGreen\bg.jpg" />
+    <Content Include="Lis\My97DatePicker\skin\whyGreen\datepicker.css" />
+    <Content Include="Lis\My97DatePicker\skin\whyGreen\img.gif" />
+    <Content Include="Lis\My97DatePicker\WdatePicker.js" />
     <Content Include="Lis\pace.min.js" />
     <Content Include="Lis\style.min.css" />
     <Content Include="Lis\vue.js" />
+    <Content Include="Lis\WdatePicker.js" />
     <Content Include="Models\Model1.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Model1.edmx</DependentUpon>
@@ -293,6 +308,8 @@
     <Content Include="Models\Model1.edmx.diagram">
       <DependentUpon>Model1.edmx</DependentUpon>
     </Content>
+    <Content Include="Lis\My97DatePicker\skin\default\Thumbs.db" />
+    <Content Include="Lis\My97DatePicker\skin\whyGreen\Thumbs.db" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

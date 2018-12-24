@@ -39,7 +39,6 @@ namespace Exam.Controllers
             var Tili = new { Li = li.Skip((ye - 1) * 10).Take(10), Ye = CountYe, Hang = page };
             return Json(Tili, JsonRequestBehavior.AllowGet);
         }
-
         /// <summary>
         /// 查询返回分页 可以根据章节名称以及教材
         /// </summary>
@@ -81,8 +80,6 @@ namespace Exam.Controllers
             var Tili = new { Li = pagedList.Skip((ye - 1) * 10).Take(10).ToList(), Ye = CountYe, Hang = page };
             return Json(Tili, JsonRequestBehavior.AllowGet);
         }
-
-
         /// <summary>
         /// 添加教材
         /// </summary>
