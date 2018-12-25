@@ -169,6 +169,7 @@
     <Compile Include="Controllers\GRadeCController.cs" />
     <Compile Include="Controllers\LoginExamGouController.cs" />
     <Compile Include="Controllers\MoKuaiController.cs" />
+    <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -247,6 +248,7 @@
     </Compile>
     <Compile Include="Models\ViewModels\ChapterS.cs" />
     <Compile Include="Models\ViewModels\ClassS.cs" />
+    <Compile Include="Models\ViewModels\StudentS.cs" />
     <Compile Include="Models\ViewModels\TextBooks.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -340,6 +342,7 @@
     <Content Include="Views\GRadeC\Index.cshtml" />
     <Content Include="Views\Chapter\Index.cshtml" />
     <Content Include="Views\Class\Index.cshtml" />
+    <Content Include="Views\Student\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -140,6 +140,11 @@ namespace Exam.Controllers
             
         }
 
+        /// <summary>
+        /// 删除指定的对象
+        /// </summary>
+        /// <param name="te"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult Clear(ClassS te)
         {
@@ -152,6 +157,49 @@ namespace Exam.Controllers
             }
             else
                 return Content("失败");
+        }
+        
+        [HttpPost]
+        public ActionResult Update(ClassS te)
+        {
+            try
+            {
+                ClassS t = te;
+                Class cl = new Class();
+                cl.ClassID = te.ClassID;
+                cl.ClassName = te.ClassName;
+                cl.GradeID = Convert.ToInt32(t.GradeName);
+                Teacher a = ef.Teachers.FirstOrDefault(x => x.TeacherName == t.MasterName);
+                foreach (var item in ef.Teachers.ToList())
+                {
+                    if (item.TeacherName == t.MasterName)
+                    {
+                        cl.MasterID = item.TeacherID;
+                    }
+                    if (item.TeacherName == t.TeacharName)
+                    {
+                        cl.TeacharID = item.TeacherID;
+                    }
+                }
+
+                if (string.IsNullOrEmpty(te.CreateTime))
+                {
+                    cl.CreateTime = DateTime.Now;
+                }
+                else
+                cl.CreateTime = DateTime.Parse(te.CreateTime);
+                ef.Configuration.EnsureTransactionsForFunctionsAndCommands = false;
+                ef.Entry(cl).State = EntityState.Modified;
+                if (ef.SaveChanges() > 0)
+                {
+                    return Content("修改成功");
+                }
+                return Content("失败");
+            }
+            catch (Exception ex)
+            {
+                return Content("请输入正确的班主任或者教员名称");
+            }
         }
         public  List<ClassS> Show()
         {

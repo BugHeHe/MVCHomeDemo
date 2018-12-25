@@ -1,0 +1,276 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<script src="~/Lis/axios.js"></script>
+<script src="~/Lis/vue.js"></script>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="~/Lis/My97DatePicker/WdatePicker.js"></script>
+<style>
+    .form-inline {
+        margin-top: 10px;
+    }
+</style>
+<div class="container">
+    <h3>学生列表</h3>
+    <hr />
+    <div class="form-inline">
+        学生名称：
+        <div class="form-group" style="margin-left:10px;">
+            <label class="sr-only" for="exampleInputEmail3"></label>
+            <input type="text" class="form-control" v-model="Name" id="exampleInputEmail3" placeholder="请输入学生名称">
+        </div>
+        @{
+            List<SelectListItem> list = ViewData["Grade"] as List<SelectListItem>;
+        }
+        班级名称：@Html.DropDownList("BookGrade", list, new { @class = "l-text-field", @style = "height:30px;width:150px;" })
+        <button class="btn btn-primary" v-on:click="Select" style="margin-left:10px;">查询</button>
+        <button class="btn btn-primary" v-on:click="Result" style="margin-left:10px;">重置</button>
+        <button class="btn btn-success" style="margin-left:10px;" data-toggle="modal" data-target="#AddModal">添加</button>
+        <button class="btn btn-success" style="margin-left:10px">导出数据</button>
+    </div>
+    <table class="table table-bordered" style="margin-top:10px;">
+        <tr>
+            <td>编号</td>
+            <td>姓名</td>
+            <td>密码</td>
+            <td>性别</td>
+            <td>所属班级</td>
+            <td>电话</td>
+            <td>身份证号</td>
+            <td>出生日期</td>
+            <td>操作</td>
+        </tr>
+        <tr v-for="s in Student1">
+            <td>{{s.StudentID}}</td>
+            <td>{{s.StudentName}}</td>
+            <td>{{s.Password}}</td>
+            <td>{{s.Gender}}</td>
+            <td>{{s.ClassName}}</td>
+            <td>{{s.Phone}}</td>
+            <td>{{s.CardID}}</td>
+            <td>{{s.Borndate}}</td>
+            <td><span class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#AddModa2" style="cursor:pointer"></span><span class="glyphicon glyphicon-remove" style="margin-left:5px; cursor:pointer"></span></td>
+        </tr>
+    </table>
+    每页 10 条记录，共<span id="CuntYe"></span>页，当前第<span id="Ye">0</span>页
+    <button class="btn btn-primary" v-on:click="ShouYe">首页</button>
+    <button class="btn btn-primary" v-on:click="ShangYe">上一页</button>
+    <button class="btn btn-primary" v-on:click="XiaYe">下一页</button>
+    <button class="btn btn-primary" v-on:click="MoYe">末页</button>
+    @*模态框 用来添加学生信息*@
+    <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">添加学生信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-inline">
+                        学员名称：
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                            <input type="text" class="form-control" v-model="StudentS.StudentName" id="exampleInputEmail3" placeholder="请输入学员名称">
+                        </div>
+                    </div>
+
+                    <div class="form-inline">
+                        &nbsp; &nbsp;&nbsp; &nbsp;  密码：
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                            <input type="text" class="form-control" v-model="StudentS.Password" id="exampleInputEmail3" placeholder="请输入密码">
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        &nbsp; &nbsp; &nbsp; &nbsp;  性别：
+                        <div class="form-group">
+                            <label class="radio-inline">
+                                <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">男
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">女
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        &nbsp; &nbsp; &nbsp; &nbsp; 电话：
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                            <input type="text" class="form-control" v-model="StudentS.Phone" id="exampleInputEmail3" placeholder="请输入电话号名称">
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        身份证号：
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                            <input type="text" class="form-control" v-model="StudentS.CardID" id="exampleInputEmail3" placeholder="请输入身份证号名称">
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        家庭住址：
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                            <input type="text" class="form-control" v-model="StudentS.Address" id="exampleInputEmail3" placeholder="请输入家庭住址">
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        &nbsp; &nbsp; &nbsp; &nbsp; 邮箱：
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                            <input type="text" class="form-control" v-model="StudentS.Email" id="exampleInputEmail3" placeholder="请输入邮箱">
+                        </div>
+                    </div>
+                    <div class="form-inline" style="margin-top:10px;">
+                        所属年级：
+                        <div class="form-group">
+                            @Html.DropDownList("BookGrade1", list, new { @class = "l-text-field", @style = "height:30px;width:150px;" })
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        出生日期：
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                            <input type="text" class="form-control" v-model="StudentS.Borndate" id="exampleInputEmail4" OnFocus="WdatePicker()" placeholder="请选择出生日期">
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        入学时间：
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                            <input type="text" class="form-control" v-model="StudentS.CreateTime" id="exampleInputEmail4" OnFocus="WdatePicker()" placeholder="请选择入学时间">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" v-on:click="ADD" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    var a = new Vue({
+        el: '.container',
+        data: {
+            Student1: [],
+            Name: '',
+            StudentS: {
+                StudentID: '',
+                StudentName: '',
+                Password: '',
+                Gender: '',
+                ClassName: '',
+                Phone: '',
+                CardID: '',
+                Borndate: '',
+                Address: '',
+                Email: '',
+                CreateTime:''
+            }
+        },
+        created() {
+            this.Init();
+        },
+        methods: {
+            Init() {
+                axios.post('/Student/List', { page: '0' }).then(Response => {
+                    this.Student1 = Response.data.Li;
+                    $('#CuntYe').text(Response.data.Ye);
+                    $('#Ye').text("1");
+                })
+            },
+            ShouYe() {
+                var Grade = $('#BookGrade').val();
+                var a = "1";
+                axios.post('/Student/Select', { page: a, ClassID: Grade, StudentName: this.Name }).then(Response => {
+                    this.Student1 = Response.data.Li;
+                })
+                $('#Ye').text(a);
+            },
+            XiaYe() {
+                var Grade = $('#BookGrade').val();
+                var a = parseInt($('#Ye').text()) + 1;
+                if (parseInt($('#Ye').text()) >= parseInt($('#CuntYe').text())) {
+                    alert("已经是最后一页了");
+                }
+                else {
+                    axios.post('/Student/Select', { page: parseInt($('#Ye').text()) + 1, ClassID: Grade, StudentName: this.Name }).then(Response => {
+                        this.Student1 = Response.data.Li;
+                    })
+                    $('#Ye').text(a);
+                }
+            },
+            ShangYe() {
+                var Grade = $('#BookGrade').val();
+                var a = parseInt($('#Ye').text()) - 1;
+                if (a <= 0) {
+                    alert("已经是第一页了");
+                    $('#Ye').text(1);
+                }
+                else {
+                    axios.post('/Student/Select', { page: a, ClassID: Grade, StudentName: this.Name }).then(Response => {
+                        this.Student1 = Response.data.Li;
+                    })
+                    $('#Ye').text(a);
+                }
+            },
+            MoYe() {
+                var Grade = $('#BookGrade').val();
+                var a = $('#CuntYe').text();
+                axios.post('/Student/Select', { page: a, ClassID: Grade, StudentName: this.Name }).then(Response => {
+                    this.Student1 = Response.data.Li;
+                })
+                $('#Ye').text(a);
+            },
+            //查询
+            Select() {
+                var Grade = $('#BookGrade').val();
+                axios.post('/Student/Select', { page: 0, ClassID: Grade, StudentName: this.Name }).then(Response => {
+                    this.Student1 = Response.data.Li;
+                    $('#CuntYe').text(Response.data.Ye);
+                    $('#Ye').text(1);
+                })
+            },
+            //重置
+            Result() {
+                var ops = document.getElementById("BookGrade").options;//取出下拉列表的项对象集合
+                for (var i = 0; i < ops.length; i++) {//遍历集合
+                    if ("不限" == ops[i].text) {//如果该项的value等于文本框填写的值
+                        document.getElementById("BookGrade").options[i].selected = "selected";//设定下拉列表相应的下拉项的选中
+                        break;
+                    }
+                }
+                this.Kong();
+                this.Init();
+            },
+            //添加
+
+
+            Kong() {
+                this.Student1.StudentID = "";
+                this.Student1.StudentName = "";
+                this.Student1.Password = "";
+                this.Student1.Gender = "";
+                this.Student1.ClassName = "";
+                this.Student1.Phone = "";
+                this.Student1.CardID= '',
+                this.Student1.Borndate= ''
+            }
+        }
+    });
+    function ModuleQ() {
+        $('#AddModal').hide();
+        $('#AddModa2').hide();
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open');
+    }
+</script>
+
+
+

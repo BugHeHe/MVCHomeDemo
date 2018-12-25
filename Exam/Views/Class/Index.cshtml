@@ -266,8 +266,8 @@
                     {
                         alert(Response.data);
                             this.Init();
-                         ModuleQ();
-
+                        ModuleQ();
+                        this.Kong();
                     })
 
                 } else
@@ -285,30 +285,30 @@
                 }
             },
             ChuUpdate(e) {
-                this.ClassS.MasterNames = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(2)').text();
+                this.ClassS.MasterName= $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(2)').text();
                 this.ClassS.ClassName = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(1)').text();
-
+                this.ClassS.TeacharName = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(3)').text();
+                this.ClassS.GradeName = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(4)').text();
+                this.ClassS.ClassID = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(0)').text();
+                this.ClassS.CreateTime = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(5)').text();
                 var ops = document.getElementById("BookGrade2").options;//取出下拉列表的项对象集合
                 for (var i = 0; i < ops.length; i++) {//遍历集合
-                    if (""== ops[i].text) {//如果该项的value等于文本框填写的值
+                    if (this.ClassS.GradeName == ops[i].text) {//如果该项的value等于文本框填写的值
                         document.getElementById("BookGrade2").options[i].selected = "selected";//设定下拉列表相应的下拉项的选中
                         break;
                     }
                 }
-                this.Chapter.ChapterName = ShuN;
-                this.Chapter.BookID = $('#BookGrade2').val();
-                this.Chapter.ChapterID = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(0)').text();
             },
-            //修改章节
+            //修改班级对象
             Update() {
-                axios.post('/Chapter/Update', this.Chapter).then(Response => {
-                    if (Response.data != "失败") {
-                        alert("修改成功");
-                        this.Init();
-                    } else
-                        alert("修改失败");
+                this.ClassS.GradeName = $('#BookGrade2').val();
+                axios.post('/Class/Update',this.ClassS).then(Response =>
+                {
+                    alert(Response.data);
+                    this.Init();
                     ModuleQ();
                 })
+                this.Kong();
             },
             //重置
             Result() {
@@ -319,9 +319,16 @@
                         break;
                     }
                 }
-                this.Name = "";
-                this.TeacharName = "";
+                this.Kong();
                 this.Init();
+            },
+            Kong() {
+                this.ClassS.ClassID = "";
+                this.ClassS.ClassName = "";
+                this.ClassS.MasterName = "";
+                this.ClassS.TeacharName = "";
+                this.ClassS.GradeName = "";
+                this.ClassS.CreateTime = "";
             }
         }
     });
