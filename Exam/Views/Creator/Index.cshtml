@@ -1,0 +1,58 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<script src="~/Lis/axios.js"></script>
+<script src="~/Lis/vue.js"></script>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="~/Lis/My97DatePicker/WdatePicker.js"></script>
+<div class="container">
+    <h3>录题统计</h3>
+    <hr />
+    <div class="form-inline">
+        开始时间：
+        <div class="form-group" style="margin-left:10px;">
+            <label class="sr-only" for="exampleInputEmail3"></label>
+            <input type="text" onfocus="WdatePicker()" class="form-control" v-model="Name" id="exampleInputEmail3" placeholder="请输入选择开始时间">
+        </div>
+        结束时间：
+        <div class="form-group" style="margin-left:10px;">
+            <label class="sr-only" for="exampleInputEmail3"></label>
+            <input type="text" onfocus="WdatePicker()" class="form-control" v-model="Name" id="exampleInputEmail3" placeholder="请输入选择开始时间">
+        </div>
+        <button class="btn btn-primary" style="margin-left:10px;">查询</button>
+        <button class="btn btn-primary" style="margin-left:10px;">查询重置</button>
+        <table class="table table-bordered">
+            <tr>
+                <td>教员名称</td>
+                <td>录题数量</td>
+            </tr>
+            <tr v-for="s in CountTeacher">
+                <td>{{s.Name}}</td>
+                <td>{{s.Count}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+<script>
+    var a = new Vue({
+        el: '.container',
+        data: {
+            CountTeacher:[]
+        },
+        created() {
+            this.Init();
+        },
+        methods:{
+            Init() {
+                axios.post('/Creator/List').then(Response => {
+                    this.CountTeacher = Response.data;
+                })
+            }
+        }
+    });
+</script>
+

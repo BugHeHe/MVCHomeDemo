@@ -1,0 +1,210 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<script src="~/Lis/axios.js"></script>
+<script src="~/Lis/vue.js"></script>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<div class="container">
+    <h3>试题类型</h3>
+    <hr />
+    <div class="form-inline">
+        类型名称：
+        <div class="form-group" style="margin-left:10px;">
+            <label class="sr-only" for="exampleInputEmail3"></label>
+            <input type="text" class="form-control" v-model="Name" id="exampleInputEmail3" placeholder="请输入类型名称">
+        </div>
+        <button class="btn btn-primary" v-on:click="Select" style="margin-left:10px;">查询</button>
+        <button class="btn btn-success" style="margin-left:10px;" data-toggle="modal" data-target="#AddModal">添加</button>
+    </div>
+    <table class="table table-bordered" style="margin-top:10px;">
+        <tr>
+            <td>编号</td>
+            <td>类型</td>
+            <td>操作</td>
+        </tr>
+        <tr v-for="s in PaperTypeS">
+            <td>{{s.TypeID}}</td>
+            <td>{{s.TypeName}}</td>
+            <td><span class="glyphicon glyphicon-pencil" v-on:click="Upda" data-toggle="modal" data-target="#AddModa2" style="cursor:pointer"></span><span class="glyphicon glyphicon-remove" v-on:click="Clear" style="margin-left:5px; cursor:pointer"></span></td>
+        </tr>
+    </table>
+    每页 10 条记录，共<span id="CuntYe"></span>页，当前第<span id="Ye">0</span>页
+    <button class="btn btn-primary" v-on:click="ShouYe">首页</button>
+    <button class="btn btn-primary" v-on:click="ShangYe">上一页</button>
+    <button class="btn btn-primary" v-on:click="XiaYe">下一页</button>
+    <button class="btn btn-primary" v-on:click="MoYe">末页</button>
+    @*模态框 用来添加考试类型信息*@
+    <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">添加考试类型</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-inline">
+                        类型名称：
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                            <input type="text" v-model="PaperType.TypeName" class="form-control" id="exampleInputEmail3" placeholder="请输入类型名称">
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" v-on:click="ADD" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*模态框 用来修改考试类型信息*@
+    <div class="modal fade" id="AddModa2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">添加考试类型</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-inline">
+                        类型名称：
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                            <input type="text" v-model="PaperType.TypeName" class="form-control" id="exampleInputEmail3" placeholder="请输入类型名称">
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" v-on:click="Update" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    var a = new Vue({
+        el: '.container',
+        data: {
+            PaperTypeS: [],
+            Name: '',
+            PaperType: {
+                TypeID: '',
+                TypeName: ''
+            }
+        },
+        created() {
+            this.Init();
+        },
+        methods: {
+            Init() {
+                axios.post('/PaperType/List', { page: '0' }).then(Response => {
+                    this.PaperTypeS = Response.data.Li;
+                    $('#CuntYe').text(Response.data.Ye);
+                    $('#Ye').text("1");
+                })
+            },
+            //首页
+            ShouYe() {
+                var a = "1";
+                axios.post('/PaperType/Select', { page: a, Name: this.Name }).then(Response => {
+                    this.PaperTypeS = Response.data.Li;
+                })
+                $('#Ye').text(a);
+            },
+            //分页的下一页
+            XiaYe() {
+                var a = parseInt($('#Ye').text()) + 1;
+                if (parseInt($('#Ye').text()) >= parseInt($('#CuntYe').text())) {
+                    alert("已经是最后一页了");
+                }
+                else {
+                    axios.post('/PaperType/Select', { page: parseInt($('#Ye').text()) + 1, Name: this.Name }).then(Response => {
+                        this.PaperTypeS = Response.data.Li;
+                    })
+                    $('#Ye').text(a);
+                }
+            },
+            //分页的上一页
+            ShangYe() {
+                var a = parseInt($('#Ye').text()) - 1;
+                if (a <= 0) {
+                    alert("已经是第一页了");
+                    $('#Ye').text(1);
+                }
+                else {
+                    axios.post('/PaperType/Select', { page: a, Name: this.Name }).then(Response => {
+                        this.PaperTypeS = Response.data.Li;
+                    })
+                    $('#Ye').text(a);
+                }
+            },
+            //最后一页
+            MoYe() {
+                var a = $('#CuntYe').text();
+                axios.post('/PaperType/Select', { page: a, Name: this.Name }).then(Response => {
+                    this.PaperTypeS = Response.data.Li;
+                })
+                $('#Ye').text(a);
+            },
+            //查询
+            Select() {
+                axios.post('/PaperType/Select', { page: 0, Name: this.Name }).then(Response => {
+                    this.PaperTypeS = Response.data.Li;
+                    $('#CuntYe').text(Response.data.Ye);
+                    $('#Ye').text(1);
+                })
+            },
+            ADD() {
+                axios.post('/PaperType/ADD', this.PaperType).then(Response =>
+                {
+                    alert(Response.data);
+                    this.Init();
+                    ModuleQ();
+                })
+            },
+            Upda(e) {
+                this.PaperType.TypeID = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(0)').text();
+                this.PaperType.TypeName = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(1)').text();
+            },
+            Update() {
+                axios.post('/PaperType/Update', this.PaperType).then(Response =>
+                {
+                    alert(Response.data);
+                    this.Init();
+                    ModuleQ();
+                    this.Kong();
+                })
+            },
+            Clear(e) {
+                if (confirm("确定要删除吗？")) {
+                    this.PaperType.TypeID = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(0)').text();
+                    this.PaperType.TypeName = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(1)').text();
+                    axios.post('/PaperType/Clear', this.PaperType).then(Response => {
+                        alert(Response.data);
+                        this.Init();
+                        this.Kong();
+                    })
+                }
+            },
+            Kong() {
+                this.PaperType.TypeID = '';
+                this.PaperType.TypeName = '';
+            }
+        }
+    });
+    function ModuleQ() {
+        $('#AddModal').hide();
+        $('#AddModa2').hide();
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open');
+    }
+</script>
+

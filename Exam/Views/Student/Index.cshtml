@@ -29,7 +29,7 @@
         班级名称：@Html.DropDownList("BookGrade", list, new { @class = "l-text-field", @style = "height:30px;width:150px;" })
         <button class="btn btn-primary" v-on:click="Select" style="margin-left:10px;">查询</button>
         <button class="btn btn-primary" v-on:click="Result" style="margin-left:10px;">重置</button>
-        <button class="btn btn-success" style="margin-left:10px;" data-toggle="modal" data-target="#AddModal">添加</button>
+        <button class="btn btn-success"  style="margin-left:10px;" data-toggle="modal" data-target="#AddModal">添加</button>
         <button class="btn btn-success" style="margin-left:10px">导出数据</button>
     </div>
     <table class="table table-bordered" style="margin-top:10px;">
@@ -250,7 +250,15 @@
                 this.Init();
             },
             //添加
-
+            ADD() {
+                alert($('#inlineRadio1'));
+                //axios.post('/StudentS/ADD', this.Student1).then(Response =>
+                //{
+                //    alert(Response.data);
+                //    this.Init();
+                //    ModuleQ();
+                //})
+            },
 
             Kong() {
                 this.Student1.StudentID = "";

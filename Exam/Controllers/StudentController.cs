@@ -79,6 +79,25 @@ namespace Exam.Controllers
         }
 
 
+       [HttpPost]
+       public ActionResult ADD(StudentS s)
+        {
+            try
+            {
+                ef.Configuration.EnsureTransactionsForFunctionsAndCommands = false;
+                ef.Entry(s).State = EntityState.Modified;
+                if (ef.SaveChanges() > 0)
+                {
+                    return Content("增加成功");
+                }
+                return Content("失败");
+            }
+            catch
+            {
+                return Content("已经存在");
+            }
+        }
+
         /// <summary>
         /// 返回属于学生类型的集合
         /// </summary>
