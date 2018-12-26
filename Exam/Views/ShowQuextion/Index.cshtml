@@ -3,4 +3,210 @@
     ViewBag.Title = "Index";
     Layout = null;
 }
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<script src="~/Lis/axios.js"></script>
+<script src="~/Lis/vue.js"></script>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="~/Lis/ueditor/ueditor.config.js"></script>
+<script src="~/Lis/ueditor/ueditor.all.min.js"></script>
+<script src="~/Lis/ueditor/lang/zh-cn/zh-cn.js"></script>
+<div class="container">
+    <h3>试题列表</h3>
+    <hr />
+    <div class="form-inline">
+        题干：
+        <div class="form-group" style="margin-left:10px;">
+            <label class="sr-only" for="exampleInputEmail3"></label>
+            <input type="text" class="form-control" id="exampleInputEmail3" placeholder="请输入题干名称">
+        </div>
+
+        年级:
+        <select id="GradeName" style="height:30px;width:80px;" v-on:change="GradeBian">
+            <option v-for="a in GradeList">{{a.GradeName}}</option>
+        </select>
+        教材:
+        <select id="BookName" style="height:30px;" v-on:change="BookBian">
+            <option v-for="a in BookList">{{a.BookName}}</option>
+        </select>
+        章节:
+        <select id="ChapterName" style="height:30px;">
+            <option v-for="a in Chapter">{{a.ChapterName}}</option>
+        </select>
+        @*操作*@
+        <button class="btn btn-primary" v-on:click="Select" style="margin-left:10px;">查询</button>
+        <button class="btn btn-primary" v-on:click="Resule" style="margin-left:10px;">重置</button>
+    </div>
+    <table class="table table-bordered" style="margin-top:10px;">
+        <tr>
+            <td style="width:700px;">题干</td>
+            <td style="width:100px;">试题类别</td>
+            <td>教材</td>
+            <td>年级</td>
+            <td style="width:90px;">章节</td>
+            <td style="width:90px;">录题人</td>
+            <td>难易度</td>
+            <td style="width:30px;">操作</td>
+        </tr>
+        <tr v-for="s in QuestionS">
+            <td style="width:700px;">{{s.QuestionTitle}}</td>
+            <td style="width:100px;">{{s.QuestionType}}</td>
+            <td>{{s.BookIDName}}</td>
+            <td>{{s.GradeName}}</td>
+            <td style="width:90px;">{{s.ChapterIDName}}</td>
+            <td style="width:90px;">{{s.CreatorName}}</td>
+            <td>{{s.QuestionLevel}}</td>
+            <td style="width:30px;"><i class="glyphicon glyphicon-sunglasses"  data-toggle="modal" data-target="#AddModal" style="cursor:pointer"></i></td>
+        </tr>
+    </table>
+    每页 10 条记录，共<span id="CuntYe"></span>页，当前第<span id="Ye">0</span>页
+    <button class="btn btn-primary" v-on:click="ShouYe">首页</button>
+    <button class="btn btn-primary" v-on:click="ShangYe">上一页</button>
+    <button class="btn btn-primary" v-on:click="XiaYe">下一页</button>
+    <button class="btn btn-primary" v-on:click="MoYe">末页</button>
+
+
+    <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h1 class="modal-title" id="myModalLabel">查看</h1>
+                </div>
+                <div class="modal-body">
+                    类型:<div class="form-group" style="margin-left:10px;">
+    <label class="sr-only" for="exampleInputEmail3"></label>
+    <input type="text" class="form-control" id="exampleInputEmail3" placeholder="请输入题干名称">
+</div>
+                    难易度:
+                    <div class="form-group">
+                        <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                        <input type="text" class="form-control" id="exampleInputEmail3">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button"  class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var a = new Vue({
+        el: '.container',
+        data: {
+            QuestionS: [],
+            Name: '',
+            BookList: [{ BookName: "全部" }],
+            GradeList: [],
+            Chapter: [{ ChapterName: "全部" }]
+        },
+        created() {
+            this.Init();
+            this.In1();
+        },
+        methods: {
+            Init() {
+                axios.post('/ShowQuextion/List', { page: '0' }).then(Response => {
+                    this.QuestionS = Response.data.Li;
+                    $('#CuntYe').text(Response.data.Ye);
+                    $('#Ye').text("1");
+                })
+            },
+            In1() {
+                axios.post('/ShowQuextion/GradeList').then(Response => {
+                    this.GradeList = Response.data;
+                })
+            },
+            GradeBian() {
+                if ($('#GradeName').val() == "全部" || $('#GradeName').val() == "全部") {
+                    this.Chapter = [{ ChapterName: "全部" }];
+                    this.BookList = [{ BookName: "全部" }];
+                } else {
+                    axios.post('/ShowQuextion/BookList', { GradeID: $('#GradeName').val() }).then(Response => {
+                        this.BookList = Response.data;
+                    })
+                }
+
+            },
+            BookBian() {
+                if ($('#BookName').val() == "全部" || $('#GradeName').val() == "全部") {
+                    this.Chapter = [{ ChapterName: "全部" }];
+                    this.BookList = [{ BookName: "全部" }];
+                } else {
+                    axios.post('/ShowQuextion/ChapterList', { Chapter: $('#BookName').val() }).then(Response => {
+                        this.Chapter = Response.data;
+                    })
+                }
+            },
+            Select() {
+                axios.post('/ShowQuextion/Select', { page: 0, Title: $('#exampleInputEmail3').val(), GradeName: $('#GradeName').val(), BookName: $('#BookName').val(), ChapterName: $('#ChapterName').val() }).then(Response => {
+                    this.QuestionS = Response.data.Li;
+                    $('#CuntYe').text(Response.data.Ye);
+                    if ($('#CuntYe').text() == "0")
+                        $('#Ye').text("0");
+                    else
+                        $('#Ye').text("1");
+                })
+            },
+            //首页
+            ShouYe() {
+                var a = "1";
+                axios.post('/ShowQuextion/Select', { page: a, Title: $('#exampleInputEmail3').val(), GradeName: $('#GradeName').val(), BookName: $('#BookName').val(), ChapterName: $('#ChapterName').val() }).then(Response => {
+                    this.QuestionS = Response.data.Li;
+                })
+                $('#Ye').text(a);
+            },
+            //分页的下一页
+            XiaYe() {
+                var a = parseInt($('#Ye').text()) + 1;
+                if (parseInt($('#Ye').text()) >= parseInt($('#CuntYe').text())) {
+                    alert("已经是最后一页了");
+                }
+                else {
+                    axios.post('/ShowQuextion/Select', { page: parseInt($('#Ye').text()) + 1, Title: $('#exampleInputEmail3').val(), GradeName: $('#GradeName').val(), BookName: $('#BookName').val(), ChapterName: $('#ChapterName').val() }).then(Response => {
+                        this.QuestionS = Response.data.Li;
+                    })
+                    $('#Ye').text(a);
+                }
+            },
+            //分页的上一页
+            ShangYe() {
+                var a = parseInt($('#Ye').text()) - 1;
+                if (a <= 0) {
+                    alert("已经是第一页了");
+                    $('#Ye').text(1);
+                }
+                else {
+                    axios.post('/ShowQuextion/Select', { page: a, Title: $('#exampleInputEmail3').val(), GradeName: $('#GradeName').val(), BookName: $('#BookName').val(), ChapterName: $('#ChapterName').val() }).then(Response => {
+                        this.QuestionS = Response.data.Li;
+                    })
+                    $('#Ye').text(a);
+                }
+            },
+            //最后一页
+            MoYe() {
+                var a = $('#CuntYe').text();
+                axios.post('/ShowQuextion/Select', { page: a, Title: $('#exampleInputEmail3').val(), GradeName: $('#GradeName').val(), BookName: $('#BookName').val(), ChapterName: $('#ChapterName').val() }).then(Response => {
+                    this.QuestionS = Response.data.Li;
+                })
+                $('#Ye').text(a);
+            },
+            Resule() {
+                $('#exampleInputEmail3').val("");
+                this.Init();
+                var ops = document.getElementById("GradeName").options;//取出下拉列表的项对象集合
+                for (var i = 0; i < ops.length; i++) {//遍历集合
+                    if ("全部" == ops[i].text) {//如果该项的value等于文本框填写的值
+                        document.getElementById("GradeName").options[i].selected = "selected";//设定下拉列表相应的下拉项的选中
+                        break;
+                    }
+                }
+                this.Chapter = [{ ChapterName: "全部" }];
+                this.BookList = [{ BookName: "全部" }];
+            }
+        }
+    });
+</script>
 

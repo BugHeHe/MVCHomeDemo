@@ -22,7 +22,52 @@ namespace Exam.Controllers
         }
         public ActionResult List()
         {
-            return Json(shou(), JsonRequestBehavior.AllowGet);
+            List<CountTeacher> li = shou();
+            return Json(li, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public ActionResult Select(string DateQian,string DateHou)
+        {
+            try
+            {
+                List<CountTeacher> li = new List<CountTeacher>();
+                foreach (var item in ef.Teachers.Where(x => x.RoleID == 2))
+                {
+                    CountTeacher te = new CountTeacher();
+                    te.Name = item.TeacherName;
+                    DateTime de1 = DateTime.Now;
+                    DateTime de2 = DateTime.Now;
+                    if (!string.IsNullOrEmpty(DateQian))
+                        de1 = DateTime.Parse(DateQian);
+                    else if (!string.IsNullOrEmpty(DateHou))
+                        de2 = DateTime.Parse(DateHou);
+                          
+                    if (!string.IsNullOrEmpty(DateQian) && !string.IsNullOrEmpty(DateHou))
+                    {
+                        te.Count = ef.Questions.Where(x => x.CreatorID == ef.Teachers.FirstOrDefault(a => a.TeacherName == item.TeacherName).TeacherID && x.CreateTime >= de1 && x.CreateTime <= de2).Count();
+                    }
+                    else if (string.IsNullOrEmpty(DateQian) && !string.IsNullOrEmpty(DateHou))
+                    {
+                        te.Count = ef.Questions.Where(x => x.CreatorID == ef.Teachers.FirstOrDefault(a => a.TeacherName == item.TeacherName).TeacherID && x.CreateTime <= de2).Count();
+                    }
+                    else if (!string.IsNullOrEmpty(DateQian) && string.IsNullOrEmpty(DateHou))
+                    {
+                        te.Count = ef.Questions.Where(x => x.CreatorID == ef.Teachers.FirstOrDefault(a => a.TeacherName == item.TeacherName).TeacherID && x.CreateTime >= de1).Count();
+                    }
+                    else
+                    {
+                        te.Count = ef.Questions.Where(x => x.CreatorID == ef.Teachers.FirstOrDefault(a => a.TeacherName == item.TeacherName).TeacherID).Count();
+                    }
+                    li.Add(te);
+                }
+                return Json(li, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                return Content("出现错误");
+            }
+           
+           
         }
         public List<CountTeacher> shou()
         {

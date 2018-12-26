@@ -112,7 +112,7 @@ namespace Exam.Controllers
                     StudentID = item.StudentID,
                     Address = item.Address,
                     Borndate = DateTime.Parse(item.Borndate.ToString()).ToString("yyyy-MM-dd"),
-                    Gender = item.Gender ==false? "男" : "女",
+                    Gender = item.Gender ==true? "男" : "女",
                     ClassName = ef.Classes.FirstOrDefault(x => x.ClassID == item.ClassID).ClassName,
                     CreateTime = DateTime.Parse(item.CreateTime.ToString()).ToString("yyyy-MM-dd"),
                     Email = item.Email,
