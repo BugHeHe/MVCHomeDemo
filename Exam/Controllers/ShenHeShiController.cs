@@ -6,19 +6,22 @@ using System.Web.Mvc;
 using System.Data.Entity;
 using Exam.Models;
 using Exam.Models.ViewModels;
-
 namespace Exam.Controllers
 {
-    /// <summary>
-    /// 考试题库管理
-    /// </summary>
-    public class ShowQuextionController : Controller
+    public class ShenHeShiController : Controller
     {
         ExamSysEntities1 ef = new ExamSysEntities1();
-        // GET: ShowQuextion
+        /// <summary>
+        /// 我的审核试题
+        /// </summary>
+        /// <returns></returns>
+        // GET: ShenHeShi
         public ActionResult Index()
         {
-          
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Index", "LoginExamGou");
+            }
             return View();
         }
         /// <summary>
@@ -36,7 +39,7 @@ namespace Exam.Controllers
             return Json(Tili, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public ActionResult Select(string page,string Title,string GradeName,string BookName,string ChapterName)
+        public ActionResult Select(string page, string Title, string GradeName, string BookName, string ChapterName)
         {
             int ye = Convert.ToInt32(page) == 0 ? 1 : Convert.ToInt32(page);
             List<QuestionS> li = Show();
@@ -47,9 +50,9 @@ namespace Exam.Controllers
                 if (GradeName == "全部")
                     pagedList = li.Where(x => x.QuestionTitle == Title).ToList();
                 else if (BookName == "全部")
-                    pagedList = li.Where(x => x.QuestionTitle == Title && x.GradeName==GradeName).ToList();
-                else if(ChapterName == "全部")
-                    pagedList = li.Where(x => x.QuestionTitle == Title && x.GradeName == GradeName && x.BookIDName==BookName).ToList();
+                    pagedList = li.Where(x => x.QuestionTitle == Title && x.GradeName == GradeName).ToList();
+                else if (ChapterName == "全部")
+                    pagedList = li.Where(x => x.QuestionTitle == Title && x.GradeName == GradeName && x.BookIDName == BookName).ToList();
                 else
                     pagedList = li.Where(x => x.QuestionTitle == Title && x.GradeName == GradeName && x.BookIDName == BookName && x.ChapterIDName == ChapterName).ToList();
             }
@@ -58,11 +61,11 @@ namespace Exam.Controllers
                 if (GradeName == "全部")
                     pagedList = li.ToList();
                 else if (BookName == "全部")
-                    pagedList = li.Where(x =>  x.GradeName == GradeName).ToList();
+                    pagedList = li.Where(x => x.GradeName == GradeName).ToList();
                 else if (ChapterName == "全部")
                     pagedList = li.Where(x => x.GradeName == GradeName && x.BookIDName == BookName).ToList();
                 else
-                    pagedList = li.Where(x => x.GradeName == GradeName && x.BookIDName == BookName && x.ChapterIDName==ChapterName).ToList();
+                    pagedList = li.Where(x => x.GradeName == GradeName && x.BookIDName == BookName && x.ChapterIDName == ChapterName).ToList();
             }
             int CountYe = pagedList.Count % 10 > 0 ? (pagedList.Count / 10) + 1 : pagedList.Count / 10;
             var Tili = new { Li = pagedList.Skip((ye - 1) * 10).Take(10).ToList(), Ye = CountYe, Hang = page };
@@ -70,8 +73,9 @@ namespace Exam.Controllers
         }
         public List<QuestionS> Show()
         {
+            Teacher te = Session["User"] as Teacher;
             List<QuestionS> li = new List<QuestionS>();
-            foreach (var item in ef.Questions.ToList())
+            foreach (var item in ef.Questions.ToList().Where(x => x.CheckID == te.TeacherID))
             {
                 li.Add(new QuestionS()
                 {
@@ -83,7 +87,7 @@ namespace Exam.Controllers
                     QuestionTitle = item.QuestionTitle,
                     QuestionType = item.QuestionType == true ? "单选题" : "双选题",
                     GradeName = ef.Grades.FirstOrDefault(a => a.GradeID == ef.TextBooks.FirstOrDefault(x => x.BookID == item.BookID).GradeID).GradeName
-                    
+
                 });
             }
             return li;
@@ -96,8 +100,8 @@ namespace Exam.Controllers
         public ActionResult BookList(string GradeID)
         {
             List<TextBook> li = new List<TextBook>();
-            
-            foreach (var item in ef.TextBooks.Where(x=>x.GradeID==ef.Grades.FirstOrDefault(a=>a.GradeName==GradeID).GradeID).ToList())
+
+            foreach (var item in ef.TextBooks.Where(x => x.GradeID == ef.Grades.FirstOrDefault(a => a.GradeName == GradeID).GradeID).ToList())
             {
                 li.Add(new TextBook() { BookID = item.BookID, BookName = item.BookName });
             }
@@ -114,11 +118,11 @@ namespace Exam.Controllers
         {
             List<Chapter> li = new List<Chapter>();
 
-            foreach (var item in ef.Chapters.Where(x => x.BookID == ef.TextBooks.FirstOrDefault(a => a.BookName ==Chapter).BookID).ToList())
+            foreach (var item in ef.Chapters.Where(x => x.BookID == ef.TextBooks.FirstOrDefault(a => a.BookName == Chapter).BookID).ToList())
             {
                 li.Add(new Chapter() { ChapterID = item.ChapterID, ChapterName = item.ChapterName });
             }
-            li.Insert(0, new Chapter() { ChapterID =-1, ChapterName ="全部"});
+            li.Insert(0, new Chapter() { ChapterID = -1, ChapterName = "全部" });
             return Json(li, JsonRequestBehavior.AllowGet);
         }
         /// <summary>

@@ -167,12 +167,14 @@
     <Compile Include="Controllers\CheckCountController.cs" />
     <Compile Include="Controllers\ClassController.cs" />
     <Compile Include="Controllers\CreatorController.cs" />
+    <Compile Include="Controllers\CreatorLuController.cs" />
     <Compile Include="Controllers\ExamHouController.cs" />
     <Compile Include="Controllers\GRadeCController.cs" />
     <Compile Include="Controllers\LoginExamGouController.cs" />
     <Compile Include="Controllers\MoKuaiController.cs" />
     <Compile Include="Controllers\PaperTypeController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
+    <Compile Include="Controllers\ShenHeShiController.cs" />
     <Compile Include="Controllers\ShowQuextionController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Controllers\TeacherController.cs" />
@@ -647,6 +649,8 @@
     <Content Include="Views\PaperType\Index.cshtml" />
     <Content Include="Views\Creator\Index.cshtml" />
     <Content Include="Views\CheckCount\Index.cshtml" />
+    <Content Include="Views\CreatorLu\Index.cshtml" />
+    <Content Include="Views\ShenHeShi\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
