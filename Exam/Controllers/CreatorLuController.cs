@@ -86,7 +86,9 @@ namespace Exam.Controllers
                     QuestionLevel = item.QuestionLevel,
                     QuestionTitle = item.QuestionTitle,
                     QuestionType = item.QuestionType == true ? "单选题" : "双选题",
-                    GradeName = ef.Grades.FirstOrDefault(a => a.GradeID == ef.TextBooks.FirstOrDefault(x => x.BookID == item.BookID).GradeID).GradeName
+                    GradeName = ef.Grades.FirstOrDefault(a => a.GradeID == ef.TextBooks.FirstOrDefault(x => x.BookID == item.BookID).GradeID).GradeName,
+                    CheckTime =item.CheckTime.ToString()
+                    
 
                 });
             }

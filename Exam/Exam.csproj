@@ -651,6 +651,7 @@
     <Content Include="Views\CheckCount\Index.cshtml" />
     <Content Include="Views\CreatorLu\Index.cshtml" />
     <Content Include="Views\ShenHeShi\Index.cshtml" />
+    <Content Include="Views\ShowQuextion\Dese.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

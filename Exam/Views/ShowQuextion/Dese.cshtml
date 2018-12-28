@@ -1,0 +1,244 @@
+﻿
+@{
+    ViewBag.Title = "Dese";
+    Layout = null;
+}
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<script src="~/Lis/axios.js"></script>
+<script src="~/Lis/vue.js"></script>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="~/Lis/ueditor/ueditor.config.js"></script>
+<script src="~/Lis/ueditor/ueditor.all.min.js"></script>
+<script src="~/Lis/ueditor/lang/zh-cn/zh-cn.js"></script>
+<style>
+    .form-inline{
+        margin-top:10px;
+    }
+    #exampleInputEmail3{
+        width:300px;
+    }
+    #exampleInputEmail3 {
+        width: 500px;
+    }
+    .form-group{
+        width:500px;
+    }
+    .form-group .form-control{
+        width:500px;
+    }
+</style>
+<div class="container">
+    <input type="text" id="bian" name="name" value="@ViewData["bian"]" hidden="hidden" />
+    <h3>查看</h3>
+    <hr />
+    类型：
+    <select id="M-Type" style="height:30px; margin-left:10px;"><option>单选题</option><option>双选题</option></select>
+    <span style="margin-left:30px;">难易度:</span><select id="M-Nan" style="height:30px; margin-left:10px;"><option value="0">全部</option><option value="1">易</option><option value="2">中</option><option value="3">难</option></select>
+    <div style="margin-top:10px;">
+        年级:
+        <select id="GradeName" style="height:30px;width:80px;" v-on:change="GradeBian">
+            <option v-for="a in GradeList">{{a.GradeName}}</option>
+        </select>
+        教材:
+        <select id="BookName" style="height:30px;" v-on:change="BookBian">
+            <option v-for="a in BookList">{{a.BookName}}</option>
+        </select>
+        章节:
+        <select id="ChapterName" style="height:30px;">
+            <option v-for="a in Chapter">{{a.ChapterName}}</option>
+        </select>
+    </div>
+    <div style="margin-top:20px;">
+        题干：<textarea id="BianJi"></textarea>
+    </div>
+    <div style="margin-top:20px;">
+        <div class="form-inline">
+            A:
+            <div class="form-group" style="margin-left:10px;">
+                <label class="sr-only" for="exampleInputEmail3"></label>
+                <input type="text"  class="form-control" id="exampleInputEmailA1">
+            </div>
+        </div>
+        <div class="form-inline">
+            B:
+            <div class="form-group" style="margin-left:10px;">
+                <label class="sr-only" for="exampleInputEmail3"></label>
+                <input type="text" class="form-control"  id="exampleInputEmailA2">
+            </div>
+        </div>
+        <div class="form-inline">
+            C:
+            <div class="form-group" style="margin-left:10px;">
+                <label class="sr-only" for="exampleInputEmail3"></label>
+                <input type="text"  class="form-control" id="exampleInputEmailA3">
+            </div>
+        </div>
+        <div class="form-inline">
+            D:
+            <div class="form-group" style="margin-left:10px;">
+                <label class="sr-only" for="exampleInputEmail3"></label>
+                <input type="text"  class="form-control" id="exampleInputEmailA4">
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top:30px;display:none" id="Duo">
+        答案：<label class="checkbox-inline">
+            <input type="checkbox" id="inlineCheckbox1" value="option1">A
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" id="inlineCheckbox2" value="option2">B
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" id="inlineCheckbox3" value="option3">C
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" id="inlineCheckbox3" value="option3">D
+        </label>
+    </div>
+    <div style="margin-top:30px;" id="Dan">
+        答案：
+        <label class="radio-inline">
+            <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> A
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> B
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> C
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> D
+        </label>
+    </div>
+
+    <div style="margin-top:20px;">
+        <div class="form-inline">
+            答案解析：
+            <div class="form-group" style="margin-left:10px;">
+                <label class="sr-only" for="exampleInputEmail4"></label>
+                <textarea id="Jie" style="width:700px;height:100px;"></textarea>
+            </div>
+        </div>
+    </div>
+    <div style="margin-top:10px;margin-bottom:30px;">
+        <button class="btn btn-success" style="margin-left:700px;" v-on:click="fan">返回</button>
+        <button class="btn btn-success" v-on:click="fan">关闭</button>
+    </div>
+</div>
+<script>
+    var hu=UE.getEditor('BianJi');
+    var a = new Vue({
+        el: '.container',
+        data: {
+            QuestionS: [],
+            Name: '',
+            BookList: [{ BookName: "全部" }],
+            GradeList: [],
+            Chapter: [{ ChapterName: "全部" }],
+            Answer:[],
+        },
+        created() {
+            this.In1();
+            this.Init();
+            
+        },
+        methods: {
+            Init() {
+                axios.post('/ShowQuextion/ListDe', { Bian: $('#bian').val() }).then(Response =>
+                {
+                    console.log(Response.data);
+                    this.QuestionS = Response.data;
+                    //题类型
+                    select("M-Type", this.QuestionS.QuestionType);
+                    //题的难度
+                    select("M-Nan", this.QuestionS.QuestionLevel);
+                    //年级
+                    select("GradeName", this.QuestionS.GradeName);
+                    //教材
+                    this.BookList = [{ BookName: this.QuestionS.BookIDName }];
+                    $('#Jie').val(this.QuestionS.Description);
+                    this.Chapter = [{ ChapterName: this.QuestionS.ChapterIDName }];
+                        hu.setContent(this.QuestionS.QuestionTitle);
+
+                })
+            },
+            In1() {
+                axios.post('/ShowQuextion/GradeList').then(Response => {
+                    this.GradeList = Response.data;
+                })
+                axios.post('/ShowQuextion/AnList',{ Bian: $('#bian').val() }).then(Response => {
+                    this.Answer = Response.data;
+                    $('#exampleInputEmailA1').val(this.Answer[0].AnswerContent);
+                    $('#exampleInputEmailA2').val(this.Answer[1].AnswerContent);
+                    $('#exampleInputEmailA3').val(this.Answer[2].AnswerContent);
+                    $('#exampleInputEmailA4').val(this.Answer[3].AnswerContent);
+                    var sum = 0;
+                    for (var i = 0; i < this.Answer.length; i++)
+                    {
+                        if (this.Answer[i].IsResult)
+                        {
+                            sum = parseInt(sum) + 1;
+                        }
+                    }
+                    if (parseInt(sum) >1)
+                    {
+                        $('#Duo').show();
+                        $('#Dan').hide();
+                        for (var i = 0; i < this.Answer.length; i++) {
+                            if (this.Answer[i].IsResult) {
+                                $("#Duo input:eq(" + i + ")").attr('checked', 'true');
+                            }
+                        }
+                    }
+                    else
+                    {
+                        $('#Duo').hide();
+                        $('#Dan').show();
+                        for (var i = 0; i < this.Answer.length; i++) {
+                            if (this.Answer[i].IsResult)
+                            {
+                                $("#Dan input:eq(" + i + ")").attr('checked', 'true');
+                            }
+                        }
+                    }
+                })
+            },
+            GradeBian() {
+                if ($('#GradeName').val() == "全部" || $('#GradeName').val() == "全部") {
+                    this.Chapter = [{ ChapterName: "全部" }];
+                    this.BookList = [{ BookName: "全部" }];
+                } else {
+                    axios.post('/ShowQuextion/BookList', { GradeID: $('#GradeName').val() }).then(Response => {
+                        this.BookList = Response.data;
+                    })
+                }
+
+            },
+            BookBian() {
+                if ($('#BookName').val() == "全部" || $('#GradeName').val() == "全部") {
+                    this.Chapter = [{ ChapterName: "全部" }];
+                    this.BookList = [{ BookName: "全部" }];
+                } else {
+                    axios.post('/ShowQuextion/ChapterList', { Chapter: $('#BookName').val() }).then(Response => {
+                        this.Chapter = Response.data;
+                    })
+                }
+            },
+            fan() {
+                location.href="/ShowQuextion/Index";
+            }
+        }
+    });
+    function select(id,shu) {
+        var ops1 = document.getElementById(id).options;//取出下拉列表的项对象集合
+        for (var i = 0; i < ops1.length; i++) {//遍历集合
+            if (shu == ops1[i].value) {
+            document.getElementById(id).options[i].selected = "selected";//设定下拉列表相应的下拉项的选中
+            break;
+        }
+    }
+    }
+</script>
+

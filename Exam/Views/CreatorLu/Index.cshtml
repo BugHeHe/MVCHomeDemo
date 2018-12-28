@@ -45,6 +45,7 @@
             <td style="width:90px;">章节</td>
             <td style="width:90px;">录题人</td>
             <td>难易度</td>
+            <td>审核时间</td>
             <td style="width:30px;">操作</td>
         </tr>
         <tr v-for="s in QuestionS">
@@ -55,6 +56,7 @@
             <td style="width:90px;">{{s.ChapterIDName}}</td>
             <td style="width:90px;">{{s.CreatorName}}</td>
             <td>{{s.QuestionLevel}}</td>
+            <td>{{s.CheckTime}}</td>
             <td style="width:30px;"><i class="glyphicon glyphicon-sunglasses" data-toggle="modal" data-target="#AddModal" style="cursor:pointer"></i></td>
         </tr>
     </table>

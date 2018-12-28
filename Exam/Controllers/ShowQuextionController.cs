@@ -21,6 +21,41 @@ namespace Exam.Controllers
           
             return View();
         }
+        
+        public ActionResult Dese(string bian)
+        {
+            ef.Configuration.ProxyCreationEnabled = false;
+            ViewData["bian"] = bian;
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ListDe(string Bian)
+        {
+            ef.Configuration.LazyLoadingEnabled = false;
+            ef.Configuration.ProxyCreationEnabled = false;
+            int bian = Convert.ToInt32(Bian);
+            try
+            {
+                QuestionS te = Show().FirstOrDefault(x => x.QuestionID == bian);
+                return Json(te, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                return Content("失败出现错误");
+            }
+          
+        }
+
+        [HttpPost]
+        public ActionResult AnList(string Bian)
+        {
+            ef.Configuration.ProxyCreationEnabled = false;
+            ef.Configuration.LazyLoadingEnabled = false;
+            int bian = Convert.ToInt32(Bian);
+            return Json(ef.Answers.Where(x => x.QuestionID ==bian).ToList(), JsonRequestBehavior.AllowGet);
+        }
+        
         /// <summary>
         /// 页面加载集合
         /// </summary>
@@ -81,8 +116,9 @@ namespace Exam.Controllers
                     QuestionID = item.QuestionID,
                     QuestionLevel = item.QuestionLevel,
                     QuestionTitle = item.QuestionTitle,
-                    QuestionType = item.QuestionType == true ? "单选题" : "双选题",
-                    GradeName = ef.Grades.FirstOrDefault(a => a.GradeID == ef.TextBooks.FirstOrDefault(x => x.BookID == item.BookID).GradeID).GradeName
+                    QuestionType = item.QuestionType == false ? "单选题" : "双选题",
+                    GradeName = ef.Grades.FirstOrDefault(a => a.GradeID == ef.TextBooks.FirstOrDefault(x => x.BookID == item.BookID).GradeID).GradeName,
+                    Description = item.Description
                     
                 });
             }
@@ -136,5 +172,6 @@ namespace Exam.Controllers
             li.Insert(0, new Grade() { GradeName = "全部", GradeID = -1 });
             return Json(li, JsonRequestBehavior.AllowGet);
         }
+        
     }
 }

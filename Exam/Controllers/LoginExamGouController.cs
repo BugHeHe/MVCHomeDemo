@@ -24,10 +24,10 @@ namespace Exam.Controllers
                 if (item.UserName == LoginDeng && item.Password == LognPwd)
                 {
                     Session["User"] = item;
-                    return RedirectToAction("Index", "ExamHou");
+                    return Content("成功");
                 }
             }
-            return Content("失败");
+            return Content("账号或者密码错误");
         }
     }
 }
