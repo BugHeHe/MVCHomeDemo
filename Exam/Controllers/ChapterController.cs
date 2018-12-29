@@ -58,10 +58,10 @@ namespace Exam.Controllers
             {
                 if (GradID >= 1)
                 {
-                    pagedList = li.Where(x => x.ChapterName ==ChapterName && x.BookName== GrNa.BookName).Skip((ye - 1) * 10).Take(10).ToList();
+                    pagedList = li.Where(x => x.ChapterName.Contains(ChapterName) && x.BookName== GrNa.BookName).Skip((ye - 1) * 10).Take(10).ToList();
                 }
                 else
-                    pagedList = li.Where(x => x.ChapterName ==ChapterName).ToList();
+                    pagedList = li.Where(x => x.ChapterName.Contains(ChapterName)).ToList();
 
             }
             else if (string.IsNullOrEmpty(ChapterName) && GradID >= 1)
@@ -70,7 +70,7 @@ namespace Exam.Controllers
             }
             else if (string.IsNullOrEmpty(TextBookID))
             {
-                pagedList = li.Where(x => x.ChapterName ==ChapterName).ToList();
+                pagedList = li.Where(x => x.ChapterName.Contains(ChapterName)).ToList();
             }
             else
             {

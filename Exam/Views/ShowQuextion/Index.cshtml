@@ -12,6 +12,7 @@
 <script src="~/Lis/ueditor/ueditor.all.min.js"></script>
 <script src="~/Lis/ueditor/lang/zh-cn/zh-cn.js"></script>
 <div class="container">
+
     <h3>试题列表</h3>
     <hr />
     <div class="form-inline">
@@ -51,7 +52,7 @@
         </tr>
         <tr v-for="s in QuestionS">
             <td style="width:30px;">{{s.QuestionID}}</td>
-            <td style="width:700px;">{{s.QuestionTitle}}</td>
+            <td style="width:700px;"><p></p>{{s.QuestionTitle}}</td>
             <td style="width:100px;">{{s.QuestionType}}</td>
             <td>{{s.BookIDName}}</td>
             <td>{{s.GradeName}}</td>

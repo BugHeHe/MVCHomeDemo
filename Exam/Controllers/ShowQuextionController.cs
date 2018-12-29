@@ -108,6 +108,7 @@ namespace Exam.Controllers
             List<QuestionS> li = new List<QuestionS>();
             foreach (var item in ef.Questions.ToList())
             {
+                Session["he"] = item.QuestionTitle;
                 li.Add(new QuestionS()
                 {
                     BookIDName = ef.TextBooks.FirstOrDefault(x => x.BookID == item.BookID).BookName,
@@ -115,7 +116,7 @@ namespace Exam.Controllers
                     CreatorName = ef.Teachers.FirstOrDefault(x => x.TeacherID == item.CreatorID).UserName,
                     QuestionID = item.QuestionID,
                     QuestionLevel = item.QuestionLevel,
-                    QuestionTitle = item.QuestionTitle,
+                    QuestionTitle =item.QuestionTitle,
                     QuestionType = item.QuestionType == false ? "单选题" : "双选题",
                     GradeName = ef.Grades.FirstOrDefault(a => a.GradeID == ef.TextBooks.FirstOrDefault(x => x.BookID == item.BookID).GradeID).GradeName,
                     Description = item.Description

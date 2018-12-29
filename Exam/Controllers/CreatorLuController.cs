@@ -24,6 +24,35 @@ namespace Exam.Controllers
             }
             return View();
         }
+        public ActionResult ADD()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public ActionResult QuestionADD(QuestionS te)
+        {
+            ef.Configuration.ProxyCreationEnabled = false;
+            ef.Configuration.LazyLoadingEnabled = false;
+          Teacher dong= Session["User"] as Teacher;
+            Question an = new Question()
+            {
+                BookID = ef.TextBooks.FirstOrDefault(x => x.BookName == te.BookIDName).BookID,
+                QuestionTitle =te.QuestionTitle,
+                QuestionType = te.QuestionType == "单选题" ? true : false,
+                QuestionLevel = te.QuestionLevel,
+                ChapterID = ef.Chapters.FirstOrDefault(x => x.ChapterName == te.ChapterIDName).ChapterID,
+                CreatorID = 2,
+                CreateTime = DateTime.Now,
+                IsCheck = false,
+                Description=te.Description
+            };
+            ef.Entry(an).State = EntityState.Added;
+            if (ef.SaveChanges() > 0)
+                return Content("成功");
+            return Content("失败");
+        }
         /// <summary>
         /// 页面加载集合
         /// </summary>

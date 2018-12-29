@@ -75,7 +75,7 @@ namespace Exam.Controllers
                 li.Add(new CountTeacher()
                 {
                     Name = item.TeacherName,
-                    Count = ef.Questions.Where(x => x.CheckID == ef.Teachers.FirstOrDefault(a => a.TeacherName == item.TeacherName).TeacherID).Count()
+                    Count = ef.Questions.Where(x => x.CheckID == ef.Teachers.FirstOrDefault(a => a.TeacherName == item.TeacherName).TeacherID && x.IsCheck==true).Count()
                 });
             }
             return li;

@@ -652,6 +652,7 @@
     <Content Include="Views\CreatorLu\Index.cshtml" />
     <Content Include="Views\ShenHeShi\Index.cshtml" />
     <Content Include="Views\ShowQuextion\Dese.cshtml" />
+    <Content Include="Views\CreatorLu\ADD.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -35,6 +35,7 @@
         @*操作*@
         <button class="btn btn-primary" v-on:click="Select" style="margin-left:10px;">查询</button>
         <button class="btn btn-primary" v-on:click="Resule" style="margin-left:10px;">重置</button>
+        <button class="btn btn-success" v-on:click="ADD" style="margin-left:10px;">添加</button>
     </div>
     <table class="table table-bordered" style="margin-top:10px;">
         <tr>
@@ -182,6 +183,9 @@
                 }
                 this.Chapter = [{ ChapterName: "全部" }];
                 this.BookList = [{ BookName: "全部" }];
+            },
+            ADD() {
+                location.href = "/CreatorLu/ADD";
             }
         }
     });
