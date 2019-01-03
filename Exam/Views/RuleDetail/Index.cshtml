@@ -1,0 +1,111 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<script src="~/Lis/axios.js"></script>
+<script src="~/Lis/vue.js"></script>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="~/Lis/My97DatePicker/WdatePicker.js"></script>
+<div class="container">
+    <h3>抽题策略明细</h3>
+    <hr />
+    策略名称：
+    <select id="GradeName" style="height:30px;width:150px;" v-on:change="CeLve">
+        <option v-for="a in CeList">{{a.RuleName}}</option>
+    </select>
+    <table class="table table-bordered">
+        <tr>
+            <td>编号</td>
+            <td>抽题策略名称</td>
+            <td>教材</td>
+            <td>抽题数量</td>
+            <td>简易程度</td>
+            <td>操作</td>
+        </tr>
+        <tr v-for="s in List">
+            <td>{{s.DetailID}}</td>
+            <td>{{s.RuleIDName}}</td>
+            <td>{{s.BookIDName}}</td>
+            <td>{{s.QuestionCount}}</td>
+            <td>{{s.QuestionLevel}}</td>
+            <td><span class="glyphicon glyphicon-pencil" data-toggle="modal" v-on:click="ChuUpdate" data-target="#AddModa2" style="cursor:pointer"></span><span class="glyphicon glyphicon-remove" v-on:click="Clear" style="margin-left:5px; cursor:pointer"></span></td>
+        </tr>
+    </table>
+    每页 10 条记录，共<span id="CuntYe"></span>页，当前第<span id="Ye">0</span>页
+    <button class="btn btn-primary" v-on:click="ShouYe">首页</button>
+    <button class="btn btn-primary" v-on:click="ShangYe">上一页</button>
+    <button class="btn btn-primary" v-on:click="XiaYe">下一页</button>
+    <button class="btn btn-primary" v-on:click="MoYe">末页</button>
+
+</div>
+<script>
+    var ap = new Vue({
+        el: '.container',
+        data: {
+            CeList: [],
+            List:[],
+        },
+        created() {
+            this.Init();
+        },
+        methods: {
+            Init() {
+                axios.post('/RuleDetail/List').then(Response =>
+                {
+                    alert(Response.data);
+                    this.CeList = Response.data;
+                })
+            },
+            CeLve() {
+
+            },
+            //首页
+            ShouYe() {
+                var a = "1";
+                axios.post('/ShowQuextion/Select', { page: a, Title: $('#exampleInputEmail3').val(), GradeName: $('#GradeName').val(), BookName: $('#BookName').val(), ChapterName: $('#ChapterName').val() }).then(Response => {
+                    this.QuestionS = Response.data.Li;
+                })
+                $('#Ye').text(a);
+            },
+            //分页的下一页
+            XiaYe() {
+                var a = parseInt($('#Ye').text()) + 1;
+                if (parseInt($('#Ye').text()) >= parseInt($('#CuntYe').text())) {
+                    alert("已经是最后一页了");
+                }
+                else {
+                    axios.post('/ShowQuextion/Select', { page: parseInt($('#Ye').text()) + 1, Title: $('#exampleInputEmail3').val(), GradeName: $('#GradeName').val(), BookName: $('#BookName').val(), ChapterName: $('#ChapterName').val() }).then(Response => {
+                        this.QuestionS = Response.data.Li;
+                    })
+                    $('#Ye').text(a);
+                }
+            },
+            //分页的上一页
+            ShangYe() {
+                var a = parseInt($('#Ye').text()) - 1;
+                if (a <= 0) {
+                    alert("已经是第一页了");
+                    $('#Ye').text(1);
+                }
+                else {
+                    axios.post('/ShowQuextion/Select', { page: a, Title: $('#exampleInputEmail3').val(), GradeName: $('#GradeName').val(), BookName: $('#BookName').val(), ChapterName: $('#ChapterName').val() }).then(Response => {
+                        this.QuestionS = Response.data.Li;
+                    })
+                    $('#Ye').text(a);
+                }
+            },
+            //最后一页
+            MoYe() {
+                var a = $('#CuntYe').text();
+                axios.post('/ShowQuextion/Select', { page: a, Title: $('#exampleInputEmail3').val(), GradeName: $('#GradeName').val(), BookName: $('#BookName').val(), ChapterName: $('#ChapterName').val() }).then(Response => {
+                    this.QuestionS = Response.data.Li;
+                })
+                $('#Ye').text(a);
+            },
+            
+        },
+    })
+</script>
+
