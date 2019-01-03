@@ -1,0 +1,121 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<script src="~/Lis/axios.js"></script>
+<script src="~/Lis/vue.js"></script>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<div class="container">
+    <h3>考卷管理</h3>
+    <hr />
+    <div class="form-inline">
+        年级：
+        <div class="form-group" style="margin-left:10px;">
+            <label class="sr-only" for="exampleInputEmail3"></label>
+            <select id="GradeName" style="height:30px;width:150px;" v-on:change="CeLve">
+                <option v-for="a in CeList">{{a.GradeName}}</option>
+            </select>
+        </div>
+
+    </div>
+    <table class="table table-bordered" style="margin-top:10px;">
+        <tr>
+            <td>编号</td>
+            <td>年级</td>
+            <td>考试时间</td>
+            <td>是否开放</td>
+            <td>可考班级</td>
+            <td>题目数量</td>
+            <td>创建时间</td>
+            <td>操作</td>
+        </tr>
+        <tr v-for="s in List">
+            <td>{{s.PaperID}}</td>
+            <td>{{s.GradeIDName}}</td>
+            <td>{{s.Duration}}</td>
+            <td>{{s.IsOpen}}</td>
+            <td>{{s.ClassList}}</td>
+            <td>{{s.QuestionCount}}<span class="glyphicon glyphicon-list-alt" style="margin-left:10px;cursor:pointer"></span></td>
+            <td>{{s.CreateTime}}</td>
+            <td><span class="glyphicon glyphicon-edit" data-toggle="modal" data-target="#AddModa2" style="cursor:pointer"></span><span class="glyphicon glyphicon-remove" style="margin-left:5px; cursor:pointer"></span><span class="glyphicon glyphicon-eye-open" v-on:click="Dian"  data-toggle="modal" data-target="#AddModa3" style="margin-left:5px;cursor:pointer"></span></td>
+        </tr>
+    </table>
+    每页 10 条记录，共<span id="CuntYe"></span>页，当前第<span id="Ye">0</span>页
+    <button class="btn btn-primary" v-on:click="ShouYe">首页</button>
+    <button class="btn btn-primary" v-on:click="ShangYe">上一页</button>
+    <button class="btn btn-primary" v-on:click="XiaYe">下一页</button>
+    <button class="btn btn-primary" v-on:click="MoYe">末页</button>
+
+   
+</div>
+<script>
+    var a = new Vue({
+        el: '.container',
+        data: {
+            List: [],
+            CeList:[],
+        },
+        created() {
+            this.Init();
+        },
+        methods: {
+            Init() {
+                axios.post('/Paper/List').then(Response =>{
+                    this.List = Response.data.Li;
+                    this.CeList = Response.data.list1;
+                    $('#CuntYe').text(Response.data.Ye);
+                    $('#Ye').text("1");
+                })
+            },
+            //首页
+            ShouYe() {
+                var a = "1";
+                axios.post('/RuleDetail/Select', { page: a, Name: $('#GradeName').val() }).then(Response => {
+                    this.List = Response.data.Li;
+                })
+                $('#Ye').text(a);
+            },
+            //分页的下一页
+            XiaYe() {
+                var a = parseInt($('#Ye').text()) + 1;
+                if (parseInt($('#Ye').text()) >= parseInt($('#CuntYe').text())) {
+                    alert("已经是最后一页了");
+                }
+                else {
+                    axios.post('/RuleDetail/Select', { page: parseInt($('#Ye').text()) + 1, Name: $('#GradeName').val() }).then(Response => {
+                        this.List = Response.data.Li;
+                    })
+                    $('#Ye').text(a);
+                }
+            },
+            //分页的上一页
+            ShangYe() {
+                var a = parseInt($('#Ye').text()) - 1;
+                if (a <= 0) {
+                    alert("已经是第一页了");
+                    $('#Ye').text(1);
+                }
+                else {
+                    axios.post('/RuleDetail/Select', { page: a, Name: $('#GradeName').val() }).then(Response => {
+                        this.List = Response.data.Li;
+                    })
+                    $('#Ye').text(a);
+                }
+            },
+            //最后一页
+            MoYe() {
+                var a = $('#CuntYe').text();
+                axios.post('/RuleDetail/Select', { page: a, Name: $('#GradeName').val() }).then(Response => {
+                    this.List = Response.data.Li;
+                })
+                $('#Ye').text(a);
+            },
+            CeLve() { },
+            Dian() {
+
+            },
+        },
+    })
+</script>

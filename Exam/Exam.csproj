@@ -172,6 +172,7 @@
     <Compile Include="Controllers\GRadeCController.cs" />
     <Compile Include="Controllers\LoginExamGouController.cs" />
     <Compile Include="Controllers\MoKuaiController.cs" />
+    <Compile Include="Controllers\PaperController.cs" />
     <Compile Include="Controllers\PaperRuleController.cs" />
     <Compile Include="Controllers\PaperTypeController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
@@ -268,6 +269,7 @@
     <Compile Include="Models\ViewModels\ClassS.cs" />
     <Compile Include="Models\ViewModels\CountTeacher.cs" />
     <Compile Include="Models\ViewModels\PaperRuleS.cs" />
+    <Compile Include="Models\ViewModels\PaperS.cs" />
     <Compile Include="Models\ViewModels\QuestionS.cs" />
     <Compile Include="Models\ViewModels\RuleDetailS.cs" />
     <Compile Include="Models\ViewModels\StudentS.cs" />
@@ -659,6 +661,8 @@
     <Content Include="Views\CreatorLu\ADD.cshtml" />
     <Content Include="Views\PaperRule\Index.cshtml" />
     <Content Include="Views\RuleDetail\Index.cshtml" />
+    <Content Include="Views\Paper\Index.cshtml" />
+    <Content Include="Views\Paper\Yu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

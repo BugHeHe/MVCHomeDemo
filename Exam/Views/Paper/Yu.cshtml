@@ -1,0 +1,83 @@
+﻿@using Exam.Models;
+@using Exam.Models.ViewModels;
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<script src="~/Lis/axios.js"></script>
+<script src="~/Lis/vue.js"></script>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="~/Lis/My97DatePicker/WdatePicker.js"></script>
+<style>
+    ul li {
+        /*list-style: none;*/
+    }
+
+    #collapseExample1 {
+        padding:10px;
+        background-color: aliceblue;
+        color: #000;
+    }
+</style>
+
+<div class="container">
+    <h3>试题预览</h3>
+    <hr />
+    <div class="container border" style=" border:1px solid #808080">
+        <ul style="list-style:none;margin-top:20px;">
+            @{
+                ExamSysEntities1 ef = new ExamSysEntities1();
+                int sum = 0;
+                foreach (var item in ef.PaperDetails.Where(x => x.PaperID == 1))
+                {
+                    sum++;
+                    string tile = ef.Questions.FirstOrDefault(x => x.QuestionID == item.QuestionID).QuestionTitle;
+                    string Shi = ef.Questions.FirstOrDefault(x => x.QuestionID == item.QuestionID).Description;
+                    <li class="question" style="margin-top:20px;">
+                        <div class="question-title">
+                            <i style="float: left;font-size:18px;">@sum</i>
+                            <div style="float:left;margin-left:10px;"><p>@tile<br></p></div>
+                            <div style="clear: both;"></div>
+                        </div>
+                        <div class="question-block ">
+                            <ol type="A">
+                                @{
+                                    foreach (var item1 in ef.Answers.Where(x => x.QuestionID == item.QuestionID))
+                                    {
+                                        <li><p>@item1.AnswerContent <br></p></li>
+                                    }
+                                }
+
+                            </ol>
+                        </div>
+                        <div class="" id="collapseExample1">
+                            @{
+                                string[] Zi=new string[4] { "A", "B", "C", "D" };
+                                string shou ="";
+                                foreach (var item1 in ef.Answers.Where(x => x.QuestionID == item.QuestionID))
+                                {
+                                    for (int i = 0; i <Zi.Length ; i++)
+                                    {
+                                        if (item1.IsResult)
+                                        {
+                                            shou += "" + Zi[i+1];
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            <b style="float:left">答案:&nbsp;@shou</b>
+                            <br>
+                            <b style="float:left">试题解析:</b>
+                            <p>@Shi</p>
+</div>
+                        </li>
+                }
+            }
+
+        </ul>
+    </div>
+</div>
+

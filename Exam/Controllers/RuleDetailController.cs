@@ -22,29 +22,28 @@ namespace Exam.Controllers
         }
 
         [HttpPost]
-        public ActionResult List()
-        {
-            List<PaperRule> li = new List<PaperRule>();
-            foreach (var item in ef.PaperRules.ToList())
-            {
-                li.Add(new PaperRule()
-                {
-                    RuleName=item.RuleName
-                });
-            }
-            li.Insert(0, new PaperRule() { RuleName = "全部"});
-            return Json(li, JsonRequestBehavior.AllowGet);
-        }
-        [HttpPost]
         public ActionResult List(string page)
         {
+            List<PaperRule> li1 = new List<PaperRule>();
+            foreach (var item in ef.PaperRules.ToList())
+            {
+                li1.Add(new PaperRule()
+                {
+                    RuleName = item.RuleName
+                });
+            }
+            li1.Insert(0, new PaperRule() { RuleName = "全部" });
             int ye = Convert.ToInt32(page) == 0 ? 1 : Convert.ToInt32(page);
             List<RuleDetailS> li = Show();
             int CountYe = li.Count % 10 > 0 ? (li.Count / 10) + 1 : li.Count / 10;
-            var Tili = new { Li = li.Skip((ye - 1) * 10).Take(10), Ye = CountYe, Hang = page };
+            var Tili = new { Li = li.Skip((ye - 1) * 10).Take(10), Ye = CountYe, Hang = page,list1=li1};
             return Json(Tili, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 返回集合对象
+        /// </summary>
+        /// <returns></returns>
         public List<RuleDetailS> Show()
         {
             List<RuleDetailS> li = new List<RuleDetailS>();
@@ -60,6 +59,38 @@ namespace Exam.Controllers
                 });
             }
             return li;
+        }
+
+        [HttpPost]
+        public ActionResult Select(string page, string Name)
+        {
+            int ye = Convert.ToInt32(page) == 0 ? 1 : Convert.ToInt32(page);
+            List<RuleDetailS> pagedList =Show().Where(x=>x.RuleIDName.Contains(Name)).ToList();
+            int CountYe = pagedList.Count % 10 > 0 ? (pagedList.Count / 10) + 1 : pagedList.Count / 10;
+            var Tili = new { Li = pagedList.Skip((ye - 1) * 10).Take(10).ToList(), Ye = CountYe, Hang = page };
+            return Json(Tili, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult Update(RuleDetailS te)
+        {
+            RuleDetail ta = new RuleDetail()
+            {
+                BookID=ef.TextBooks.FirstOrDefault(x=>x.BookName==te.BookIDName).BookID,
+                DetailID=te.DetailID,
+                QuestionCount=te.QuestionCount,
+                QuestionLevel=te.QuestionLevel,
+                RuleID=ef.PaperRules.FirstOrDefault(x=>x.RuleName==te.RuleIDName).RuleID,
+            };
+            ef.Entry(ta).State = EntityState.Modified;
+            if (ef.SaveChanges() > 0)
+            {
+                return Content("成功");
+            }
+            else
+            {
+                return Content("失败");
+            }
         }
     }
 }
