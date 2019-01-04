@@ -21,8 +21,9 @@ namespace Exam.Controllers
             return View();
         }
 
-        public ActionResult Yu()
+        public ActionResult Yu(string bian)
         {
+            ViewData["Bian"] = bian;
             return View();
         }
 
@@ -44,6 +45,21 @@ namespace Exam.Controllers
             var Tili = new { Li = li.Skip((ye - 1) * 10).Take(10), Ye = CountYe, Hang = page, list1 = Gradli };
             return Json(Tili, JsonRequestBehavior.AllowGet);
 
+        }
+
+        [HttpPost]
+        public ActionResult Select(string page, string GradeID)
+        {
+            int ye = Convert.ToInt32(page) == 0 ? 1 : Convert.ToInt32(page);
+            List<PaperS> li = Show();
+            List<PaperS> pagedList = null;
+            if (!string.IsNullOrEmpty(GradeID))
+            {
+                pagedList = li.Where(x => x.GradeIDName == GradeID).ToList();
+            }
+            int CountYe = pagedList.Count % 10 > 0 ? (pagedList.Count / 10) + 1 : pagedList.Count / 10;
+            var Tili = new { Li = pagedList.Skip((ye - 1) * 10).Take(10).ToList(), Ye = CountYe, Hang = page };
+            return Json(Tili, JsonRequestBehavior.AllowGet);
         }
         public List<PaperS> Show()
         {

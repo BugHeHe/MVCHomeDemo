@@ -27,7 +27,7 @@
             <td>考试时间</td>
             <td>是否开放</td>
             <td>可考班级</td>
-            <td>题目数量</td>
+            <td>答题人数</td>
             <td>创建时间</td>
             <td>操作</td>
         </tr>
@@ -112,9 +112,20 @@
                 })
                 $('#Ye').text(a);
             },
-            CeLve() { },
-            Dian() {
-
+            CeLve() {
+                alert($('#GradeName').val());
+                if ($('#GradeName').val() == "全部") {
+                    this.Init();
+                } else {
+                    axios.post('/Paper/Select', { GradeID: $('#GradeName').val() }).then(Response =>
+                    {
+                        this.List = Response.data;
+                    })
+                }
+            },
+            Dian(e) {
+                var Bian = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(0)').text();
+                location.href = "/Paper/Yu?bian=" + Bian;
             },
         },
     })

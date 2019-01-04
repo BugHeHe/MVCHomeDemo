@@ -1,0 +1,31 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<script src="~/Lis/axios.js"></script>
+<script src="~/Lis/vue.js"></script>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<div class="container">
+    <form action="/FileShang/File" method="post" enctype="multipart/form-data">
+        <input type="file" id="demo_input" name="img" value="" />
+        <input type="submit" class="btn btn-primary"  name="name" value="" />
+    </form>
+  
+</div>
+<script>
+    var a=new Vue({
+      el:'.container',
+      data:{},
+      methods:{
+          Dian() {
+              var shou = $('#demo_input').val();
+              var jie = shou.substring(shou.lastIndexOf("\\") + 1, shou.length);
+              axios.post('/FileShang/File').then(Response => { alert(alert(Response.data)) })
+         }
+        }
+    })
+</script>
+
