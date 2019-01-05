@@ -20,7 +20,6 @@ namespace Exam.Controllers
         {
             return View();
         }
-
         [HttpPost]
         public ActionResult List(string page)
         {
@@ -34,20 +33,19 @@ namespace Exam.Controllers
             }
             li1.Insert(0, new PaperRule() { RuleName = "全部" });
             int ye = Convert.ToInt32(page) == 0 ? 1 : Convert.ToInt32(page);
-            List<RuleDetailS> li = Show();
+            List<PaperSS> li = Shou();
             int CountYe = li.Count % 10 > 0 ? (li.Count / 10) + 1 : li.Count / 10;
             var Tili = new { Li = li.Skip((ye - 1) * 10).Take(10), Ye = CountYe, Hang = page,list1=li1};
             return Json(Tili, JsonRequestBehavior.AllowGet);
         }
-
         /// <summary>
         /// 返回集合对象
         /// </summary>
         /// <returns></returns>
-        public List<RuleDetailS> Show()
+        public ActionResult Show(string jie)
         {
             List<RuleDetailS> li = new List<RuleDetailS>();
-            foreach (var item in ef.RuleDetails.ToList())
+            foreach (var item in ef.RuleDetails.Where(x=>x.RuleID==ef.PaperRules.FirstOrDefault(a=>a.RuleName==jie).RuleID).ToList())
             {
                 li.Add(new RuleDetailS()
                 {
@@ -58,27 +56,30 @@ namespace Exam.Controllers
                     RuleIDName=ef.PaperRules.FirstOrDefault(x=>x.RuleID==item.RuleID).RuleName
                 });
             }
-            return li;
+            List<TextBook> li1 = new List<TextBook>();
+            foreach (var item in ef.RuleDetails.Where(x => x.RuleID == ef.PaperRules.FirstOrDefault(a => a.RuleName == jie).RuleID).ToList())
+            {
+                li1.Add(ef.TextBooks.FirstOrDefault(x => x.BookID == item.BookID));
+            }
+            return Json(li,JsonRequestBehavior.AllowGet);
         }
-
         [HttpPost]
         public ActionResult Select(string page, string Name)
         {
             int ye = Convert.ToInt32(page) == 0 ? 1 : Convert.ToInt32(page);
-            List<RuleDetailS> pagedList = null;
+            List<PaperSS> pagedList = null;
             if (Name == "全部")
             {
-               pagedList=Show().ToList();
+               pagedList=Shou().ToList();
             }
             else
             {
-                pagedList=Show().Where(x => x.RuleIDName.Contains(Name)).ToList();
+                pagedList=Shou().Where(x => x.Name.Contains(Name)).ToList();
             }
             int CountYe = pagedList.Count % 10 > 0 ? (pagedList.Count / 10) + 1 : pagedList.Count / 10;
             var Tili = new { Li = pagedList.Skip((ye - 1) * 10).Take(10).ToList(), Ye = CountYe, Hang = page };
             return Json(Tili, JsonRequestBehavior.AllowGet);
         }
-
         [HttpPost]
         public ActionResult Update(RuleDetailS te)
         {
@@ -100,5 +101,38 @@ namespace Exam.Controllers
                 return Content("失败");
             }
         }
+
+        /// <summary>
+        /// 返回对象的策略明细的名称以及题个数
+        /// </summary>
+        /// <returns></returns>
+        public List<PaperSS> Shou()
+        {
+            List<PaperSS> li = new List<PaperSS>();
+            foreach (var item in ef.PaperRules)
+            {
+                PaperSS te = new PaperSS() { ID = item.RuleID, Name = item.RuleName };
+                foreach (var item1 in ef.RuleDetails.Where(x=>x.RuleID==item.RuleID))
+                {
+                    te.Count+=item1.QuestionCount;
+                }
+                li.Add(te);
+            }
+            return li;
+        }
+
+        /// <summary>
+        /// 返回每个策略名称的具体的内容
+        /// </summary>
+        /// <returns></returns>
+        //public List<PaperSSS> ListShow(string jie)
+        //{
+        //    List<PaperSSS> li = new List<PaperSSS>();
+        //    foreach (var item in ef.RuleDetails.ToList())
+        //    {
+        //        PaperSSS te = new PaperSSS();
+        //        te.Name=ef.PaperRules.FirstOrDefault(x=>x.)
+        //    }
+        //}
     }
 }
