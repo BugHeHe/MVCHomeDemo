@@ -65,7 +65,15 @@ namespace Exam.Controllers
         public ActionResult Select(string page, string Name)
         {
             int ye = Convert.ToInt32(page) == 0 ? 1 : Convert.ToInt32(page);
-            List<RuleDetailS> pagedList =Show().Where(x=>x.RuleIDName.Contains(Name)).ToList();
+            List<RuleDetailS> pagedList = null;
+            if (Name == "全部")
+            {
+               pagedList=Show().ToList();
+            }
+            else
+            {
+                pagedList=Show().Where(x => x.RuleIDName.Contains(Name)).ToList();
+            }
             int CountYe = pagedList.Count % 10 > 0 ? (pagedList.Count / 10) + 1 : pagedList.Count / 10;
             var Tili = new { Li = pagedList.Skip((ye - 1) * 10).Take(10).ToList(), Ye = CountYe, Hang = page };
             return Json(Tili, JsonRequestBehavior.AllowGet);

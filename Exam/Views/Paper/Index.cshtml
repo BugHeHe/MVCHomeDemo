@@ -18,7 +18,7 @@
                 <option v-for="a in CeList">{{a.GradeName}}</option>
             </select>
         </div>
-
+        <button class="btn btn-primary" style="margin-left:10px;">添加考场</button>
     </div>
     <table class="table table-bordered" style="margin-top:10px;">
         <tr>
@@ -39,7 +39,7 @@
             <td>{{s.ClassList}}</td>
             <td>{{s.QuestionCount}}<span class="glyphicon glyphicon-list-alt" style="margin-left:10px;cursor:pointer"></span></td>
             <td>{{s.CreateTime}}</td>
-            <td><span class="glyphicon glyphicon-edit" data-toggle="modal" data-target="#AddModa2" style="cursor:pointer"></span><span class="glyphicon glyphicon-remove" style="margin-left:5px; cursor:pointer"></span><span class="glyphicon glyphicon-eye-open" v-on:click="Dian"  data-toggle="modal" data-target="#AddModa3" style="margin-left:5px;cursor:pointer"></span></td>
+            <td><span class="glyphicon glyphicon-edit" data-toggle="modal" v-on:click="Mo" data-target="#AddModa2" style="cursor:pointer"></span><span class="glyphicon glyphicon-remove" v-on:click="Shan" style="margin-left:5px; cursor:pointer"></span><span class="glyphicon glyphicon-eye-open" v-on:click="Dian" data-toggle="modal" data-target="#AddModa3" style="margin-left:5px;cursor:pointer"></span></td>
         </tr>
     </table>
     每页 10 条记录，共<span id="CuntYe"></span>页，当前第<span id="Ye">0</span>页
@@ -48,14 +48,44 @@
     <button class="btn btn-primary" v-on:click="XiaYe">下一页</button>
     <button class="btn btn-primary" v-on:click="MoYe">末页</button>
 
-   
+    <div class="modal fade" id="AddModa2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">修改</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-inline">
+                        是否开放：
+                        <div class="form-group">
+                            <select id="Kai" style="width:100px;height:30px;">
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" v-on:click="DianBao"  class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 <script>
     var a = new Vue({
         el: '.container',
         data: {
             List: [],
-            CeList:[],
+            CeList: [],
+            ID:'',
+            PaperS: {
+
+            },
         },
         created() {
             this.Init();
@@ -72,7 +102,7 @@
             //首页
             ShouYe() {
                 var a = "1";
-                axios.post('/RuleDetail/Select', { page: a, Name: $('#GradeName').val() }).then(Response => {
+                axios.post('/Paper/Select', { page: a, GradeID: $('#GradeName').val()}).then(Response => {
                     this.List = Response.data.Li;
                 })
                 $('#Ye').text(a);
@@ -84,7 +114,7 @@
                     alert("已经是最后一页了");
                 }
                 else {
-                    axios.post('/RuleDetail/Select', { page: parseInt($('#Ye').text()) + 1, Name: $('#GradeName').val() }).then(Response => {
+                    axios.post('/Paper/Select', { page: parseInt($('#Ye').text()) + 1, GradeID: $('#GradeName').val() }).then(Response => {
                         this.List = Response.data.Li;
                     })
                     $('#Ye').text(a);
@@ -98,7 +128,7 @@
                     $('#Ye').text(1);
                 }
                 else {
-                    axios.post('/RuleDetail/Select', { page: a, Name: $('#GradeName').val() }).then(Response => {
+                    axios.post('/Paper/Select', { page: a, GradeID: $('#GradeName').val() }).then(Response => {
                         this.List = Response.data.Li;
                     })
                     $('#Ye').text(a);
@@ -107,19 +137,22 @@
             //最后一页
             MoYe() {
                 var a = $('#CuntYe').text();
-                axios.post('/RuleDetail/Select', { page: a, Name: $('#GradeName').val() }).then(Response => {
+                axios.post('/Paper/Select', { GradeID: $('#GradeName').val() }).then(Response => {
                     this.List = Response.data.Li;
                 })
                 $('#Ye').text(a);
             },
             CeLve() {
-                alert($('#GradeName').val());
                 if ($('#GradeName').val() == "全部") {
                     this.Init();
                 } else {
-                    axios.post('/Paper/Select', { GradeID: $('#GradeName').val() }).then(Response =>
-                    {
-                        this.List = Response.data;
+                    axios.post('/Paper/Select', { GradeID: $('#GradeName').val() }).then(Response => {
+                        this.List = Response.data.Li;
+                        $('#CuntYe').text(Response.data.Ye);
+                        if ($('#CuntYe').text() == "0")
+                        {
+                            $('#Ye').text("0");
+                        }
                     })
                 }
             },
@@ -127,6 +160,40 @@
                 var Bian = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(0)').text();
                 location.href = "/Paper/Yu?bian=" + Bian;
             },
+            Mo(e) {
+                var Bian = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(3)').text();
+                this.ID = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(0)').text();
+                var ops = document.getElementById("Kai").options;//取出下拉列表的项对象集合
+                for (var i = 0; i < ops.length; i++) {//遍历集合
+                    if (Bian == ops[i].value) {//如果该项的value等于文本框填写的值
+                        document.getElementById("Kai").options[i].selected = "selected";//设定下拉列表相应的下拉项的选中
+                        break;
+                    }
+                }
+            },
+            DianBao() {
+                axios.post('/Paper/Update', { Id: this.ID, Shi:$('#Kai').val() }).then(Response => {
+                    alert(Response.data);
+                    this.Init();
+                    ModuleQ();
+                })
+            },
+            Shan(e) {
+                if (confirm("确定要删除吗？"))
+                {
+                    this.ID = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(0)').text();
+                    axios.post('/Paper/Delete', { id: this.ID }).then(Response => {
+                        alert(Response.data);
+                        this.Init();
+                    })
+                }
+            }
         },
     })
+    function ModuleQ() {
+        $('#AddModal').hide();
+        $('#AddModa2').hide();
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open');
+    }
 </script>

@@ -92,7 +92,10 @@
                 })
             },
             CeLve() {
-                if ($('#GradeName').val() == "全部") { this.Init() } else {
+                if ($('#GradeName').val() == "全部")
+                {
+                    this.Init()
+                } else {
                     axios.post('/RuleDetail/Select', { page: '0', Name: $('#GradeName').val() }).then(Response => {
                         this.List = Response.data.Li;
                         $('#CuntYe').text(Response.data.Ye);

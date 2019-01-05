@@ -58,7 +58,7 @@ namespace Exam.Controllers
                 pagedList = li.Where(x => x.GradeIDName == GradeID).ToList();
             }
             int CountYe = pagedList.Count % 10 > 0 ? (pagedList.Count / 10) + 1 : pagedList.Count / 10;
-            var Tili = new { Li = pagedList.Skip((ye - 1) * 10).Take(10).ToList(), Ye = CountYe, Hang = page };
+            var Tili = new { Li = pagedList.Skip((ye - 1) * 10).Take(10).ToList(), Ye = CountYe, Hang = ye };
             return Json(Tili, JsonRequestBehavior.AllowGet);
         }
         public List<PaperS> Show()
@@ -82,6 +82,33 @@ namespace Exam.Controllers
                 });
             }
             return li;
+        }
+
+        [HttpPost]
+        public ActionResult Update(string id,string Shi)
+        {
+            int ID = Convert.ToInt32(id);
+            bool flag = Shi == "0" ? true : false;
+            Paper te = ef.Papers.FirstOrDefault(x => x.PaperID == ID);
+            te.IsOpen = flag;
+            ef.Entry(te).State = EntityState.Modified;
+            if (ef.SaveChanges() > 0)
+            {
+                return Content("成功");
+            }
+            return Content("失败");
+        }
+
+        [HttpPost]
+        public ActionResult Delete(string id)
+        {
+            int ID = Convert.ToInt32(id);
+            ef.Papers.Remove(ef.Papers.FirstOrDefault(x => x.PaperID == ID));
+            if (ef.SaveChanges() > 0)
+            {
+                return Content("删除成功");
+            }
+            return Content("失败！");
         }
     }
 }
