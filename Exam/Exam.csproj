@@ -171,6 +171,7 @@
     <Compile Include="Controllers\ExamHouController.cs" />
     <Compile Include="Controllers\FileShangController.cs" />
     <Compile Include="Controllers\GRadeCController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\LoginExamGouController.cs" />
     <Compile Include="Controllers\MoKuaiController.cs" />
     <Compile Include="Controllers\PaperController.cs" />
@@ -667,6 +668,7 @@
     <Content Include="Views\Paper\Index.cshtml" />
     <Content Include="Views\Paper\Yu.cshtml" />
     <Content Include="Views\FileShang\Index.cshtml" />
+    <Content Include="Views\Login\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

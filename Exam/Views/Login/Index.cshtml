@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+
+<body class="login">
+    <div class="backlay" style="background-image: url(assets/imgs/bg.jpg);"></div>
+    <form action="front/student/login" method="post">
+        <div class="login-box col-xl-5  col-lg-5 col-md-6 col-sm-10" style="position: relative;">
+            <div style="position: absolute; right: 20px; top:10px;font-size:66px;color:#ddd;"><i class="fa fa-key"></i></div>
+            <h3 class="h3" style="font-weight:200">翱翔在线考试系统</h3>
+            <p class="hidden-xs" style="color:lightgray;font-family: 'Roboto', sans-serif;font-weight: lighter;">AOXIANG ONLINE EXAM SYSTEM</p>
+            <div style="background-color: #eee;padding:30px 15px; margin:0px -15px;">
+                <div class="form-group">
+                    <input type="text" autocomplete="off" autofocus name="studentNo" class="form-control" placeholder="请输入身份证号">
+                </div>
+                <div class="form-group">
+                    <input type="password" name="studentPwd" class="form-control" placeholder="请输入密码">
+                </div>
+                <div class="form-group">
+                    <button name="button" class="btn btn-success btn-block" onclick="return checkBrower();">登录系统</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+

@@ -85,14 +85,15 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-inline">
-                        章节名称：<select id="Zhang" v-for=" a in ListBook">
-                                    <option value="">{{a.BookName}}</option>
-                                </select>
+                        章节名称：
+                        <div class="form-group">
+                            <input type="text" v-model="ListSum.BookIDName" name="name" id="Zhang" value="" class="form-control" />
+                        </div>
                     </div>
                     <div class="form-inline">
                         题目数量：
                         <div class="form-group">
-                            <input type="text" class="form-control" name="name" value="" />
+                            <input type="number" id="Number" class="form-control" name="name" value="" />
                         </div>
                     </div>
                     <div class="form-inline">
@@ -126,12 +127,16 @@
                 QuestionLevel: '',
             },
             ListRule: [],
-            ListBook:[],
+            ListBook: [],
+            BookName: '',
         },
         created() {
             this.Init();
         },
         methods: {
+            BookBian() {
+                alert("呵呵");
+            },
             Init() {
                 axios.post('/RuleDetail/List', { page: '0' }).then(Response => {
                     this.List = Response.data.Li;
@@ -141,8 +146,7 @@
                 })
             },
             CeLve() {
-                if ($('#GradeName').val() == "全部")
-                {
+                if ($('#GradeName').val() == "全部") {
                     this.Init()
                 } else {
                     axios.post('/RuleDetail/Select', { page: '0', Name: $('#GradeName').val() }).then(Response => {
@@ -195,15 +199,12 @@
                 })
                 $('#Ye').text(a);
             },
+            //获取每个策略的具体章节 提数 难度
             Dian(e) {
                 var Shou = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(1)').text();
-                axios.post('/RuleDetail/Show', { jie: Shou}).then(Response =>
-                {
-                    alert(Response.data);
+                axios.post('/RuleDetail/Show', { jie: Shou }).then(Response => {
                     this.ListRule = Response.data;
-                })
-
-               
+                });
             },
             Cun() {
                 //this.ListSum.QuestionLevel = $('#M-Nan').val();
@@ -213,23 +214,26 @@
                 //    ModuleQ();
                 //})
             },
+            //修改题目数量
             MoCun(e) {
                 this.ListSum.DetailID = $('.modal-body .table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(0)').text();
                 this.ListSum.BookIDName = $('.modal-body .table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(1)').text();
                 this.ListSum.QuestionCount = $('.modal-body .table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(2)').text();
                 var huo = $('.modal-body .table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(3)').text();
-                var ops1 = document.getElementById('M-Nan').options;//取出下拉列表的项对象集合
-                alert(huo);
-                for (var i = 0; i < ops1.length; i++) {//遍历集合
-                    if (huo == ops1[i].value)
-                    {
-                        document.getElementById('M-Nan').options[i].selected = "selected";//设定下拉列表相应的下拉项的选中
-                        break;
-                    }
-                }
+                SeleXia("M-Nan", huo);
             },
+            
         },
     })
+    function SeleXia(b, a) {
+        var ops1 = document.getElementById(b).options;//取出下拉列表的项对象集合
+        for (var i = 0; i < ops1.length; i++) {//遍历集合
+            if (a== ops1[i].value) {
+                document.getElementById(b).options[i].selected = "selected";//设定下拉列表相应的下拉项的选中
+                break;
+            }
+        }
+    };
     function ModuleQ() {
         $('#AddModal').hide();
         $('#AddModa2').hide();

@@ -56,13 +56,19 @@ namespace Exam.Controllers
                     RuleIDName=ef.PaperRules.FirstOrDefault(x=>x.RuleID==item.RuleID).RuleName
                 });
             }
-            List<TextBook> li1 = new List<TextBook>();
-            foreach (var item in ef.RuleDetails.Where(x => x.RuleID == ef.PaperRules.FirstOrDefault(a => a.RuleName == jie).RuleID).ToList())
-            {
-                li1.Add(ef.TextBooks.FirstOrDefault(x => x.BookID == item.BookID));
-            }
             return Json(li,JsonRequestBehavior.AllowGet);
         }
+        [HttpPost]
+        public ActionResult ListShow(string jie)
+        {
+            List<string> li1 = new List<string>();
+            foreach (var item in ef.TextBooks.Where(a=>a.GradeID==ef.TextBooks.FirstOrDefault(x=>x.BookName==jie).GradeID).ToList())
+            {
+                li1.Add(item.BookName);
+            }
+            return Json(li1, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public ActionResult Select(string page, string Name)
         {
