@@ -217,14 +217,8 @@
                 if (parseInt(GradeID) > 0) {
                     this.PaperRuleS.GradeIDName = GradeID;
                     axios.post('/PaperRule/ADD', this.PaperRuleS).then(Response => {
-                        if (Response.data != "失败")
-                        {
-                            alert("添加成功");
+                        alert(Response.data);
                             this.Init();
-                        }
-                        else {
-                            alert("已经拥有该教材，请重新添加");
-                        }
                         ModuleQ();
 
                     })

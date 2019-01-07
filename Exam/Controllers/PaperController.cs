@@ -102,13 +102,48 @@ namespace Exam.Controllers
         [HttpPost]
         public ActionResult Delete(string id)
         {
-            int ID = Convert.ToInt32(id);
-            ef.Papers.Remove(ef.Papers.FirstOrDefault(x => x.PaperID == ID));
-            if (ef.SaveChanges() > 0)
+            try
             {
-                return Content("删除成功");
+                ef.Configuration.LazyLoadingEnabled = false;
+                ef.Configuration.ProxyCreationEnabled = false;
+                int ID = Convert.ToInt32(id);
+                Paper te = ef.Papers.FirstOrDefault(x => x.PaperID == ID);
+                ef.Papers.Remove(te);
+                if (ef.SaveChanges() > 0)
+                {
+                    return Content("删除成功");
+                }
+                return Content("失败！");
             }
-            return Content("失败！");
+            catch(Exception ex)
+            {
+                return Content(ex.ToString());
+            }
+            
+        }
+
+
+
+        [HttpPost]
+        public ActionResult ShowListJie()
+        {
+            List<string> GradeLi = new List<string>();
+            List<string> TypeLi = new List<string>();
+            List<string> CeLve = new List<string>();
+            foreach (var item in ef.Grades.ToList())
+            {
+                GradeLi.Add(item.GradeName);
+            }
+            foreach (var item in ef.PaperTypes.ToList())
+            {
+                TypeLi.Add(item.TypeName);
+            }
+            foreach (var item in ef.PaperRules.ToList())
+            {
+                CeLve.Add(item.RuleName);
+            }
+            var Sum = new { Grad = GradeLi,Ty= TypeLi, CL = CeLve };
+            return Json(Sum, JsonRequestBehavior.AllowGet);
         }
     }
 }

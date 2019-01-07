@@ -5,8 +5,15 @@
 <link href="~/Content/bootstrap.css" rel="stylesheet" />
 <script src="~/Lis/axios.js"></script>
 <script src="~/Lis/vue.js"></script>
+<script src="~/Lis/jquery-1.11.0.js"></script>
 <script src="~/Scripts/jquery-3.3.1.js"></script>
+
 <script src="~/Scripts/bootstrap.js"></script>
+<style>
+    .form-inline {
+        margin-top: 10px;
+    }
+</style>
 <div class="container">
     <h3>考卷管理</h3>
     <hr />
@@ -18,7 +25,7 @@
                 <option v-for="a in CeList">{{a.GradeName}}</option>
             </select>
         </div>
-        <button class="btn btn-primary" style="margin-left:10px;">添加考场</button>
+        <button class="btn btn-primary" v-on:click="ADDKao" data-toggle="modal" data-target="#AddModa3" style="margin-left:10px;">添加考场</button>
     </div>
     <table class="table table-bordered" style="margin-top:10px;">
         <tr>
@@ -69,12 +76,118 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" v-on:click="DianBao"  class="btn btn-primary">保存</button>
+                    <button type="button" v-on:click="DianBao" class="btn btn-primary">保存</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="modal fade bs-example-modal-lg" tabindex="-1" id="AddModa3" data-backdrop="static" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" data-dismiss="modal" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title" id="myModalLabel">添加考场</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-inline">
+                        选择年级:
+                        <div class="form-group">
+                            <select style="width:300px;height:30px;" id="ADDGrade">
+                                <option v-for="s in GradeList">{{s}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        考试类型:
+                        <div class="form-group">
+                            <select style="width:300px;height:30px;" id="ADDKaoType">
+                                <option v-for="s in TypeList">{{s}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        考试时间:
+                        <div class="form-group">
+                            <input type="number" name="name" value="60" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        考试班级:
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="name" value="" />
+                            <select style="width:100px;height:30px;" id="ADDStudent">
+                                <option v-for="s in GradeLit">{{s}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        是否开放：
+                        <div class="form-group">
+                            <select id="Kai" style="width:100px;height:30px;">
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="form-inline">
+                        是否结业：
+                        <div class="form-group">
+                            <select id="Jie" style="width:100px;height:30px;">
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <h3>组卷</h3>
+                    <hr />
+                    <div class="form-inline">
+                        出题策略:
+                        <div class="form-group">
+                            <select id="Ce" style="width:300px;height:30px;">
+                                <option v-for="s in CeLve1">{{s}}</option>
+                            </select>
+                            <span v-on:click="ADDCeLveZDY" style="color:aquamarine;cursor:pointer">添加自定义策略</span>
+                        </div>
+                    </div>
+                    <table class="table table-bordered" id="ZDY" style="margin-top:10px;">
+                        <tr>
+                            <td>教材</td>
+                            <td>章节</td>
+                            <td>数量</td>
+                            <td>操作</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select id="Ce" style="width:200px;height:30px;">
+                                    <option>a</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select id="Ce" style="width:200px;height:30px;">
+                                    <option>a</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select id="Ce" style="width:200px;height:30px;">
+                                    <option>a</option>
+                                </select>
+                            </td>
+                            <td>
+                                <span onclick="ShanZD(this)" class="glyphicon glyphicon-remove" style="margin-left:5px; cursor:pointer"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-default">关闭</button>
+                    <button type="button" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script>
     var a = new Vue({
@@ -82,17 +195,22 @@
         data: {
             List: [],
             CeList: [],
-            ID:'',
+            ID: '',
             PaperS: {
 
             },
+            CeLve1: [],//出题策略
+            TypeList: [],//考试类型
+            GradeList: [],//年级
+            GradeLit: [],//选择年级之后的触发的所属年级的班级
+
         },
         created() {
             this.Init();
         },
         methods: {
             Init() {
-                axios.post('/Paper/List').then(Response =>{
+                axios.post('/Paper/List').then(Response => {
                     this.List = Response.data.Li;
                     this.CeList = Response.data.list1;
                     $('#CuntYe').text(Response.data.Ye);
@@ -102,7 +220,7 @@
             //首页
             ShouYe() {
                 var a = "1";
-                axios.post('/Paper/Select', { page: a, GradeID: $('#GradeName').val()}).then(Response => {
+                axios.post('/Paper/Select', { page: a, GradeID: $('#GradeName').val() }).then(Response => {
                     this.List = Response.data.Li;
                 })
                 $('#Ye').text(a);
@@ -149,8 +267,7 @@
                     axios.post('/Paper/Select', { GradeID: $('#GradeName').val() }).then(Response => {
                         this.List = Response.data.Li;
                         $('#CuntYe').text(Response.data.Ye);
-                        if ($('#CuntYe').text() == "0")
-                        {
+                        if ($('#CuntYe').text() == "0") {
                             $('#Ye').text("0");
                         }
                     })
@@ -172,21 +289,38 @@
                 }
             },
             DianBao() {
-                axios.post('/Paper/Update', { Id: this.ID, Shi:$('#Kai').val() }).then(Response => {
+                axios.post('/Paper/Update', { Id: this.ID, Shi: $('#Kai').val() }).then(Response => {
                     alert(Response.data);
                     this.Init();
                     ModuleQ();
                 })
             },
             Shan(e) {
-                if (confirm("确定要删除吗？"))
-                {
+                if (confirm("确定要删除吗？")) {
                     this.ID = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(0)').text();
                     axios.post('/Paper/Delete', { id: this.ID }).then(Response => {
                         alert(Response.data);
                         this.Init();
                     })
                 }
+            },
+            //自定义策略
+            ADDCeLveZDY() {
+                if ($('#ZDY').length == 2) {
+                    $('#ZDY tr:eq(1)').show();
+                }
+                $('#ZDY').append("<tr>" + $('#ZDY tr:eq(1)').html() + "</tr>");
+
+            },
+            //添加考试
+            ADDKao() {
+                axios.post('/Paper/ShowListJie').then(Response =>
+                {
+                    alert(Response.data.Ty);
+                    this.GradeList = Response.data.Grad;
+                    this.TypeList = Response.data.Ty;
+                    this.CeLve1 = Response.data.CL;
+                })
             }
         },
     })
@@ -195,5 +329,22 @@
         $('#AddModa2').hide();
         $('.modal-backdrop').remove();
         $('body').removeClass('modal-open');
-    }
+    };
+</script>
+<script type="text/javascript">
+    function ShanZD(a) {
+        if (confirm("确定要删除吗？"))
+        {
+           
+            if (parseInt($('#ZDY tr').length)> 2) {
+                let i = $(a).parent().parent().index();
+                $(a).parent().parent().remove();
+               
+            } else
+            {
+                alert("不能再删除了");
+            }
+            
+        }
+    };
 </script>
