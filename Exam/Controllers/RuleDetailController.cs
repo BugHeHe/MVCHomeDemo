@@ -68,7 +68,6 @@ namespace Exam.Controllers
             }
             return Json(li1, JsonRequestBehavior.AllowGet);
         }
-
         [HttpPost]
         public ActionResult Select(string page, string Name)
         {
@@ -107,7 +106,6 @@ namespace Exam.Controllers
                 return Content("失败");
             }
         }
-
         /// <summary>
         /// 返回对象的策略明细的名称以及题个数
         /// </summary>
@@ -126,19 +124,91 @@ namespace Exam.Controllers
             }
             return li;
         }
-
         /// <summary>
         /// 返回每个策略名称的具体的内容
         /// </summary>
         /// <returns></returns>
-        //public List<PaperSSS> ListShow(string jie)
-        //{
-        //    List<PaperSSS> li = new List<PaperSSS>();
-        //    foreach (var item in ef.RuleDetails.ToList())
-        //    {
-        //        PaperSSS te = new PaperSSS();
-        //        te.Name=ef.PaperRules.FirstOrDefault(x=>x.)
-        //    }
-        //}
+        //删除章节
+        public ActionResult Delete(string ID1)
+        {
+            try
+            {
+                int sum=int.Parse(ID1);
+                ef.RuleDetails.Remove(ef.RuleDetails.FirstOrDefault(x=>x.DetailID==sum));
+                if (ef.SaveChanges() > 0)
+                {
+                    return Content("删除成功");
+                }
+                else
+                {
+                    return Content("删除失败");
+                }
+            }
+            catch(Exception ex)
+            {
+                return Content(ex.ToString());
+            }
+        }
+        //添加章节时所属策略的年级的所有课程
+        [HttpPost]
+        public ActionResult TeacherBook(string jie)
+        {
+            try
+            {
+                List<string> li1 = new List<string>();
+                List<TextBook> li= ef.TextBooks.Where(s=>s.GradeID==ef.PaperRules.FirstOrDefault(x => x.RuleName == jie).GradeID).ToList();
+                foreach (var item in li)
+                {
+                    li1.Add(item.BookName);
+                }
+                return Json(li1,JsonRequestBehavior.AllowGet);
+            }catch(Exception ex)
+            {
+                return Content(ex.ToString());
+            }
+         
+        }
+
+        //添加章节
+        [HttpPost]
+        public ActionResult ZhangADD(RuleDetailS te)
+        {
+            try
+            {
+                if(ef.RuleDetails.Any(x=>x.BookID== ef.TextBooks.FirstOrDefault(a => a.BookName == te.BookIDName).BookID && x.QuestionCount==te.QuestionCount && x.QuestionLevel==te.QuestionLevel &&x.RuleID== ef.PaperRules.FirstOrDefault(b => b.RuleName == te.RuleIDName).RuleID))
+                {
+                    return Content("已经存在了，请重新添加");
+                }
+                else
+                {
+                    RuleDetail ta = new RuleDetail()
+                    {
+                        BookID = ef.TextBooks.FirstOrDefault(x => x.BookName == te.BookIDName).BookID,
+                        RuleID = ef.PaperRules.FirstOrDefault(x => x.RuleName == te.RuleIDName).RuleID,
+                        QuestionCount = te.QuestionCount,
+                        QuestionLevel = te.QuestionLevel
+                    };
+                    ef.Entry(ta).State = EntityState.Added;
+                    if (ef.SaveChanges() > 0)
+                    {
+                        return Content("添加成功");
+                    }
+                    else
+                    {
+                        return Content("添加失败");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return Content(ex.ToString());
+            }
+        }
+
+
+
+
+
+
     }
 }

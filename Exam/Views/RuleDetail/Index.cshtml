@@ -16,10 +16,6 @@
 <div class="container">
     <h3>抽题策略明细</h3>
     <hr />
-    策略名称：
-    <select id="GradeName" style="height:30px;width:150px;" v-on:change="CeLve">
-        <option v-for="a in CeList">{{a.RuleName}}</option>
-    </select>
     <table class="table table-bordered" style="margin-top:10px;">
         <tr>
             <td>编号</td>
@@ -39,19 +35,18 @@
     <button class="btn btn-primary" v-on:click="ShangYe">上一页</button>
     <button class="btn btn-primary" v-on:click="XiaYe">下一页</button>
     <button class="btn btn-primary" v-on:click="MoYe">末页</button>
-
-    <div class="modal fade bs-example-modal-lg" tabindex="-1" id="AddModa2" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal fade bs-example-modal-lg" tabindex="-1" id="AddModa2" data-backdrop="static" role="dialog" aria-labelledby="myLargeModalLabel">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" v-on:click="Guan" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="myModalLabel">修改策略</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-inline">
-                        <button class="btn btn-primary" >添加章节</button>
+                        <button class="btn btn-primary" v-on:click="ZADD" data-toggle="modal" data-target="#AddModa4">添加章节</button>
                     </div>
-                    <table class="table" style="margin-top:10px;">
+                    <table class="table" id="Sum" style="margin-top:10px;">
                         <tr>
                             <td>编号</td>
                             <td>章节名称</td>
@@ -64,19 +59,18 @@
                             <td>{{s.BookIDName}}</td>
                             <td>{{s.QuestionCount}}</td>
                             <td>{{s.QuestionLevel}}</td>
-                            <td><span class="glyphicon glyphicon-pencil"  data-toggle="modal" data-target="#AddModa3" v-on:click="MoCun" style="cursor:pointer"></span><span class="glyphicon glyphicon-remove"  style="margin-left:5px; cursor:pointer"></span></td>
+                            <td><span class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#AddModa3" v-on:click="MoCun" style="cursor:pointer"></span><span class="glyphicon glyphicon-remove" v-on:click="Delete" style="margin-left:5px; cursor:pointer"></span></td>
                         </tr>
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" v-on:click="Guan" class="btn btn-default" >关闭</button>
                     <button type="button" v-on:click="Cun" class="btn btn-primary">保存</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="modal fade" id="AddModa3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade" id="AddModa3" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -85,15 +79,9 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-inline">
-                        章节名称：
-                        <div class="form-group">
-                            <input type="text" v-model="ListSum.BookIDName" name="name" id="Zhang" value="" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-inline">
                         题目数量：
                         <div class="form-group">
-                            <input type="number" id="Number" class="form-control" name="name" value="" />
+                            <input type="number" v-model="RuleDetailS.QuestionCount" id="Number" class="form-control" name="name" value="" />
                         </div>
                     </div>
                     <div class="form-inline">
@@ -106,8 +94,46 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" style="cursor:pointer" class="btn btn-default" data-dismiss="modal">关闭</button>
                     <button type="button" v-on:click="Cun" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="AddModa4" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">添加策略</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-inline">
+                        章节名称:
+                        <div class="form-group">
+                            <select id="BookName" style="width:300px;height:30px;">
+                                <option v-for="a in ListBook">{{a}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        题目数量：
+                        <div class="form-group">
+                            <input type="number" v-model="RuleDetailS.QuestionCount" id="ANumber" class="form-control" name="name" value="" />
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        &nbsp;难易度：
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                            <select id="A-Nan" style="height:30px; margin-left:10px;"><option value="1">易</option><option value="2">中</option><option value="3">难</option></select>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" style="cursor:pointer" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" v-on:click="ZhangADD" class="btn btn-primary">保存</button>
                 </div>
             </div>
         </div>
@@ -119,7 +145,7 @@
         data: {
             CeList: [],
             List: [],
-            ListSum: {
+            RuleDetailS: {
                 DetailID: '',
                 RuleIDName: '',
                 BookIDName: '',
@@ -134,9 +160,6 @@
             this.Init();
         },
         methods: {
-            BookBian() {
-                alert("呵呵");
-            },
             Init() {
                 axios.post('/RuleDetail/List', { page: '0' }).then(Response => {
                     this.List = Response.data.Li;
@@ -145,21 +168,21 @@
                     $('#Ye').text("1");
                 })
             },
-            CeLve() {
-                if ($('#GradeName').val() == "全部") {
-                    this.Init()
-                } else {
-                    axios.post('/RuleDetail/Select', { page: '0', Name: $('#GradeName').val() }).then(Response => {
-                        this.List = Response.data.Li;
-                        $('#CuntYe').text(Response.data.Ye);
-                        $('#Ye').text("1");
-                    })
-                }
-            },
+            //CeLve() {
+            //    if ($('#GradeName').val() == "全部") {
+            //        this.Init()
+            //    } else {
+            //        axios.post('/RuleDetail/Select', { page: '0', Name: $('#GradeName').val() }).then(Response => {
+            //            this.List = Response.data.Li;
+            //            $('#CuntYe').text(Response.data.Ye);
+            //            $('#Ye').text("1");
+            //        })
+            //    }
+            //},
             //首页
             ShouYe() {
                 var a = "1";
-                axios.post('/RuleDetail/Select', { page: a, Name: $('#GradeName').val() }).then(Response => {
+                axios.post('/RuleDetail/Select', { page: a, Name:''}).then(Response => {
                     this.List = Response.data.Li;
                 })
                 $('#Ye').text(a);
@@ -171,7 +194,7 @@
                     alert("已经是最后一页了");
                 }
                 else {
-                    axios.post('/RuleDetail/Select', { page: parseInt($('#Ye').text()) + 1, Name: $('#GradeName').val() }).then(Response => {
+                    axios.post('/RuleDetail/Select', { page: parseInt($('#Ye').text()) + 1,Name: ''}).then(Response => {
                         this.List = Response.data.Li;
                     })
                     $('#Ye').text(a);
@@ -185,7 +208,7 @@
                     $('#Ye').text(1);
                 }
                 else {
-                    axios.post('/RuleDetail/Select', { page: a, Name: $('#GradeName').val() }).then(Response => {
+                    axios.post('/RuleDetail/Select', { page: a, Name: ''}).then(Response => {
                         this.List = Response.data.Li;
                     })
                     $('#Ye').text(a);
@@ -194,7 +217,7 @@
             //最后一页
             MoYe() {
                 var a = $('#CuntYe').text();
-                axios.post('/RuleDetail/Select', { page: a, Name: $('#GradeName').val() }).then(Response => {
+                axios.post('/RuleDetail/Select', { page: a, Name: '' }).then(Response => {
                     this.List = Response.data.Li;
                 })
                 $('#Ye').text(a);
@@ -205,23 +228,78 @@
                 axios.post('/RuleDetail/Show', { jie: Shou }).then(Response => {
                     this.ListRule = Response.data;
                 });
+                this.RuleDetailS.RuleIDName = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(1)').text();
             },
-            Cun() {
-                //this.ListSum.QuestionLevel = $('#M-Nan').val();
-                //axios.post('/RuleDetail/Update', this.ListSum).then(Response => {
-                //    alert(Response.data);
-                //    this.Init();
-                //    ModuleQ();
-                //})
+            //修改 题目的和数量  难度
+            Cun(e) {
+                this.RuleDetailS.QuestionLevel = $('#M-Nan').val();
+                axios.post('/RuleDetail/Update', this.RuleDetailS).then(Response =>
+                {
+                    alert(Response.data);
+                    axios.post('/RuleDetail/Show', { jie: this.RuleDetailS.RuleIDName }).then(Response => {
+                        this.ListRule = Response.data;
+                    });
+                    $('#AddModa3').hide();
+                    $('.modal-backdrop').remove();
+                })
             },
-            //修改题目数量
             MoCun(e) {
-                this.ListSum.DetailID = $('.modal-body .table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(0)').text();
-                this.ListSum.BookIDName = $('.modal-body .table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(1)').text();
-                this.ListSum.QuestionCount = $('.modal-body .table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(2)').text();
+                this.RuleDetailS.DetailID = $('.modal-body .table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(0)').text();
+                this.RuleDetailS.BookIDName = $('.modal-body .table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(1)').text();
+                this.RuleDetailS.QuestionCount = $('.modal-body .table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(2)').text();
                 var huo = $('.modal-body .table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(3)').text();
                 SeleXia("M-Nan", huo);
             },
+            //根据指定的ID 删除 抽题策略中的内容
+            Delete(e) {
+                let ID = $('.modal-body .table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(0)').text();
+                alert(ID);
+                axios.post('/RuleDetail/Delete', { ID1: ID }).then(Response =>
+                {
+                    alert(Response.data);
+                    axios.post('/RuleDetail/Show', { jie: this.RuleDetailS.RuleIDName }).then(Response => {
+                        this.ListRule = Response.data;
+                    });
+                })
+            },
+            ZADD() {
+                axios.post('/RuleDetail/TeacherBook', { jie: this.RuleDetailS.RuleIDName }).then(Response => {
+                    this.ListBook = Response.data;
+                })
+            },
+            //添加章节
+            ZhangADD() {
+                this.RuleDetailS.BookIDName = $('#BookName').val();
+                this.RuleDetailS.QuestionLevel = $('#A-Nan').val();
+                if (parseInt($('#ANumber').val()) > 0)
+                {
+                    axios.post('/RuleDetail/ZhangADD', this.RuleDetailS).then(Response => {
+                        alert(Response.data);
+                        axios.post('/RuleDetail/Show', { jie: this.RuleDetailS.RuleIDName }).then(Response => {
+                            this.ListRule = Response.data;
+                        });
+                        $('#AddModa4').hide();
+                    })
+                } else {
+                    alert("请填写数量");
+                }
+            },
+            Guan() {
+                let sum = 0;
+                for (var i = 0; i < $('#Sum tr').length; i++) {
+                    if (i > 0)
+                    {
+                        sum += parseInt($('#Sum tr:eq(' + i + ') td:eq(2)').text());
+                    }
+                }
+                if (parseInt(sum) != 50) {
+                    alert("题的数量必须为50");
+                } else
+                {
+                    ModuleQ('#AddModa2');
+                    this.Init();
+                }
+            }
             
         },
     })
@@ -234,9 +312,8 @@
             }
         }
     };
-    function ModuleQ() {
-        $('#AddModal').hide();
-        $('#AddModa2').hide();
+    function ModuleQ(hh) {
+        $(hh).hide();
         $('.modal-backdrop').remove();
         $('body').removeClass('modal-open');
     }
