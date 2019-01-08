@@ -32,6 +32,7 @@ namespace Exam.Models
         public virtual DbSet<Menu> Menus { get; set; }
         public virtual DbSet<Module> Modules { get; set; }
         public virtual DbSet<Paper> Papers { get; set; }
+        public virtual DbSet<PaperDetail> PaperDetails { get; set; }
         public virtual DbSet<PaperRule> PaperRules { get; set; }
         public virtual DbSet<PaperType> PaperTypes { get; set; }
         public virtual DbSet<Question> Questions { get; set; }
@@ -41,8 +42,8 @@ namespace Exam.Models
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<StuQueRecord> StuQueRecords { get; set; }
         public virtual DbSet<StuQueRecordDetail> StuQueRecordDetails { get; set; }
+        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<Teacher> Teachers { get; set; }
         public virtual DbSet<TextBook> TextBooks { get; set; }
-        public virtual DbSet<PaperDetail> PaperDetails { get; set; }
     }
 }

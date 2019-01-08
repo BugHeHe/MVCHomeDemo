@@ -231,12 +231,8 @@
                     var BookName = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(1)').text();
                     this.PaperRuleS.RuleName = BookName;
                     axios.post('/PaperRule/Clear', this.PaperRuleS).then(Response => {
-                        if (Response.data != "失败") {
-                            alert("删除成功");
-                            this.Init();
-                        } else {
-                            alert("删除失败");
-                        }
+                        alert(Response.data);
+                        this.Init();
                     })
                 }
             },

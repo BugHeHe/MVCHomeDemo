@@ -18,6 +18,8 @@ namespace Exam.Controllers
         // GET: Paper
         public ActionResult Index()
         {
+            List<Class> GradeListSum = ef.Classes.ToList();
+            ViewData["GradeList"] = GradeListSum;
             return View();
         }
 
@@ -75,8 +77,8 @@ namespace Exam.Controllers
                     PaperID=item.PaperID,
                     PaperName=item.PaperName,
                     QuestionCount=item.QuestionCount,
-                    RuleID=item.RuleID,
-                    typeID=item.typeID,
+                    RuleID=item.RuleID.ToString(),
+                    typeID=item.typeID.ToString(),
                     GradeIDName=ef.Grades.FirstOrDefault(x=>x.GradeID==item.GradeID).GradeName,
                     ClassList=item.ClassList,
                 });
@@ -157,6 +159,74 @@ namespace Exam.Controllers
             return Json(Sum, JsonRequestBehavior.AllowGet);
         }
 
+
+        [HttpPost]
+        public ActionResult ADDPaper(PaperS te)
+        {
+            try
+            {
+                string TypeName = te.typeID.ToString();
+                string RuleName = te.RuleID.ToString();
+                Paper ta = new Paper();
+                ta.CreateTime = DateTime.Now;
+                ta.PaperName = te.ClassList + "(1)";
+                ta.GradeID = ef.Grades.FirstOrDefault(x => x.GradeName == te.GradeIDName).GradeID;
+                ta.typeID = ef.PaperTypes.FirstOrDefault(x => x.TypeName == TypeName).TypeID;
+                ta.Duration = te.Duration;
+                ta.IsOpen = te.IsOpen == 0 ? false : true;
+                ta.ClassList = te.ClassList;
+                ta.RuleID = ef.PaperRules.FirstOrDefault(x => x.RuleName == RuleName).RuleID;
+                ta.CreatorID = 1;
+
+                    ta.QuestionCount = 0; ;
+                ef.Entry(ta).State = EntityState.Added;
+                ef.SaveChanges();
+                List<Paper> PapeID = ef.Papers.ToList();
+
+                List<RuleDetail> list = ef.RuleDetails.Where(x => x.RuleID == ef.PaperRules.FirstOrDefault(a => a.RuleName == RuleName).RuleID).ToList();
+                for (int i = 0; i <list.Count ; i++)
+                {
+                    int questionLevel = list[i].QuestionLevel;
+                    int BookID = list[i].BookID;
+                    List<Question> QLi = ef.Questions.Where(x => x.QuestionLevel == questionLevel && x.BookID== BookID).ToList();
+                    //该章节所拥有的所有内容
+                    List<Question> QList = ef.Questions.Where(x => x.BookID == BookID).ToList();
+                    if (QLi.Count != list[i].QuestionCount)
+                    {
+                        int bian = list[i].QuestionCount-QLi.Count;
+                        for (int k = 0; k < bian; k++)
+                        {
+                            Random r = new Random(int.Parse(DateTime.Now.ToString("HHmmssfff")) +k);
+                            int num = r.Next(QList[0].QuestionID,QList[QList.Count-1].QuestionID);
+                            PaperDetail Xiang = new PaperDetail();
+                            Xiang.QuestionID = num;
+                            Xiang.PaperID = PapeID[PapeID.Count- 1].PaperID;
+                            ef.Entry(Xiang).State = EntityState.Added;
+                            ef.SaveChanges();
+                        }
+                    }
+                    else
+                    {
+                        for (int j = 0; j < QLi.Count; j++)
+                        {
+                            Random r = new Random(int.Parse(DateTime.Now.ToString("HHmmssfff")) +j);
+                            int num = r.Next(QLi[0].QuestionID, QLi[QLi.Count-1].QuestionID);
+                            PaperDetail Xiang = new PaperDetail();
+                            Xiang.QuestionID = num;
+                            Xiang.PaperID = PapeID[PapeID.Count - 1].PaperID;
+                            ef.Entry(Xiang).State = EntityState.Added;
+                            ef.SaveChanges();
+                        }
+                    }
+                    
+                }
+                return Content("添加成功");
+            }
+            catch (Exception ex)
+            {
+                return Content(ex.ToString());
+            }
+        }
         
     }
 }

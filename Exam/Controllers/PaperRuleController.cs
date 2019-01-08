@@ -131,14 +131,47 @@ namespace Exam.Controllers
         [HttpPost]
         public ActionResult Clear(PaperRuleS  te)
         {
-            string name = te.RuleName;
-            ef.PaperRules.Remove(ef.PaperRules.FirstOrDefault(x=>x.RuleName==name));
-            if (ef.SaveChanges() > 0)
+            try
             {
-                return Json(Shou(), JsonRequestBehavior.AllowGet);
+                ef.Configuration.LazyLoadingEnabled = false;
+                ef.Configuration.ProxyCreationEnabled = false;
+                string name = te.RuleName;
+                NewMethod(name);
+                List<RuleDetail> li = ef.RuleDetails.Where(x => x.RuleID == ef.PaperRules.FirstOrDefault(a => a.RuleName == name).RuleID).ToList();
+                for (int i = 0; i < li.Count; i++)
+                {
+                    ef.RuleDetails.Remove(li[i]);
+                    ef.SaveChanges();
+                }
+                ef.PaperRules.Remove(ef.PaperRules.FirstOrDefault(x => x.RuleName == name));
+                if (ef.SaveChanges() > 0)
+                {
+                    return Content("删除成功");
+                }
+                else
+                    return Content("失败");
             }
-            else
-                return Content("失败");
+            catch (Exception ex)
+            {
+                return Content(ex.ToString());
+            }
+        }
+
+        private void NewMethod(string name)
+        {
+            List<Paper> PaperDeLi = ef.Papers.Where(x => x.RuleID == ef.PaperRules.FirstOrDefault(a => a.RuleName == name).RuleID).ToList();
+            for (int i = 0; i < PaperDeLi.Count; i++)
+            {
+                ef.Papers.Remove(PaperDeLi[i]);
+                ef.SaveChanges();
+            }
+            List<PaperDetail> li = ef.PaperDetails.Where(x => x.PaperID == ef.Papers.FirstOrDefault(a => a.RuleID == ef.PaperRules.FirstOrDefault(b => b.RuleName == name).RuleID).PaperID).ToList();
+            for (int i = 0; i < li.Count; i++)
+            {
+                ef.PaperDetails.Remove(li[i]);
+                ef.SaveChanges();
+            }
+           
         }
 
         [HttpPost]

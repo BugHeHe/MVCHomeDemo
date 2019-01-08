@@ -1,4 +1,6 @@
-﻿@{
+﻿@using Exam.Models;
+@using Exam.Models.ViewModels;
+@{
     ViewBag.Title = "Index";
     Layout = null;
 }
@@ -110,17 +112,24 @@
                     <div class="form-inline">
                         考试时间:
                         <div class="form-group">
-                            <input type="number" name="name" value="60" class="form-control" />
+                            <input type="number" id="ADDDate" name="name" value="60" class="form-control" />
                         </div>
                     </div>
                     <div class="" style="margin-top:10px;">
-                        考试班级:
-                        <select data-placeholder="请选择班级" class="chzn-select" multiple style="width:350px;" id="dl_chose2">
-                            <option v-for="a in GradeLit">{{a}}</option>
+                        考试班级: <select data-placeholder="请选择班级" class="chzn-select" multiple style="width:350px;" id="dl_chose2">
+                            @{
+                                List<Class> li = ViewData["GradeList"] as List<Class>;
+                                foreach (var item in li)
+                                {
+                                    <option value="@item.ClassID">@item.ClassName</option>
+                                }
+                            }
+
                             
+
                         </select>
 
-                       
+
                     </div>
                     <div class="form-inline">
                         是否开放：
@@ -199,7 +208,17 @@
             CeList: [],
             ID: '',
             PaperS: {
-
+                PaperID: '',
+                PaperName: '',
+                GradeIDName: '',
+                typeID: '',
+                Duration: '',
+                IsOpen: '',
+                ClassList: '',
+                RuleID: '',
+                QuestionCount: '',
+                CreateTime: '',
+                CreatorID: '',
             },
             CeLve1: [],//出题策略
             TypeList: [],//考试类型
@@ -311,7 +330,6 @@
                 $('#ZDY').append("<tr>" + $('#ZDY tr:eq(1)').html() + "</tr>");
             },
             ADDGradXuan() {
-
             },
             //添加考试
             ADDKao() {
@@ -322,7 +340,7 @@
                     this.GradeLit = Response.data.GradeLi;
                 });
 
-              
+
             },
             //以下都为下拉框事件
             //下拉框选取事件 当为自定义策略
@@ -338,13 +356,26 @@
             },
             //添加
             DianBaoADD() {
-                alert($('#dl_chose2_chosen .chosen-choices .search-choice span').text());
+                this.PaperS.GradeIDName = $('#ADDGrade').val();
+                this.PaperS.typeID = $('#ADDKaoType').val();
+                this.PaperS.Duration = $('#ADDDate').val();
+                this.PaperS.IsOpen = $('#Kai').val();
+                this.PaperS.ClassList = $('#dl_chose2_chosen .chosen-choices .search-choice span').text();
+                this.PaperS.RuleID = $('#Ce').val();
+                axios.post('/Paper/ADDPaper', this.PaperS).then(Response =>
+                {
+                    alert(Response.data);
+                    ModuleQ();
+                    this.Init();
+                })
+
             }
         },
     })
     function ModuleQ() {
         $('#AddModal').hide();
         $('#AddModa2').hide();
+        $('#AddModa3').hide();
         $('.modal-backdrop').remove();
         $('body').removeClass('modal-open');
     };
@@ -371,7 +402,6 @@
         //初始化
         $(".chzn-select").chosen();
     });
-
     function chose_mult_set_ini(select, values) {
         var arr = values.split(',');
         var length = arr.length;
@@ -388,7 +418,7 @@
         // 如果要初始化已选中的项，需要在调用chosen()函数之前调用chose_mult_set_ini()函数
         // 设置<select>的<option>属性selected='selected'，这样chosen()函数被调用时，相应项会显示在框中
         chose_mult_set_ini('#dl_chose2', '1,3,5,8');
-       
+
         //初始化
         $(".chzn-select").chosen();
     });
