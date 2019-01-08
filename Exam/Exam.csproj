@@ -294,6 +294,7 @@
     <Content Include="Images\Logo.png" />
     <Content Include="Lis\axios.js" />
     <Content Include="Lis\bootstrap.css" />
+    <Content Include="Lis\bootstrap.min14ed.css" />
     <Content Include="Lis\contabs.min.js" />
     <Content Include="Lis\hplus.min.js" />
     <Content Include="Lis\jquery.metisMenu.js" />
@@ -301,6 +302,7 @@
     <Content Include="Lis\layer.min.js" />
     <Content Include="Lis\My97DatePicker\calendar.js" />
     <Content Include="Lis\My97DatePicker\config.js" />
+    <Content Include="Lis\My97DatePicker\font-awesome.min93e3.css" />
     <Content Include="Lis\My97DatePicker\lang\en.js" />
     <Content Include="Lis\My97DatePicker\lang\zh-cn.js" />
     <Content Include="Lis\My97DatePicker\lang\zh-tw.js" />
@@ -314,7 +316,11 @@
     <Content Include="Lis\My97DatePicker\skin\whyGreen\img.gif" />
     <Content Include="Lis\My97DatePicker\WdatePicker.js" />
     <Content Include="Lis\pace.min.js" />
+    <Content Include="Lis\scriptXia\chosen-sprite.png" />
+    <Content Include="Lis\scriptXia\chosen.css" />
+    <Content Include="Lis\scriptXia\chosen.jquery.js" />
     <Content Include="Lis\style.min.css" />
+    <Content Include="Lis\style.min862f.css" />
     <Content Include="Lis\ueditor\dialogs\anchor\anchor.html" />
     <Content Include="Lis\ueditor\dialogs\attachment\attachment.css" />
     <Content Include="Lis\ueditor\dialogs\attachment\attachment.html" />

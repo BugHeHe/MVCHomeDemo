@@ -7,7 +7,8 @@
 <script src="~/Lis/vue.js"></script>
 <script src="~/Lis/jquery-1.11.0.js"></script>
 <script src="~/Scripts/jquery-3.3.1.js"></script>
-
+<script src="~/Lis/scriptXia/chosen.jquery.js"></script>
+<link href="~/Lis/scriptXia/chosen.css" rel="stylesheet" />
 <script src="~/Scripts/bootstrap.js"></script>
 <style>
     .form-inline {
@@ -93,7 +94,7 @@
                     <div class="form-inline">
                         选择年级:
                         <div class="form-group">
-                            <select style="width:300px;height:30px;" id="ADDGrade">
+                            <select style="width:300px;height:30px;" id="ADDGrade" v-on:change="ADDGradXuan">
                                 <option v-for="s in GradeList">{{s}}</option>
                             </select>
                         </div>
@@ -112,14 +113,14 @@
                             <input type="number" name="name" value="60" class="form-control" />
                         </div>
                     </div>
-                    <div class="form-inline">
+                    <div class="" style="margin-top:10px;">
                         考试班级:
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="name" value="" />
-                            <select style="width:100px;height:30px;" id="ADDStudent">
-                                <option v-for="s in GradeLit">{{s}}</option>
-                            </select>
-                        </div>
+                        <select data-placeholder="请选择班级" class="chzn-select" multiple style="width:350px;" id="dl_chose2">
+                            <option v-for="a in GradeLit">{{a}}</option>
+                            
+                        </select>
+
+                       
                     </div>
                     <div class="form-inline">
                         是否开放：
@@ -146,7 +147,7 @@
                     <div class="form-inline">
                         出题策略:
                         <div class="form-group">
-                            <select id="Ce" style="width:300px;height:30px;">
+                            <select id="Ce" style="width:300px;height:30px;" v-on:change="CeLveXun">
                                 <option v-for="s in CeLve1">{{s}}</option>
                             </select>
                             <span v-on:click="ADDCeLveZDY" style="color:aquamarine;cursor:pointer">添加自定义策略</span>
@@ -183,13 +184,14 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" data-dismiss="modal" class="btn btn-default">关闭</button>
-                    <button type="button" class="btn btn-primary">保存</button>
+                    <button type="button" v-on:click="DianBaoADD" class="btn btn-primary">保存</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <script>
+    var mycars = new Array();
     var a = new Vue({
         el: '.container',
         data: {
@@ -306,21 +308,37 @@
             },
             //自定义策略
             ADDCeLveZDY() {
-                if ($('#ZDY').length == 2) {
-                    $('#ZDY tr:eq(1)').show();
-                }
                 $('#ZDY').append("<tr>" + $('#ZDY tr:eq(1)').html() + "</tr>");
+            },
+            ADDGradXuan() {
 
             },
             //添加考试
             ADDKao() {
-                axios.post('/Paper/ShowListJie').then(Response =>
-                {
-                    alert(Response.data.Ty);
+                axios.post('/Paper/ShowListJie').then(Response => {
                     this.GradeList = Response.data.Grad;
                     this.TypeList = Response.data.Ty;
                     this.CeLve1 = Response.data.CL;
-                })
+                    this.GradeLit = Response.data.GradeLi;
+                });
+
+              
+            },
+            //以下都为下拉框事件
+            //下拉框选取事件 当为自定义策略
+            CeLveXun() {
+
+                if ($('#Ce').val() == "自定义策略") {
+                    $('#ZDY').show();
+                } else {
+                    $('#ZDY').hide();
+                }
+            },
+            BanKuang() {
+            },
+            //添加
+            DianBaoADD() {
+                alert($('#dl_chose2_chosen .chosen-choices .search-choice span').text());
             }
         },
     })
@@ -332,19 +350,59 @@
     };
 </script>
 <script type="text/javascript">
+    $('#ZDY').hide();
+    function chose_mult_set_ini(select, values) {
+        var arr = values.split(',');
+        var length = arr.length;
+        var value = '';
+        for (i = 0; i < length; i++) {
+            value = arr[i];
+            $(select + " option[value='" + value + "']").attr('selected', 'selected');
+        }
+        $(select).trigger("liszt:updated");
+    };
+    $("#dl_chose2").chosen({ allow_single_deselect: true, width: "300px" }).change(function () {
+    });
+    $(document).ready(function () {
+        // 如果要初始化已选中的项，需要在调用chosen()函数之前调用chose_mult_set_ini()函数
+        // 设置<select>的<option>属性selected='selected'，这样chosen()函数被调用时，相应项会显示在框中
+        chose_mult_set_ini('#dl_chose2', '1,3,5,8');
+
+        //初始化
+        $(".chzn-select").chosen();
+    });
+
+    function chose_mult_set_ini(select, values) {
+        var arr = values.split(',');
+        var length = arr.length;
+        var value = '';
+        for (i = 0; i < length; i++) {
+            value = arr[i];
+            $(select + " option[value='" + value + "']").attr('selected', 'selected');
+        }
+        $(select).trigger("liszt:updated");
+    };
+    $("#dl_chose2").chosen({ allow_single_deselect: true, width: "300px" }).change(function () {
+    });
+    $(document).ready(function () {
+        // 如果要初始化已选中的项，需要在调用chosen()函数之前调用chose_mult_set_ini()函数
+        // 设置<select>的<option>属性selected='selected'，这样chosen()函数被调用时，相应项会显示在框中
+        chose_mult_set_ini('#dl_chose2', '1,3,5,8');
+       
+        //初始化
+        $(".chzn-select").chosen();
+    });
+
     function ShanZD(a) {
-        if (confirm("确定要删除吗？"))
-        {
-           
-            if (parseInt($('#ZDY tr').length)> 2) {
+        if (confirm("确定要删除吗？")) {
+
+            if (parseInt($('#ZDY tr').length) == 3) {
                 let i = $(a).parent().parent().index();
                 $(a).parent().parent().remove();
-               
-            } else
-            {
+            } else {
                 alert("不能再删除了");
             }
-            
+
         }
     };
 </script>

@@ -124,12 +124,17 @@ namespace Exam.Controllers
 
 
 
+       /// <summary>
+       /// 返回 策略类型 年级信息  考试类型
+       /// </summary>
+       /// <returns></returns>
         [HttpPost]
         public ActionResult ShowListJie()
         {
             List<string> GradeLi = new List<string>();
             List<string> TypeLi = new List<string>();
             List<string> CeLve = new List<string>();
+            List<string> GradeListSum= new List<string>();
             foreach (var item in ef.Grades.ToList())
             {
                 GradeLi.Add(item.GradeName);
@@ -138,12 +143,20 @@ namespace Exam.Controllers
             {
                 TypeLi.Add(item.TypeName);
             }
+            
             foreach (var item in ef.PaperRules.ToList())
             {
                 CeLve.Add(item.RuleName);
             }
-            var Sum = new { Grad = GradeLi,Ty= TypeLi, CL = CeLve };
+            foreach (var item in ef.Classes)
+            {
+                GradeListSum.Add(item.ClassName);
+            }
+            CeLve.Add("自定义策略");
+            var Sum = new { Grad = GradeLi,Ty= TypeLi, CL = CeLve,GradeLi=GradeListSum};
             return Json(Sum, JsonRequestBehavior.AllowGet);
         }
+
+        
     }
 }
