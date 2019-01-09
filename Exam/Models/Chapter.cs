@@ -24,6 +24,7 @@ namespace Exam.Models
         public int ChapterID { get; set; }
         public string ChapterName { get; set; }
         public int BookID { get; set; }
+        public Nullable<bool> Shan { get; set; }
     
         public virtual TextBook TextBook { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

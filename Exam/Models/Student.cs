@@ -31,6 +31,7 @@ namespace Exam.Models
         public System.DateTime Borndate { get; set; }
         public Nullable<System.DateTime> CreateTime { get; set; }
         public Nullable<int> ClassID { get; set; }
+        public Nullable<bool> Shan { get; set; }
     
         public virtual Class Class { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

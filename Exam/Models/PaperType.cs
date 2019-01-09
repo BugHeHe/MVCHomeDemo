@@ -22,6 +22,7 @@ namespace Exam.Models
     
         public int TypeID { get; set; }
         public string TypeName { get; set; }
+        public Nullable<bool> Shan { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Paper> Papers { get; set; }

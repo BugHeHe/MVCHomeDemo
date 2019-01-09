@@ -13,6 +13,7 @@
           <Property Name="AnswerContent" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="QuestionID" Type="int" Nullable="false" />
           <Property Name="IsResult" Type="bit" Nullable="false" />
+          <Property Name="Shan" Type="bit" />
         </EntityType>
         <EntityType Name="Chapter">
           <Key>
@@ -21,6 +22,7 @@
           <Property Name="ChapterID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ChapterName" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="BookID" Type="int" Nullable="false" />
+          <Property Name="Shan" Type="bit" />
         </EntityType>
         <EntityType Name="Class">
           <Key>
@@ -32,6 +34,7 @@
           <Property Name="TeacharID" Type="int" Nullable="false" />
           <Property Name="GradeID" Type="int" Nullable="false" />
           <Property Name="CreateTime" Type="date" />
+          <Property Name="Shan" Type="bit" />
         </EntityType>
         <EntityType Name="Grade">
           <Key>
@@ -39,6 +42,7 @@
           </Key>
           <Property Name="GradeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="GradeName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Shan" Type="bit" />
         </EntityType>
         <EntityType Name="Menu">
           <Key>
@@ -50,6 +54,7 @@
           <Property Name="Service" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="ModuleID" Type="int" Nullable="false" />
           <Property Name="Roles" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Shan" Type="bit" />
         </EntityType>
         <EntityType Name="Module">
           <Key>
@@ -59,6 +64,7 @@
           <Property Name="Ico" Type="varchar" MaxLength="200" />
           <Property Name="ModuleName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="SortCode" Type="int" Nullable="false" />
+          <Property Name="Shan" Type="bit" />
         </EntityType>
         <EntityType Name="Paper">
           <Key>
@@ -75,6 +81,7 @@
           <Property Name="QuestionCount" Type="int" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="CreatorID" Type="int" Nullable="false" />
+          <Property Name="Shan" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="PaperDetail">
           <Key>
@@ -83,6 +90,7 @@
           <Property Name="PaperID" Type="int" Nullable="false" />
           <Property Name="QuestionID" Type="int" Nullable="false" />
           <Property Name="SortCode" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Shan" Type="bit" />
         </EntityType>
         <EntityType Name="PaperRule">
           <Key>
@@ -93,6 +101,7 @@
           <Property Name="GradeID" Type="int" Nullable="false" />
           <Property Name="CreatorID" Type="int" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="Shan" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="PaperType">
           <Key>
@@ -100,6 +109,7 @@
           </Key>
           <Property Name="TypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TypeName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Shan" Type="bit" />
         </EntityType>
         <EntityType Name="Question">
           <Key>
@@ -117,6 +127,7 @@
           <Property Name="CheckID" Type="int" />
           <Property Name="CheckTime" Type="datetime" />
           <Property Name="Description" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Shan" Type="bit" />
         </EntityType>
         <EntityType Name="Result">
           <Key>
@@ -133,6 +144,7 @@
           <Property Name="RoleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="RoleName" Type="varchar" MaxLength="120" Nullable="false" />
           <Property Name="Description" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Shan" Type="bit" />
         </EntityType>
         <EntityType Name="RuleDetail">
           <Key>
@@ -144,6 +156,7 @@
           <Property Name="ChapterID" Type="int" />
           <Property Name="QuestionCount" Type="int" Nullable="false" />
           <Property Name="QuestionLevel" Type="int" Nullable="false" />
+          <Property Name="Shan" Type="bit" />
         </EntityType>
         <EntityType Name="Student">
           <Key>
@@ -160,6 +173,7 @@
           <Property Name="Borndate" Type="date" Nullable="false" />
           <Property Name="CreateTime" Type="date" />
           <Property Name="ClassID" Type="int" />
+          <Property Name="Shan" Type="bit" />
         </EntityType>
         <EntityType Name="StuQueRecord">
           <Key>
@@ -200,6 +214,7 @@
           <Property Name="Password" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="RoleID" Type="int" Nullable="false" />
           <Property Name="JoinTime" Type="date" Nullable="false" />
+          <Property Name="Shan" Type="bit" />
         </EntityType>
         <EntityType Name="TextBook">
           <Key>
@@ -208,6 +223,7 @@
           <Property Name="BookID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="BookName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="GradeID" Type="int" Nullable="false" />
+          <Property Name="Shan" Type="bit" />
         </EntityType>
         <Association Name="FK__Answer__Question__35BCFE0A">
           <End Role="Question" Type="Self.Question" Multiplicity="1" />
@@ -724,6 +740,7 @@
           <Property Name="AnswerContent" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="QuestionID" Type="Int32" Nullable="false" />
           <Property Name="IsResult" Type="Boolean" Nullable="false" />
+          <Property Name="Shan" Type="Boolean" />
           <NavigationProperty Name="Question" Relationship="Self.FK__Answer__Question__35BCFE0A" FromRole="Answer" ToRole="Question" />
           <NavigationProperty Name="StuQueRecordDetails" Relationship="Self.FK__StuQueRec__Answe__5812160E" FromRole="Answer" ToRole="StuQueRecordDetail" />
         </EntityType>
@@ -734,6 +751,7 @@
           <Property Name="ChapterID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ChapterName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="BookID" Type="Int32" Nullable="false" />
+          <Property Name="Shan" Type="Boolean" />
           <NavigationProperty Name="TextBook" Relationship="Self.FK__Chapter__BookID__182C9B23" FromRole="Chapter" ToRole="TextBook" />
           <NavigationProperty Name="Questions" Relationship="Self.FK__Question__Chapte__2F10007B" FromRole="Chapter" ToRole="Question" />
           <NavigationProperty Name="RuleDetails" Relationship="Self.FK__RuleDetai__Chapt__403A8C7D" FromRole="Chapter" ToRole="RuleDetail" />
@@ -748,6 +766,7 @@
           <Property Name="TeacharID" Type="Int32" Nullable="false" />
           <Property Name="GradeID" Type="Int32" Nullable="false" />
           <Property Name="CreateTime" Type="DateTime" Precision="0" />
+          <Property Name="Shan" Type="Boolean" />
           <NavigationProperty Name="Grade" Relationship="Self.FK__Class__GradeID__25869641" FromRole="Class" ToRole="Grade" />
           <NavigationProperty Name="Teacher" Relationship="Self.FK__Class__MasterID__239E4DCF" FromRole="Class" ToRole="Teacher" />
           <NavigationProperty Name="Teacher1" Relationship="Self.FK__Class__TeacharID__24927208" FromRole="Class" ToRole="Teacher" />
@@ -759,6 +778,7 @@
           </Key>
           <Property Name="GradeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="GradeName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Shan" Type="Boolean" />
           <NavigationProperty Name="Classes" Relationship="Self.FK__Class__GradeID__25869641" FromRole="Grade" ToRole="Class" />
           <NavigationProperty Name="Papers" Relationship="Self.FK__Paper__GradeID__47DBAE45" FromRole="Grade" ToRole="Paper" />
           <NavigationProperty Name="PaperRules" Relationship="Self.FK__PaperRule__Grade__398D8EEE" FromRole="Grade" ToRole="PaperRule" />
@@ -774,6 +794,7 @@
           <Property Name="Service" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="ModuleID" Type="Int32" Nullable="false" />
           <Property Name="Roles" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Shan" Type="Boolean" />
           <NavigationProperty Name="Module" Relationship="Self.FK__Menu__ModuleID__6383C8BA" FromRole="Menu" ToRole="Module" />
         </EntityType>
         <EntityType Name="Module">
@@ -784,6 +805,7 @@
           <Property Name="Ico" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="ModuleName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="SortCode" Type="Int32" Nullable="false" />
+          <Property Name="Shan" Type="Boolean" />
           <NavigationProperty Name="Menus" Relationship="Self.FK__Menu__ModuleID__6383C8BA" FromRole="Module" ToRole="Menu" />
         </EntityType>
         <EntityType Name="Paper">
@@ -801,6 +823,7 @@
           <Property Name="QuestionCount" Type="Int32" Nullable="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreatorID" Type="Int32" Nullable="false" />
+          <Property Name="Shan" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Grade" Relationship="Self.FK__Paper__GradeID__47DBAE45" FromRole="Paper" ToRole="Grade" />
           <NavigationProperty Name="Teacher" Relationship="Self.FK__Paper__CreatorID__4BAC3F29" FromRole="Paper" ToRole="Teacher" />
           <NavigationProperty Name="PaperRule" Relationship="Self.FK__Paper__RuleID__49C3F6B7" FromRole="Paper" ToRole="PaperRule" />
@@ -815,6 +838,7 @@
           <Property Name="PaperID" Type="Int32" Nullable="false" />
           <Property Name="QuestionID" Type="Int32" Nullable="false" />
           <Property Name="SortCode" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Shan" Type="Boolean" />
           <NavigationProperty Name="Paper" Relationship="Self.FK__PaperDeta__Paper__03F0984C" FromRole="PaperDetail" ToRole="Paper" />
           <NavigationProperty Name="Question" Relationship="Self.FK__PaperDeta__Quest__04E4BC85" FromRole="PaperDetail" ToRole="Question" />
         </EntityType>
@@ -827,6 +851,7 @@
           <Property Name="GradeID" Type="Int32" Nullable="false" />
           <Property Name="CreatorID" Type="Int32" Nullable="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Shan" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Grade" Relationship="Self.FK__PaperRule__Grade__398D8EEE" FromRole="PaperRule" ToRole="Grade" />
           <NavigationProperty Name="Papers" Relationship="Self.FK__Paper__RuleID__49C3F6B7" FromRole="PaperRule" ToRole="Paper" />
           <NavigationProperty Name="Teacher" Relationship="Self.FK__PaperRule__Creat__3A81B327" FromRole="PaperRule" ToRole="Teacher" />
@@ -838,6 +863,7 @@
           </Key>
           <Property Name="TypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TypeName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Shan" Type="Boolean" />
           <NavigationProperty Name="Papers" Relationship="Self.FK__Paper__typeID__48CFD27E" FromRole="PaperType" ToRole="Paper" />
         </EntityType>
         <EntityType Name="Question">
@@ -856,6 +882,7 @@
           <Property Name="CheckID" Type="Int32" />
           <Property Name="CheckTime" Type="DateTime" Precision="3" />
           <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Shan" Type="Boolean" />
           <NavigationProperty Name="Answers" Relationship="Self.FK__Answer__Question__35BCFE0A" FromRole="Question" ToRole="Answer" />
           <NavigationProperty Name="Chapter" Relationship="Self.FK__Question__Chapte__2F10007B" FromRole="Question" ToRole="Chapter" />
           <NavigationProperty Name="PaperDetails" Relationship="Self.FK__PaperDeta__Quest__04E4BC85" FromRole="Question" ToRole="PaperDetail" />
@@ -880,6 +907,7 @@
           <Property Name="RoleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="RoleName" Type="String" MaxLength="120" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Shan" Type="Boolean" />
           <NavigationProperty Name="Teachers" Relationship="Self.FK__Teacher__RoleID__1FCDBCEB" FromRole="Role" ToRole="Teacher" />
         </EntityType>
         <EntityType Name="RuleDetail">
@@ -892,6 +920,7 @@
           <Property Name="ChapterID" Type="Int32" />
           <Property Name="QuestionCount" Type="Int32" Nullable="false" />
           <Property Name="QuestionLevel" Type="Int32" Nullable="false" />
+          <Property Name="Shan" Type="Boolean" />
           <NavigationProperty Name="Chapter" Relationship="Self.FK__RuleDetai__Chapt__403A8C7D" FromRole="RuleDetail" ToRole="Chapter" />
           <NavigationProperty Name="PaperRule" Relationship="Self.FK__RuleDetai__RuleI__3E52440B" FromRole="RuleDetail" ToRole="PaperRule" />
           <NavigationProperty Name="TextBook" Relationship="Self.FK__RuleDetai__BookI__3F466844" FromRole="RuleDetail" ToRole="TextBook" />
@@ -911,6 +940,7 @@
           <Property Name="Borndate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="CreateTime" Type="DateTime" Precision="0" />
           <Property Name="ClassID" Type="Int32" />
+          <Property Name="Shan" Type="Boolean" />
           <NavigationProperty Name="Class" Relationship="Self.FK__Student__ClassID__2A4B4B5E" FromRole="Student" ToRole="Class" />
           <NavigationProperty Name="StuQueRecords" Relationship="Self.FK__StuQueRec__Stude__5165187F" FromRole="Student" ToRole="StuQueRecord" />
         </EntityType>
@@ -960,6 +990,7 @@
           <Property Name="Password" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="RoleID" Type="Int32" Nullable="false" />
           <Property Name="JoinTime" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Shan" Type="Boolean" />
           <NavigationProperty Name="Classes" Relationship="Self.FK__Class__MasterID__239E4DCF" FromRole="Teacher" ToRole="Class" />
           <NavigationProperty Name="Classes1" Relationship="Self.FK__Class__TeacharID__24927208" FromRole="Teacher" ToRole="Class" />
           <NavigationProperty Name="Papers" Relationship="Self.FK__Paper__CreatorID__4BAC3F29" FromRole="Teacher" ToRole="Paper" />
@@ -975,6 +1006,7 @@
           <Property Name="BookID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="BookName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="GradeID" Type="Int32" Nullable="false" />
+          <Property Name="Shan" Type="Boolean" />
           <NavigationProperty Name="Chapters" Relationship="Self.FK__Chapter__BookID__182C9B23" FromRole="TextBook" ToRole="Chapter" />
           <NavigationProperty Name="Grade" Relationship="Self.FK__TextBook__GradeI__145C0A3F" FromRole="TextBook" ToRole="Grade" />
           <NavigationProperty Name="Questions" Relationship="Self.FK__Question__BookID__2E1BDC42" FromRole="TextBook" ToRole="Question" />
@@ -1340,7 +1372,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="ExamSysEntities2" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="ExamSysEntities1" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Answers" EntityType="Self.Answer" />
           <EntitySet Name="Chapters" EntityType="Self.Chapter" />
           <EntitySet Name="Classes" EntityType="Self.Class" />
@@ -1487,7 +1519,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="ExamSysModelStoreContainer" CdmEntityContainer="ExamSysEntities2">
+        <EntityContainerMapping StorageEntityContainer="ExamSysModelStoreContainer" CdmEntityContainer="ExamSysEntities1">
           <EntitySetMapping Name="Answers">
             <EntityTypeMapping TypeName="ExamSysModel.Answer">
               <MappingFragment StoreEntitySet="Answer">
@@ -1495,6 +1527,7 @@
                 <ScalarProperty Name="AnswerContent" ColumnName="AnswerContent" />
                 <ScalarProperty Name="QuestionID" ColumnName="QuestionID" />
                 <ScalarProperty Name="IsResult" ColumnName="IsResult" />
+                <ScalarProperty Name="Shan" ColumnName="Shan" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1504,6 +1537,7 @@
                 <ScalarProperty Name="ChapterID" ColumnName="ChapterID" />
                 <ScalarProperty Name="ChapterName" ColumnName="ChapterName" />
                 <ScalarProperty Name="BookID" ColumnName="BookID" />
+                <ScalarProperty Name="Shan" ColumnName="Shan" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1516,6 +1550,7 @@
                 <ScalarProperty Name="TeacharID" ColumnName="TeacharID" />
                 <ScalarProperty Name="GradeID" ColumnName="GradeID" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Shan" ColumnName="Shan" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1524,6 +1559,7 @@
               <MappingFragment StoreEntitySet="Grade">
                 <ScalarProperty Name="GradeID" ColumnName="GradeID" />
                 <ScalarProperty Name="GradeName" ColumnName="GradeName" />
+                <ScalarProperty Name="Shan" ColumnName="Shan" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1536,6 +1572,7 @@
                 <ScalarProperty Name="Service" ColumnName="Service" />
                 <ScalarProperty Name="ModuleID" ColumnName="ModuleID" />
                 <ScalarProperty Name="Roles" ColumnName="Roles" />
+                <ScalarProperty Name="Shan" ColumnName="Shan" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1546,6 +1583,7 @@
                 <ScalarProperty Name="Ico" ColumnName="Ico" />
                 <ScalarProperty Name="ModuleName" ColumnName="ModuleName" />
                 <ScalarProperty Name="SortCode" ColumnName="SortCode" />
+                <ScalarProperty Name="Shan" ColumnName="Shan" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1563,6 +1601,7 @@
                 <ScalarProperty Name="QuestionCount" ColumnName="QuestionCount" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="CreatorID" ColumnName="CreatorID" />
+                <ScalarProperty Name="Shan" ColumnName="Shan" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1572,6 +1611,7 @@
                 <ScalarProperty Name="PaperID" ColumnName="PaperID" />
                 <ScalarProperty Name="QuestionID" ColumnName="QuestionID" />
                 <ScalarProperty Name="SortCode" ColumnName="SortCode" />
+                <ScalarProperty Name="Shan" ColumnName="Shan" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1583,6 +1623,7 @@
                 <ScalarProperty Name="GradeID" ColumnName="GradeID" />
                 <ScalarProperty Name="CreatorID" ColumnName="CreatorID" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Shan" ColumnName="Shan" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1591,6 +1632,7 @@
               <MappingFragment StoreEntitySet="PaperType">
                 <ScalarProperty Name="TypeID" ColumnName="TypeID" />
                 <ScalarProperty Name="TypeName" ColumnName="TypeName" />
+                <ScalarProperty Name="Shan" ColumnName="Shan" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1609,6 +1651,7 @@
                 <ScalarProperty Name="CheckID" ColumnName="CheckID" />
                 <ScalarProperty Name="CheckTime" ColumnName="CheckTime" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Shan" ColumnName="Shan" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1627,6 +1670,7 @@
                 <ScalarProperty Name="RoleID" ColumnName="RoleID" />
                 <ScalarProperty Name="RoleName" ColumnName="RoleName" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Shan" ColumnName="Shan" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1639,6 +1683,7 @@
                 <ScalarProperty Name="ChapterID" ColumnName="ChapterID" />
                 <ScalarProperty Name="QuestionCount" ColumnName="QuestionCount" />
                 <ScalarProperty Name="QuestionLevel" ColumnName="QuestionLevel" />
+                <ScalarProperty Name="Shan" ColumnName="Shan" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1656,6 +1701,7 @@
                 <ScalarProperty Name="Borndate" ColumnName="Borndate" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="ClassID" ColumnName="ClassID" />
+                <ScalarProperty Name="Shan" ColumnName="Shan" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1700,6 +1746,7 @@
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="RoleID" ColumnName="RoleID" />
                 <ScalarProperty Name="JoinTime" ColumnName="JoinTime" />
+                <ScalarProperty Name="Shan" ColumnName="Shan" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1709,6 +1756,7 @@
                 <ScalarProperty Name="BookID" ColumnName="BookID" />
                 <ScalarProperty Name="BookName" ColumnName="BookName" />
                 <ScalarProperty Name="GradeID" ColumnName="GradeID" />
+                <ScalarProperty Name="Shan" ColumnName="Shan" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

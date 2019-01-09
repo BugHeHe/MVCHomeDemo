@@ -18,10 +18,7 @@ namespace Exam.Controllers
         // GET: CreatorLu
         public ActionResult Index()
         {
-            if (Session["User"] == null)
-            {
-                return RedirectToAction("Index", "LoginExamGou");
-            }
+            
             return View();
         }
         public ActionResult ADD()

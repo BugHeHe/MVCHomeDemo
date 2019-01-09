@@ -122,17 +122,12 @@
             },
             //增加
             ADD() {
-                axios.post('/GRadeC/ADD', { GradeNme:this.GradeName}).then(Response => {
-                    if (Response.data != "失败")
-                    {
-                        alert("添加成功");
-                        this.Init();
+                axios.post('/GRadeC/ADD', { GradeNme: this.GradeName }).then(Response => {
+                    alert(Response.data);
+                    this.Init();
                         //去掉模态框
                         
                         ModuleQ();
-                    } else {
-                        alert("已经存在，请重新输入");
-                    }
                 })
             },
             //删除
@@ -140,12 +135,9 @@
                 var Shu = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(1)').text();
                 if (confirm("确定要删除吗？")) {
                     axios.post('/GRadeC/Clear', { GradeN: Shu }).then(Response => {
-                        if (Response.data != "失败") {
-                            alert("删除成功");
+
+                        alert(Response.data);
                             this.Init();
-                        } else {
-                            alert("删除失败");
-                        }
                     })
                 }
             },
@@ -162,13 +154,10 @@
             //修改
             Update() {
                 axios.post('/GRadeC/Update', { GradeID:this.GradeID1, GradeNam:this.GradeName1 }).then(Response => {
-                        if (Response.data != "失败") {
-                            alert("修改成功");
+
+                            alert(Response.data);
                             this.Init();
                             ModuleQ1();
-                        } else {
-                            alert("修改失败");
-                        }
                     })
             }
 

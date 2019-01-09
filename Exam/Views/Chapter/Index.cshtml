@@ -200,13 +200,8 @@
                 if (parseInt(BookID) > 0) {
                     this.Chapter.BookID = BookID;
                     axios.post('/Chapter/ADD', this.Chapter).then(Response => {
-                        if (Response.data != "失败") {
-                            alert("添加成功");
-                            this.Init();
-                        }
-                        else {
-                            alert("已经拥有该教材，请重新添加");
-                        }
+                        alert(Response.data);
+                        this.Init();
                         ModuleQ();
 
                     })
@@ -220,12 +215,8 @@
                     this.Chapter.ChapterName = BookName;
                     this.Chapter.ChapterID = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(0)').text();
                     axios.post('/Chapter/Clear', this.Chapter).then(Response => {
-                        if (Response.data != "失败") {
-                            alert("删除成功");
-                            this.Init();
-                        } else {
-                            alert("删除失败");
-                        }
+                        alert(Response.data);
+                        this.Init();
                     })
                 }
             },
@@ -245,12 +236,10 @@
             },
             //修改章节
             Update() {
+                this.Chapter.BookID = $('#BookGrade2').val();
                 axios.post('/Chapter/Update', this.Chapter).then(Response => {
-                    if (Response.data != "失败") {
-                        alert("修改成功");
-                        this.Init();
-                    } else
-                        alert("修改失败");
+                    alert(Response.data);
+                    this.Init();
                     ModuleQ();
                 })
             },

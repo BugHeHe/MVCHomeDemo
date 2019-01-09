@@ -12,10 +12,7 @@ namespace Exam.Controllers
         // GET: ExamHou
         public ActionResult Index()
         {
-            if (Session["User"] == null)
-            {
-                return RedirectToAction("Index","LoginExamGou");
-            }
+            
             return View();
         }
     }

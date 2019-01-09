@@ -20,6 +20,7 @@ namespace Exam.Models
         public string Service { get; set; }
         public int ModuleID { get; set; }
         public string Roles { get; set; }
+        public Nullable<bool> Shan { get; set; }
     
         public virtual Module Module { get; set; }
     }

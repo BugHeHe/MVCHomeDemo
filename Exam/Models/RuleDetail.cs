@@ -20,6 +20,7 @@ namespace Exam.Models
         public Nullable<int> ChapterID { get; set; }
         public int QuestionCount { get; set; }
         public int QuestionLevel { get; set; }
+        public Nullable<bool> Shan { get; set; }
     
         public virtual Chapter Chapter { get; set; }
         public virtual PaperRule PaperRule { get; set; }

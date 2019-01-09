@@ -74,7 +74,7 @@ namespace Exam.Controllers
         public List<PaperRuleS> Shou()
         {
             List<PaperRuleS> li = new List<PaperRuleS>();
-            foreach (var item in ef.PaperRules.ToList())
+            foreach (var item in ef.PaperRules.Where(x=>x.Shan==false).ToList())
             {
                 li.Add(new PaperRuleS()
                 {
@@ -136,14 +136,9 @@ namespace Exam.Controllers
                 ef.Configuration.LazyLoadingEnabled = false;
                 ef.Configuration.ProxyCreationEnabled = false;
                 string name = te.RuleName;
-                NewMethod(name);
-                List<RuleDetail> li = ef.RuleDetails.Where(x => x.RuleID == ef.PaperRules.FirstOrDefault(a => a.RuleName == name).RuleID).ToList();
-                for (int i = 0; i < li.Count; i++)
-                {
-                    ef.RuleDetails.Remove(li[i]);
-                    ef.SaveChanges();
-                }
-                ef.PaperRules.Remove(ef.PaperRules.FirstOrDefault(x => x.RuleName == name));
+               PaperRule ga=ef.PaperRules.FirstOrDefault(x => x.RuleName == name);
+                ga.Shan = true;
+                ef.Entry(ga).State= EntityState.Modified;
                 if (ef.SaveChanges() > 0)
                 {
                     return Content("删除成功");
@@ -157,22 +152,22 @@ namespace Exam.Controllers
             }
         }
 
-        private void NewMethod(string name)
-        {
-            List<Paper> PaperDeLi = ef.Papers.Where(x => x.RuleID == ef.PaperRules.FirstOrDefault(a => a.RuleName == name).RuleID).ToList();
-            for (int i = 0; i < PaperDeLi.Count; i++)
-            {
-                ef.Papers.Remove(PaperDeLi[i]);
-                ef.SaveChanges();
-            }
-            List<PaperDetail> li = ef.PaperDetails.Where(x => x.PaperID == ef.Papers.FirstOrDefault(a => a.RuleID == ef.PaperRules.FirstOrDefault(b => b.RuleName == name).RuleID).PaperID).ToList();
-            for (int i = 0; i < li.Count; i++)
-            {
-                ef.PaperDetails.Remove(li[i]);
-                ef.SaveChanges();
-            }
+        //private void NewMethod(string name)
+        //{
+        //    List<Paper> PaperDeLi = ef.Papers.Where(x => x.RuleID == ef.PaperRules.FirstOrDefault(a => a.RuleName == name).RuleID).ToList();
+        //    for (int i = 0; i < PaperDeLi.Count; i++)
+        //    {
+        //        ef.Papers.Remove(PaperDeLi[i]);
+        //        ef.SaveChanges();
+        //    }
+        //    List<PaperDetail> li = ef.PaperDetails.Where(x => x.PaperID == ef.Papers.FirstOrDefault(a => a.RuleID == ef.PaperRules.FirstOrDefault(b => b.RuleName == name).RuleID).PaperID).ToList();
+        //    for (int i = 0; i < li.Count; i++)
+        //    {
+        //        ef.PaperDetails.Remove(li[i]);
+        //        ef.SaveChanges();
+        //    }
            
-        }
+        //}
 
         [HttpPost]
         public ActionResult Update(PaperRuleS te)

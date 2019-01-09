@@ -24,6 +24,7 @@ namespace Exam.Models
         public string AnswerContent { get; set; }
         public int QuestionID { get; set; }
         public bool IsResult { get; set; }
+        public Nullable<bool> Shan { get; set; }
     
         public virtual Question Question { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

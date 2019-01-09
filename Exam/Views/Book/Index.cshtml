@@ -200,13 +200,9 @@
                 if (parseInt(GradeID) > 0) {
                     this.TextBook.GradeID = GradeID;
                     axios.post('/Book/ADD', this.TextBook).then(Response => {
-                        if (Response.data != "失败") {
-                            alert("添加成功");
+
+                        alert(Response.data);
                             this.Init();
-                        }
-                        else {
-                            alert("已经拥有该教材，请重新添加");
-                        }
                         ModuleQ();
 
                     })
@@ -220,12 +216,8 @@
                     this.TextBook.BookName = BookName;
 
                     axios.post('/Book/Clear', this.TextBook).then(Response => {
-                        if (Response.data != "失败") {
-                            alert("删除成功");
+                         alert(Response.data);
                             this.Init();
-                        } else {
-                            alert("删除失败");
-                        }
                     })
                 }
             },
@@ -248,12 +240,8 @@
                 this.TextBook.GradeID = $('#BookGrade2').val();
                 axios.post('/Book/Update', this.TextBook).then(Response =>
                 {
-                    if (Response.data != "失败")
-                    {
-                        alert("修改成功");
+                    alert(Response.data);
                         this.Init();
-                    } else
-                        alert("修改失败");
                     ModuleQ();
                 })
             },

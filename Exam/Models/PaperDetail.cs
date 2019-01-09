@@ -17,6 +17,7 @@ namespace Exam.Models
         public int PaperID { get; set; }
         public int QuestionID { get; set; }
         public int SortCode { get; set; }
+        public Nullable<bool> Shan { get; set; }
     
         public virtual Paper Paper { get; set; }
         public virtual Question Question { get; set; }

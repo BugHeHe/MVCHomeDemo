@@ -32,6 +32,7 @@ namespace Exam.Models
         public string Password { get; set; }
         public int RoleID { get; set; }
         public System.DateTime JoinTime { get; set; }
+        public Nullable<bool> Shan { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Class> Classes { get; set; }

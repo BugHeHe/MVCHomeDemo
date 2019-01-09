@@ -20,7 +20,7 @@ namespace Exam.Controllers
         public ActionResult List()
         {
             ef.Configuration.ProxyCreationEnabled = false;
-            return Json(ef.Grades.ToList(), JsonRequestBehavior.AllowGet);
+            return Json(ef.Grades.Where(x=>x.Shan==false).ToList(), JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
         public ActionResult Select(string Name)
@@ -28,7 +28,7 @@ namespace Exam.Controllers
             ef.Configuration.ProxyCreationEnabled = false;
             if (!string.IsNullOrEmpty(Name))
             {
-                return Json(ef.Grades.Where(x => x.GradeName == Name).ToList(), JsonRequestBehavior.AllowGet);
+                return Json(ef.Grades.Where(x => x.GradeName == Name && x.Shan==false).ToList(), JsonRequestBehavior.AllowGet);
             }
             return Content("失败");
 
@@ -46,12 +46,13 @@ namespace Exam.Controllers
             string an = GradeNme;
             List<Grade> list = ef.Grades.ToList();
             if (list.Any(i => i.GradeName == GradeNme))
-                return Content("失败");
+                return Content("已经存在");
             Grade ad = new Grade() {GradeName= GradeNme };
+            ad.Shan = false;
             ef.Entry(ad).State = EntityState.Added;
             if(ef.SaveChanges()>0)
             {
-                return Json(list, JsonRequestBehavior.AllowGet);
+                return Content("添加成功");
             }
             return Content("失败");
             
@@ -66,12 +67,14 @@ namespace Exam.Controllers
         {
             ef.Configuration.ProxyCreationEnabled = false;
             List<Grade> list = ef.Grades.ToList();
-            ef.Grades.Remove(list.FirstOrDefault(x => x.GradeName == GradeN));
+            Grade lis = ef.Grades.FirstOrDefault(x => x.GradeName == GradeN);
+            lis.Shan = true;
+            ef.Entry(lis).State = EntityState.Modified;
             if (ef.SaveChanges() > 0)
             {
-                return Json(list, JsonRequestBehavior.AllowGet);
+                return Content("删除成功");
             }
-                return Content("失败");
+                return Content("删除失败");
         }
         /// <summary>
         /// 修改年级信息
@@ -83,13 +86,15 @@ namespace Exam.Controllers
         public ActionResult Update(string GradeID,string GradeNam)
         {
             ef.Configuration.ProxyCreationEnabled = false;
+            if (ef.Grades.Any(x => x.GradeName == GradeNam))
+                return Content("已经存在");
             Grade gr = new Grade() { GradeID = Convert.ToInt32(GradeID), GradeName = GradeNam };
             ef.Entry(gr).State = EntityState.Modified;
             if (ef.SaveChanges() > 0)
             {
-                return Json(ef.Grades.ToList(), JsonRequestBehavior.AllowGet);
+                return Content("修改成功");
             }
-            return Content("失败");
+            return Content("修改失败");
         }
     }
 }

@@ -32,6 +32,7 @@ namespace Exam.Models
         public int QuestionCount { get; set; }
         public System.DateTime CreateTime { get; set; }
         public int CreatorID { get; set; }
+        public bool Shan { get; set; }
     
         public virtual Grade Grade { get; set; }
         public virtual Teacher Teacher { get; set; }

@@ -26,6 +26,7 @@ namespace Exam.Models
         public int TeacharID { get; set; }
         public int GradeID { get; set; }
         public Nullable<System.DateTime> CreateTime { get; set; }
+        public Nullable<bool> Shan { get; set; }
     
         public virtual Grade Grade { get; set; }
         public virtual Teacher Teacher { get; set; }

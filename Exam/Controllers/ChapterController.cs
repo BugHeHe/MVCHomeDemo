@@ -16,7 +16,7 @@ namespace Exam.Controllers
         public ActionResult Index()
         {
             var li = new List<SelectListItem>();
-            foreach (var item in ef.TextBooks.ToList())
+            foreach (var item in ef.TextBooks.Where(x=>x.Shan==false).ToList())
             {
                 li.Add(new SelectListItem() { Text = item.BookName, Value = item.BookID.ToString() });
             }
@@ -53,7 +53,7 @@ namespace Exam.Controllers
             List<ChapterS> li = Show();
             List<ChapterS> pagedList = null;
             int GradID = Convert.ToInt32(TextBookID);
-            TextBook GrNa = ef.TextBooks.FirstOrDefault(x =>x.BookID==GradID);
+            TextBook GrNa = ef.TextBooks.FirstOrDefault(x =>x.BookID==GradID && x.Shan==false);
             if (!string.IsNullOrEmpty(ChapterName) && !string.IsNullOrEmpty(TextBookID))
             {
                 if (GradID >= 1)
@@ -88,18 +88,45 @@ namespace Exam.Controllers
         [HttpPost]
         public ActionResult ADD(Chapter te)
         {
-            Chapter ch = new Chapter()
+            try
             {
-                BookID=te.BookID,
-                ChapterName=te.ChapterName
-            };
-            ef.Entry(ch).State = EntityState.Added;
-            if (ef.SaveChanges() > 0)
-            {
-                return Json("成功", JsonRequestBehavior.AllowGet);
+
+                Chapter ch = new Chapter()
+                {
+                    BookID = te.BookID,
+                    ChapterName = te.ChapterName
+                };
+                if (ef.Chapters.Any(x => x.ChapterName == te.ChapterName.Trim()))
+                {
+                    if (ef.Chapters.All(x =>  x.Shan == true && x.BookID==te.BookID))
+                    {
+                        Chapter ta = ef.Chapters.FirstOrDefault(x => x.ChapterName == te.ChapterName);
+                        ta.Shan = false;
+                        ef.Entry(ta).State = EntityState.Modified;
+                        if (ef.SaveChanges() > 0)
+                        {
+                            return Content("添加成功");
+                        }
+                    }
+                   else
+                        return Content("已经存在了");
+                }
+                else
+                {
+                    ch.Shan = false;
+                    ef.Entry(ch).State = EntityState.Added;
+                    if (ef.SaveChanges() > 0)
+                        return Content("添加成功");
+                }
+                return Content("添加失败");
+
             }
-            else
-                return Content("失败");
+            catch(Exception ex)
+            {
+                return Content(ex.ToString());
+            }
+           
+            
         }
         /// <summary>
         /// 清除对象  删除
@@ -109,10 +136,12 @@ namespace Exam.Controllers
         [HttpPost]
         public ActionResult Clear(Chapter te)
         {
-            ef.Chapters.Remove(ef.Chapters.FirstOrDefault(x=>x.ChapterName==te.ChapterName && x.ChapterID==te.ChapterID));
+            Chapter ta = ef.Chapters.FirstOrDefault(x => x.ChapterName == te.ChapterName.Trim());
+            ta.Shan = true;
+            ef.Entry(ta).State = EntityState.Modified;
             if (ef.SaveChanges() > 0)
             {
-                return Json("成功", JsonRequestBehavior.AllowGet);
+                return Content("删除成功");
             }
             else
                 return Content("失败");
@@ -125,19 +154,20 @@ namespace Exam.Controllers
         [HttpPost]
         public ActionResult Update(Chapter te)
         {
-            ef.Configuration.EnsureTransactionsForFunctionsAndCommands = false;
-            Chapter a = new Chapter() { ChapterID=te.ChapterID,ChapterName=te.ChapterName,BookID=te.BookID};
+            if (ef.Chapters.All(x => x.ChapterName == te.ChapterName.Trim() && x.ChapterID == te.ChapterID && x.BookID == te.BookID))
+                return Content("已经存在了");
+            Chapter a = new Chapter() { ChapterID=te.ChapterID,ChapterName=te.ChapterName.Trim(),BookID=te.BookID,Shan=false};
             ef.Entry(a).State = EntityState.Modified;
             if (ef.SaveChanges() > 0)
             {
-                return Json(Show(), JsonRequestBehavior.AllowGet);
+                return Content("修改成功");
             }
             return Content("失败");
         }
         public List<ChapterS> Show()
         {
             List<ChapterS> li = new List<ChapterS>();
-            foreach (var item in ef.Chapters.ToList())
+            foreach (var item in ef.Chapters.Where(x => x.Shan == false).ToList())
             {
                 li.Add(new ChapterS()
                 {

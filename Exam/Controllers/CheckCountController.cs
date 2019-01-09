@@ -29,7 +29,7 @@ namespace Exam.Controllers
             try
             {
                 List<CountTeacher> li = new List<CountTeacher>();
-                foreach (var item in ef.Teachers.Where(x => x.RoleID == 2))
+                foreach (var item in ef.Teachers.Where(x=>x.Shan==false).ToList())
                 {
                     CountTeacher te = new CountTeacher();
                     te.Name = item.TeacherName;
@@ -42,19 +42,19 @@ namespace Exam.Controllers
 
                     if (!string.IsNullOrEmpty(DateQian) && !string.IsNullOrEmpty(DateHou))
                     {
-                        te.Count = ef.Questions.Where(x => x.CheckID == ef.Teachers.FirstOrDefault(a => a.TeacherName == item.TeacherName).TeacherID && x.CheckTime >= de1 && x.CheckTime <= de2).Count();
+                        te.Count = ef.Questions.Where(x => x.CheckID == ef.Teachers.FirstOrDefault(a => a.TeacherName == item.TeacherName && x.Shan == false).TeacherID && x.CheckTime >= de1 && x.CheckTime <= de2).Count();
                     }
                     else if (string.IsNullOrEmpty(DateQian) && !string.IsNullOrEmpty(DateHou))
                     {
-                        te.Count = ef.Questions.Where(x => x.CheckID == ef.Teachers.FirstOrDefault(a => a.TeacherName == item.TeacherName).TeacherID && x.CheckTime <= de2).Count();
+                        te.Count = ef.Questions.Where(x => x.CheckID == ef.Teachers.FirstOrDefault(a => a.TeacherName == item.TeacherName && x.Shan == false ).TeacherID && x.CheckTime <= de2).Count();
                     }
                     else if (!string.IsNullOrEmpty(DateQian) && string.IsNullOrEmpty(DateHou))
                     {
-                        te.Count = ef.Questions.Where(x => x.CheckID == ef.Teachers.FirstOrDefault(a => a.TeacherName == item.TeacherName).TeacherID && x.CheckTime >= de1).Count();
+                        te.Count = ef.Questions.Where(x => x.CheckID == ef.Teachers.FirstOrDefault(a => a.TeacherName == item.TeacherName && x.Shan == false ).TeacherID && x.CheckTime >= de1).Count();
                     }
                     else
                     {
-                        te.Count = ef.Questions.Where(x => x.CreatorID == ef.Teachers.FirstOrDefault(a => a.TeacherName == item.TeacherName).TeacherID).Count();
+                        te.Count = ef.Questions.Where(x => x.CreatorID == ef.Teachers.FirstOrDefault(a => a.TeacherName == item.TeacherName && x.Shan == false ).TeacherID).Count();
                     }
                     li.Add(te);
                 }
@@ -70,12 +70,12 @@ namespace Exam.Controllers
         public List<CountTeacher> shou()
         {
             List<CountTeacher> li = new List<CountTeacher>();
-            foreach (var item in ef.Teachers.Where(x => x.RoleID == 2))
+            foreach (var item in ef.Teachers.Where(x => x.Shan == false).ToList())
             {
                 li.Add(new CountTeacher()
                 {
                     Name = item.TeacherName,
-                    Count = ef.Questions.Where(x => x.CheckID == ef.Teachers.FirstOrDefault(a => a.TeacherName == item.TeacherName).TeacherID && x.IsCheck==true).Count()
+                    Count = ef.Questions.Where(x => x.CheckID == ef.Teachers.FirstOrDefault(a => a.TeacherName == item.TeacherName && x.Shan==false).TeacherID && x.IsCheck==true).Count()
                 });
             }
             return li;

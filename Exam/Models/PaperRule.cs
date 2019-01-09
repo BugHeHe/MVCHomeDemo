@@ -26,6 +26,7 @@ namespace Exam.Models
         public int GradeID { get; set; }
         public int CreatorID { get; set; }
         public System.DateTime CreateTime { get; set; }
+        public bool Shan { get; set; }
     
         public virtual Grade Grade { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

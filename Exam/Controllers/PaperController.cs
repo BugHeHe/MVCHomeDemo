@@ -110,6 +110,7 @@ namespace Exam.Controllers
                 ef.Configuration.ProxyCreationEnabled = false;
                 int ID = Convert.ToInt32(id);
                 Paper te = ef.Papers.FirstOrDefault(x => x.PaperID == ID);
+                
                 ef.Papers.Remove(te);
                 if (ef.SaveChanges() > 0)
                 {
@@ -175,7 +176,7 @@ namespace Exam.Controllers
                 ta.Duration = te.Duration;
                 ta.IsOpen = te.IsOpen == 0 ? false : true;
                 ta.ClassList = te.ClassList;
-                ta.RuleID = ef.PaperRules.FirstOrDefault(x => x.RuleName == RuleName).RuleID;
+                ta.RuleID = ef.PaperRules.FirstOrDefault(x => x.RuleName == RuleName && x.Shan==false).RuleID;
                 ta.CreatorID = 1;
 
                     ta.QuestionCount = 0; ;
@@ -183,7 +184,7 @@ namespace Exam.Controllers
                 ef.SaveChanges();
                 List<Paper> PapeID = ef.Papers.ToList();
 
-                List<RuleDetail> list = ef.RuleDetails.Where(x => x.RuleID == ef.PaperRules.FirstOrDefault(a => a.RuleName == RuleName).RuleID).ToList();
+                List<RuleDetail> list = ef.RuleDetails.Where(x => x.RuleID == ef.PaperRules.FirstOrDefault(a => a.RuleName == RuleName && a.Shan==false).RuleID).ToList();
                 for (int i = 0; i <list.Count ; i++)
                 {
                     int questionLevel = list[i].QuestionLevel;
@@ -191,10 +192,11 @@ namespace Exam.Controllers
                     List<Question> QLi = ef.Questions.Where(x => x.QuestionLevel == questionLevel && x.BookID== BookID).ToList();
                     //该章节所拥有的所有内容
                     List<Question> QList = ef.Questions.Where(x => x.BookID == BookID).ToList();
+                    
                     if (QLi.Count != list[i].QuestionCount)
                     {
                         int bian = list[i].QuestionCount-QLi.Count;
-                        for (int k = 0; k < bian; k++)
+                        for (int k = 0; k <bian; k++)
                         {
                             Random r = new Random(int.Parse(DateTime.Now.ToString("HHmmssfff")) +k);
                             int num = r.Next(QList[0].QuestionID,QList[QList.Count-1].QuestionID);
