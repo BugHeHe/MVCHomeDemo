@@ -96,9 +96,7 @@ namespace Exam.Controllers
                     BookID = te.BookID,
                     ChapterName = te.ChapterName
                 };
-                if (ef.Chapters.Any(x => x.ChapterName == te.ChapterName.Trim()))
-                {
-                    if (ef.Chapters.All(x =>  x.Shan == true && x.BookID==te.BookID))
+                    if (ef.Chapters.FirstOrDefault(x =>  x.Shan == true && x.BookID==te.BookID)!=null)
                     {
                         Chapter ta = ef.Chapters.FirstOrDefault(x => x.ChapterName == te.ChapterName);
                         ta.Shan = false;
@@ -107,18 +105,15 @@ namespace Exam.Controllers
                         {
                             return Content("添加成功");
                         }
+                      }
+                    else
+                    {
+                        ch.Shan = false;
+                        ef.Entry(ch).State = EntityState.Added;
+                        if (ef.SaveChanges() > 0)
+                            return Content("添加成功");
                     }
-                   else
-                        return Content("已经存在了");
-                }
-                else
-                {
-                    ch.Shan = false;
-                    ef.Entry(ch).State = EntityState.Added;
-                    if (ef.SaveChanges() > 0)
-                        return Content("添加成功");
-                }
-                return Content("添加失败");
+                    return Content("添加失败");
 
             }
             catch(Exception ex)
@@ -154,7 +149,7 @@ namespace Exam.Controllers
         [HttpPost]
         public ActionResult Update(Chapter te)
         {
-            if (ef.Chapters.All(x => x.ChapterName == te.ChapterName.Trim() && x.ChapterID == te.ChapterID && x.BookID == te.BookID))
+            if (ef.Chapters.FirstOrDefault(x => x.ChapterName == te.ChapterName.Trim() && x.ChapterID == te.ChapterID && x.BookID == te.BookID)!=null)
                 return Content("已经存在了");
             Chapter a = new Chapter() { ChapterID=te.ChapterID,ChapterName=te.ChapterName.Trim(),BookID=te.BookID,Shan=false};
             ef.Entry(a).State = EntityState.Modified;
@@ -173,7 +168,7 @@ namespace Exam.Controllers
                 {
                     ChapterID = item.ChapterID,
                     ChapterName = item.ChapterName,
-                    BookName = ef.TextBooks.FirstOrDefault(x => x.BookID == item.BookID).BookName
+                    BookName = ef.TextBooks.FirstOrDefault(x => x.BookID == item.BookID && x.Shan==false).BookName
                 });
 
             }

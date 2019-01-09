@@ -80,17 +80,23 @@
 
                     <div class="form-inline">
                         班主任名称：
-                        <div class="form-group">
+                        <select id="ADBan" style="width:300px;height:30px">
+                            <option v-for="s in Ban">{{s}}</option>
+                        </select>
+                        @*<div class="form-group">
                             <label class="sr-only" for="exampleInputEmail3">Email address</label>
                             <input type="text" class="form-control" v-model="ClassS.MasterName" id="exampleInputEmail3" placeholder="请输入班主任名称">
-                        </div>
+                        </div>*@
                     </div>
                     <div class="form-inline">
                         &nbsp; &nbsp; 教员名称：
-                        <div class="form-group">
+                        <select id="ADJiao" style="width:300px;height:30px">
+                            <option v-for="s in Jiao">{{s}}</option>
+                        </select>
+                        @*<div class="form-group">
                             <label class="sr-only" for="exampleInputEmail3">Email address</label>
                             <input type="text" class="form-control" v-model="ClassS.TeacharName" id="exampleInputEmail3" placeholder="请输入教员名称">
-                        </div>
+                        </div>*@
                     </div>
                     <div class="form-inline" style="margin-top:10px;">
                         &nbsp; &nbsp; 所属年级：
@@ -132,17 +138,23 @@
 
                     <div class="form-inline">
                         班主任名称：
-                        <div class="form-group">
+                        <select id="UpBan" style="width:300px;height:30px">
+                            <option v-for="s in Ban">{{s}}</option>
+                        </select>
+                                    @*<div class="form-group">
                             <label class="sr-only" for="exampleInputEmail3">Email address</label>
                             <input type="text" class="form-control" v-model="ClassS.MasterName" id="exampleInputEmail3" placeholder="请输入班主任名称">
-                        </div>
+                        </div>*@
                     </div>
                     <div class="form-inline">
                         &nbsp; &nbsp; 教员名称：
-                        <div class="form-group">
+                        <select id="UpJiao" style="width:300px;height:30px">
+                            <option v-for="s in Jiao">{{s}}</option>
+                        </select>
+                                    @*<div class="form-group">
                             <label class="sr-only" for="exampleInputEmail3">Email address</label>
                             <input type="text" class="form-control" v-model="ClassS.TeacharName" id="exampleInputEmail3" placeholder="请输入教员名称">
-                        </div>
+                        </div>*@
                     </div>
                     <div class="form-inline" style="margin-top:10px;">
                         &nbsp; &nbsp; 所属年级：
@@ -182,7 +194,9 @@
                 TeacharName: '',
                 GradeName: '',
                 CreateTime: ''
-            }
+            },
+            Ban: [],
+            Jiao:[],
         },
         created() {
             this.Init();
@@ -193,7 +207,8 @@
                     this.ClassS1 = Response.data.Li;
                     $('#CuntYe').text(Response.data.Ye);
                     $('#Ye').text("1");
-                })
+                });
+                this.JiaoBan();
             },
             //首页
             ShouYe() {
@@ -260,6 +275,8 @@
             ADD() {
                 var BookID = $('#BookGrade1').val();
                 if (parseInt(BookID) > 0) {
+                    this.ClassS.MasterName = $('#ADBan').val();
+                    this.ClassS.TeacharName = $('#ADJiao').val();
                     this.ClassS.GradeName = BookID;
                     this.ClassS.CreateTime = $('#exampleInputEmail4').val();
                     axios.post('/Class/ADD', this.ClassS).then(Response =>
@@ -298,10 +315,15 @@
                         break;
                     }
                 }
+                SelectXia('#UpJiao', this.ClassS.TeacherName);
+                selectXia('#UpBam', this.ClassS.MasterName);
+
             },
             //修改班级对象
             Update() {
                 this.ClassS.GradeName = $('#BookGrade2').val();
+                this.ClassS.MasterName = $('#UpBan').val();
+                this.ClassS.TeacharName = $('#UpJiao').val();
                 axios.post('/Class/Update',this.ClassS).then(Response =>
                 {
                     alert(Response.data);
@@ -329,9 +351,26 @@
                 this.ClassS.TeacharName = "";
                 this.ClassS.GradeName = "";
                 this.ClassS.CreateTime = "";
-            }
+            },
+            //获取班主任和教员
+            JiaoBan() {
+                axios.post('/Class/JiaoShow').then(Response =>
+                {
+                    this.Ban = Response.data.B;
+                    this.Jiao = Response.data.J;
+                })
+            },
         }
     });
+    function SelectXia(a, zhi) {
+        var ops = document.getElementById(a).options;//取出下拉列表的项对象集合
+        for (var i = 0; i < ops.length; i++) {//遍历集合
+            if (zhi == ops[i].values) {//如果该项的value等于文本框填写的值
+                document.getElementById(a).options[i].selected = "selected";//设定下拉列表相应的下拉项的选中
+                break;
+            }
+        }
+    }
     function ModuleQ() {
         $('#AddModal').hide();
         $('#AddModa2').hide();

@@ -219,6 +219,21 @@ namespace Exam.Controllers
             return li;
         }
 
-
+        [HttpPost]
+        public  ActionResult JiaoShow()
+        {
+            List<string> Ban = new List<string>();
+            foreach (var item in ef.Teachers.Where(x=>x.RoleID==ef.Roles.FirstOrDefault(a=>a.RoleName=="班主任" && a.Shan==false).RoleID && x.Shan==false).ToList())
+            {
+                Ban.Add(item.TeacherName);
+            }
+            List<string> Jiao = new List<string>();
+            foreach (var item in ef.Teachers.Where(x => x.RoleID == ef.Roles.FirstOrDefault(a => a.RoleName == "教员" && a.Shan == false).RoleID && x.Shan==false).ToList())
+            {
+                Jiao.Add(item.TeacherName);
+            }
+            var Ti = new { B = Ban, J = Jiao };
+            return Json(Ti,JsonRequestBehavior.AllowGet);
+        }
     }
 }

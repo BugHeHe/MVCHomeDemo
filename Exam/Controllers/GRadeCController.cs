@@ -51,10 +51,7 @@ namespace Exam.Controllers
         public ActionResult ADD(string GradeNme)
         {
             string an = GradeNme;
-            List<Grade> list = ef.Grades.ToList();
-            if (list.Any(i => i.GradeName == GradeNme))
-            {
-                if(list.Any(x=>x.GradeName==GradeNme && x.Shan == true))
+                if(ef.Grades.FirstOrDefault(x=>x.GradeName==GradeNme && x.Shan == true)!=null)
                 {
                     Grade ad1 = ef.Grades.FirstOrDefault(x => x.GradeName == GradeNme);
                     ad1.Shan = false; ;
@@ -63,17 +60,14 @@ namespace Exam.Controllers
                         return Content("添加成功");
                 }
                 else
-                    return Content("已经存在");
-            }
-            else
-            {
-                Grade ad = new Grade() { GradeName = GradeNme, Shan = false };
-                ef.Entry(ad).State = EntityState.Added;
-                if (ef.SaveChanges() > 0)
                 {
-                    return Content("添加成功");
+                    Grade ad = new Grade() { GradeName = GradeNme, Shan = false };
+                    ef.Entry(ad).State = EntityState.Added;
+                    if (ef.SaveChanges() > 0)
+                    {
+                        return Content("添加成功");
+                    }
                 }
-            }
             return Content("失败");
 
         }

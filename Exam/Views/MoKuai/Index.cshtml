@@ -8,7 +8,7 @@
     Teacher te = ViewData["MoKuai"] as Teacher;
     ExamSysEntities1 ef = new ExamSysEntities1();
     //获取当前登陆用户的身份 获得当前登录人的身份
-    Role HuoDeng= ef.Roles.ToList().Find(a=>a.RoleID==te.RoleID);
+    Role HuoDeng= ef.Roles.ToList().Find(a=>a.RoleID==te.RoleID && a.Shan==false);
     //获取所有功能的集合  根据功能判断哪个模块的
     List<Menu> Menuli = ef.Menus.ToList();
     //用来保存模块的ID 
@@ -73,7 +73,7 @@
                 //首先获取该用户的模块
                     foreach (var item in MoKuaiId)
                     {
-                       Module DaMoKuai=ef.Modules.ToList().Find(x=>x.ModuleID==item);
+                       Module DaMoKuai=ef.Modules.ToList().Find(x=>x.ModuleID==item && x.Shan==false);
                          <li>
                                 <a href="#">
                                     <i class="@DaMoKuai.Ico"></i> <span class="nav-label">@DaMoKuai.ModuleName</span> <span class="fa arrow"></span>
@@ -82,7 +82,7 @@
 
                                 @{
                                     //根据模块判出具体的功能
-                                    foreach (var item1 in Menuli.Where(x => x.ModuleID == item))
+                                    foreach (var item1 in Menuli.Where(x => x.ModuleID == item && x.Shan==false))
                                     {
                                         <li>
                                             <a class="J_menuItem" href="/@item1.Service/Index">@item1.MenuName</a>

@@ -25,13 +25,11 @@
             <td>编号</td>
             <td>角色名称</td>
             <td>描述</td>
-            <td>操作</td>
         </tr>
         <tr v-for="s in Rol">
             <td>{{s.RoleID}}</td>
             <td>{{s.RoleName}}</td>
-            <td>{{s.Description}}</td>
-            <td><span class="glyphicon glyphicon-pencil" data-toggle="modal" v-on:click="ChuUpdate" data-target="#AddModa2" style="cursor:pointer"></span><span class="glyphicon glyphicon-remove" v-on:click="Clear" style="margin-left:5px; cursor:pointer"></span></td>
+            <td><span class="glyphicon glyphicon-pencil" data-toggle="modal" v-on:click="ChuUpdate" data-target="#AddModa2" style="cursor:pointer"></span>@*<span class="glyphicon glyphicon-remove" v-on:click="Clear" style="margin-left:5px; cursor:pointer"></span>*@</td>
         </tr>
     </table>
     每页 10 条记录，共<span id="CuntYe"></span>页，当前第<span id="Ye">0</span>页
@@ -39,6 +37,9 @@
     <button class="btn btn-primary" v-on:click="ShangYe">上一页</button>
     <button class="btn btn-primary" v-on:click="XiaYe">下一页</button>
     <button class="btn btn-primary" v-on:click="MoYe">末页</button>
+
+
+
 
     @*模态框 用来添加角色信息*@
     <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -74,7 +75,7 @@
         </div>
     </div>
     @*模态框 用来添加角色信息*@
-    <div class="modal fade" id="AddModa2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade" id="AddModa6" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -106,6 +107,58 @@
             </div>
         </div>
     </div>
+    
+    <div class="modal fade bs-example-modal-lg" tabindex="-1" id="AddModa2" data-backdrop="static" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close"  v-on:click="QuanXiao" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">角色的权限设置</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-inline">
+                        <button class="btn btn-primary" v-on:click="ADDQUXian"  data-target="#AddModa3" data-toggle="modal" >添加权限</button>
+                    </div>
+                    <table class="table" id="Sum" style="margin-top:10px;">
+                        <tr>
+                            <td style="color:blue">权限范围</td>
+                            <td>操作</td>
+                        </tr>
+                        <tr v-for="s in RoleDe">
+                            <td>{{s}}</td>
+                            <td><span class="glyphicon glyphicon-remove" style="margin-left:5px; cursor:pointer"></span></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" v-on:click="QuanXiao" class="btn btn-default">关闭</button>
+                    <button type="button" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="AddModa3" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" v-on:click="ADQU" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">添加权限</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-inline">
+                    权限内容:
+                    <select id="Zong" style="width:300px;height:30px">
+                        <option v-for="s in MeiRole">{{s}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="cursor:pointer" class="btn btn-default" v-on:click="ADQU" >关闭</button>
+                <button type="button" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 <script>
     var a = new Vue({
@@ -117,7 +170,9 @@
                 RoleID: '',
                 RoleName: '',
                 Description: ''
-            }
+            },
+            RoleDe: [],
+            MeiRole:[],
         },
         created() {
             this.Init();
@@ -188,13 +243,12 @@
             },
             //添加章节
             ADD() {
-                axios.post('/Role/ADD', this.Role).then(Response =>
-                {
+                axios.post('/Role/ADD', this.Role).then(Response => {
                     alert(Response.data);
                     this.Init();
                     ModuleQ();
                 })
-                
+
             },
             Clear(e) {
                 if (confirm("确定要删除吗？")) {
@@ -213,7 +267,9 @@
                 this.Role.Description = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(2)').text();
                 this.Role.RoleName = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(1)').text();
                 this.Role.RoleID = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(0)').text();
-               
+                axios.post('/Role/RoleShou', { ID: this.Role.RoleID }).then(Response => {
+                    this.RoleDe = Response.data;
+                })
             },
             //修改章节
             Update() {
@@ -229,7 +285,26 @@
                 this.Role.Description = '';
                 this.Role.RoleName = '';
                 this.Role.RoleID = '';
-            }
+            },
+            //取消模态框第三个添加权限的数据
+            ADQU() {
+                $('#AddModa3').hide();
+            },
+            //取消大的模态框
+            QuanXiao() {
+                $('#AddModa2').hide();
+                $('.modal-backdrop').remove();
+                $('body').removeClass('modal-open');
+            },
+            //点击显示新增加的
+            ADDQUXian()
+            {
+                alert(this.Role.RoleID);
+                axios.post("/Role/RoleList", { ID: this.Role.RoleID }).then(Response => {
+                    
+                    this.MeiRole = Response.data;
+                })
+            },
         }
     });
     function ModuleQ() {

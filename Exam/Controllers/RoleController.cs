@@ -30,7 +30,6 @@ namespace Exam.Controllers
             var Tili = new { Li = li.Skip((ye - 1) * 10).Take(10), Ye = CountYe, Hang = page };
             return Json(Tili, JsonRequestBehavior.AllowGet);
         }
-
         [HttpPost]
         public ActionResult Select(string page, string Name)
         {
@@ -48,8 +47,6 @@ namespace Exam.Controllers
             var Tili = new { Li = pagedList.Skip((ye - 1) * 10).Take(10).ToList(), Ye = CountYe, Hang = page };
             return Json(Tili, JsonRequestBehavior.AllowGet);
         }
-
-
         [HttpPost]
         public ActionResult ADD(Role re)
         {
@@ -77,7 +74,6 @@ namespace Exam.Controllers
                 return Content("出现错误");
             }
         }
-
         [HttpPost]
         public ActionResult Clear(Role te)
         {
@@ -109,6 +105,7 @@ namespace Exam.Controllers
                 }
                 else
                 {
+                    te.Shan = false;
                     ef.Entry(te).State = EntityState.Modified;
                     if (ef.SaveChanges() > 0)
                         return Content("修改成功");
@@ -128,6 +125,44 @@ namespace Exam.Controllers
                 li.Add(new Role() { Description=item.Description,RoleID=item.RoleID,RoleName=item.RoleName});
             }
             return li;
+        }
+
+        [HttpPost]
+        public ActionResult RoleShou(string ID)
+        {
+            List<string> li = new List<string>();
+            foreach (var item in ef.Menus)
+            {
+                string[] jie = item.Roles.Split(',');
+                for (int i = 0; i <jie.Length ; i++)
+                {
+                    if (ID ==jie[i])
+                    {
+                        li.Add(item.MenuName);
+                    }
+                }
+            }
+            return Json(li, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult RoleList(string ID)
+        {
+            List<string> li = new List<string>();
+            foreach (var item in ef.Menus)
+            {
+                string[] jie = item.Roles.Split(',');
+                for (int i = 0; i < jie.Length; i++)
+                {
+                    if (ID != jie[i])
+                    {
+                        if (li.Any(x => x == item.MenuName)) { }
+                        else
+                            li.Add(item.MenuName);
+                    }
+                }
+            }
+            return Json(li, JsonRequestBehavior.AllowGet);
         }
     }
 }

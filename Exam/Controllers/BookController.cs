@@ -38,7 +38,6 @@ namespace Exam.Controllers
 
             int ye = Convert.ToInt32(page)==0?1: Convert.ToInt32(page);
             List<TextBooks> li = Shou();
-            
             int CountYe = li.Count % 10 > 0 ? (li.Count / 10) + 1 : li.Count / 10;
             var Tili = new {Li=li.Skip((ye-1)*10).Take(10), Ye=CountYe,Hang= page };
              return Json(Tili, JsonRequestBehavior.AllowGet);
@@ -94,9 +93,7 @@ namespace Exam.Controllers
         {
             try
             {
-                if (ef.TextBooks.Any(x => x.BookName == te.BookName.Trim()))
-                {
-                    if (ef.TextBooks.Any(x => x.BookName == te.BookName.Trim() && x.Shan == true))
+                    if (ef.TextBooks.FirstOrDefault(x => x.BookName == te.BookName.Trim() && x.Shan == true)!=null)
                     {
                         TextBook ta = ef.TextBooks.FirstOrDefault(x => x.BookName == te.BookName);
                         ta.Shan = false;
@@ -105,13 +102,8 @@ namespace Exam.Controllers
                         {
                             return Content("添加成功");
                         }
-                        else
-                            return Content("失败");
-                    }
-                    else
-                        return Content("已经存在了");
                 }
-                else
+                    else
                 {
                     te.Shan = false;
                     ef.Entry(te).State = EntityState.Added;
@@ -120,7 +112,7 @@ namespace Exam.Controllers
                     else
                         return Content("失败");
                 }
-               
+                return Content("");
             }
             catch(Exception ex)
             {
@@ -151,7 +143,7 @@ namespace Exam.Controllers
         [HttpPost]
         public ActionResult Update(TextBook te)
         {
-            if (ef.TextBooks.Any(x => x.BookName == te.BookName.Trim() && x.GradeID==te.GradeID))
+            if (ef.TextBooks.FirstOrDefault(x => x.BookName == te.BookName.Trim() && x.GradeID==te.GradeID)!=null)
                 return Content("已经存在");
             TextBook a = new TextBook() { BookName = te.BookName.Trim(), GradeID = te.GradeID,BookID=te.BookID};
             a.Shan = false;
@@ -170,7 +162,7 @@ namespace Exam.Controllers
                 TextBooks Book = new TextBooks();
                 Book.BookID = item.BookID;
                 Book.BookName = item.BookName;
-                Book.GradeName = ef.Grades.FirstOrDefault(x => x.GradeID == item.GradeID).GradeName;
+                Book.GradeName = ef.Grades.FirstOrDefault(x => x.GradeID == item.GradeID && x.Shan==false).GradeName;
                 li.Add(Book);
             }
             return li;
