@@ -40,7 +40,7 @@ namespace Exam.Controllers
             List<Role> pagedList = null;
             if (!string.IsNullOrEmpty(Name))
             {
-                pagedList = li.Where(x => x.RoleName == Name).ToList();
+                pagedList = li.Where(x => x.RoleName.Contains(Name)).ToList();
             }
             else
                 pagedList = li;
@@ -55,11 +55,22 @@ namespace Exam.Controllers
         {
             try
             {
-                ef.Entry(re).State = EntityState.Added;
-                if (ef.SaveChanges() > 0)
-                    return Content("增加成功");
+                if (ef.Roles.FirstOrDefault(x => x.RoleName ==re.RoleName && x.Shan == true) != null)
+                {
+                    Role ta = ef.Roles.FirstOrDefault(x => x.RoleName == re.RoleName);
+                    ta.Shan = false;
+                    ef.Entry(ta).State = EntityState.Modified;
+                    if (ef.SaveChanges() > 0)
+                        return Content("添加成功");
+                }
                 else
-                    return Content("失败");
+                {
+                    re.Shan = false;
+                    ef.Entry(re).State = EntityState.Added;
+                    if (ef.SaveChanges() > 0)
+                        return Content("添加成功");
+                }
+                return Content("");
             }
             catch
             {
@@ -72,7 +83,9 @@ namespace Exam.Controllers
         {
             try
             {
-                ef.Roles.Remove(ef.Roles.FirstOrDefault(x=>x.RoleName==te.RoleName && x.RoleID==te.RoleID));
+                Role ta = ef.Roles.FirstOrDefault(x => x.RoleName==te.RoleName && x.RoleID == te.RoleID);
+                ta.Shan = true;
+                ef.Entry(ta).State = EntityState.Modified;
                 if (ef.SaveChanges() > 0)
                     return Content("删除成功");
                 else
@@ -88,12 +101,19 @@ namespace Exam.Controllers
         {
             try
             {
-                Role ad = new Role() {RoleID=te.RoleID,Description=te.Description,RoleName=te.RoleName };
-                ef.Entry(ad).State = EntityState.Modified;
-                if (ef.SaveChanges() > 0)
-                    return Content("修改成功");
+
+                if (ef.Roles.FirstOrDefault(x => x.RoleName==te.RoleName) != null)
+                {
+
+                    return Content("已经拥有了该名称");
+                }
                 else
-                    return Content("失败");
+                {
+                    ef.Entry(te).State = EntityState.Modified;
+                    if (ef.SaveChanges() > 0)
+                        return Content("修改成功");
+                }
+                return Content("");
             }
             catch
             {
@@ -103,7 +123,7 @@ namespace Exam.Controllers
         public List<Role> Show()
         {
             List<Role> li = new List<Role>();
-            foreach (var item in ef.Roles)
+            foreach (var item in ef.Roles.Where(x=>x.Shan==false).ToList())
             {
                 li.Add(new Role() { Description=item.Description,RoleID=item.RoleID,RoleName=item.RoleName});
             }

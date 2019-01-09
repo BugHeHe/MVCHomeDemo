@@ -180,7 +180,10 @@
                 axios.post('/Role/Select', { page: 0, Name: this.Name }).then(Response => {
                     this.Rol = Response.data.Li;
                     $('#CuntYe').text(Response.data.Ye);
-                    $('#Ye').text(1);
+                    if (parseInt($('#CuntYe').text()) == 0) {
+                        $('#Ye').text("0");
+                    } else
+                        $('#Ye').text($('#CuntYe').text());
                 })
             },
             //添加章节

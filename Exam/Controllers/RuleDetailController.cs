@@ -24,7 +24,7 @@ namespace Exam.Controllers
         public ActionResult List(string page)
         {
             List<PaperRule> li1 = new List<PaperRule>();
-            foreach (var item in ef.PaperRules.ToList())
+            foreach (var item in ef.PaperRules.Where(x=>x.Shan==false).ToList())
             {
                 li1.Add(new PaperRule()
                 {
@@ -45,15 +45,15 @@ namespace Exam.Controllers
         public ActionResult Show(string jie)
         {
             List<RuleDetailS> li = new List<RuleDetailS>();
-            foreach (var item in ef.RuleDetails.Where(x=>x.RuleID==ef.PaperRules.FirstOrDefault(a=>a.RuleName==jie).RuleID).ToList())
+            foreach (var item in ef.RuleDetails.Where(x=>x.RuleID==ef.PaperRules.FirstOrDefault(a=>a.RuleName==jie && a.Shan == false).RuleID && x.Shan == false ).ToList())
             {
                 li.Add(new RuleDetailS()
                 {
-                    BookIDName=ef.TextBooks.FirstOrDefault(x=>x.BookID==item.BookID).BookName,
+                    BookIDName=ef.TextBooks.FirstOrDefault(x=>x.BookID==item.BookID && x.Shan==false).BookName,
                     DetailID=item.DetailID,
                     QuestionCount=item.QuestionCount,
                     QuestionLevel=item.QuestionLevel,
-                    RuleIDName=ef.PaperRules.FirstOrDefault(x=>x.RuleID==item.RuleID).RuleName
+                    RuleIDName=ef.PaperRules.FirstOrDefault(x=>x.RuleID==item.RuleID && x.Shan == false).RuleName
                 });
             }
             return Json(li,JsonRequestBehavior.AllowGet);
@@ -62,7 +62,7 @@ namespace Exam.Controllers
         public ActionResult ListShow(string jie)
         {
             List<string> li1 = new List<string>();
-            foreach (var item in ef.TextBooks.Where(a=>a.GradeID==ef.TextBooks.FirstOrDefault(x=>x.BookName==jie).GradeID).ToList())
+            foreach (var item in ef.TextBooks.Where(a=>a.GradeID==ef.TextBooks.FirstOrDefault(x=>x.BookName==jie && x.Shan==false).GradeID && a.Shan==false).ToList())
             {
                 li1.Add(item.BookName);
             }
@@ -90,11 +90,11 @@ namespace Exam.Controllers
         {
             RuleDetail ta = new RuleDetail()
             {
-                BookID=ef.TextBooks.FirstOrDefault(x=>x.BookName==te.BookIDName).BookID,
+                BookID=ef.TextBooks.FirstOrDefault(x=>x.BookName==te.BookIDName && x.Shan==false).BookID,
                 DetailID=te.DetailID,
                 QuestionCount=te.QuestionCount,
                 QuestionLevel=te.QuestionLevel,
-                RuleID=ef.PaperRules.FirstOrDefault(x=>x.RuleName==te.RuleIDName).RuleID,
+                RuleID=ef.PaperRules.FirstOrDefault(x=>x.RuleName==te.RuleIDName && x.Shan==false).RuleID,
             };
             ef.Entry(ta).State = EntityState.Modified;
             if (ef.SaveChanges() > 0)
@@ -113,10 +113,10 @@ namespace Exam.Controllers
         public List<PaperSS> Shou()
         {
             List<PaperSS> li = new List<PaperSS>();
-            foreach (var item in ef.PaperRules)
+            foreach (var item in ef.PaperRules.Where(x=>x.Shan==false))
             {
                 PaperSS te = new PaperSS() { ID = item.RuleID, Name = item.RuleName };
-                foreach (var item1 in ef.RuleDetails.Where(x=>x.RuleID==item.RuleID))
+                foreach (var item1 in ef.RuleDetails.Where(x=>x.RuleID==item.RuleID && x.Shan==false))
                 {
                     te.Count+=item1.QuestionCount;
                 }
@@ -156,7 +156,7 @@ namespace Exam.Controllers
             try
             {
                 List<string> li1 = new List<string>();
-                List<TextBook> li= ef.TextBooks.Where(s=>s.GradeID==ef.PaperRules.FirstOrDefault(x => x.RuleName == jie).GradeID).ToList();
+                List<TextBook> li= ef.TextBooks.Where(s=>s.GradeID==ef.PaperRules.FirstOrDefault(x => x.RuleName == jie && x.Shan==false).GradeID && s.Shan==false).ToList();
                 foreach (var item in li)
                 {
                     li1.Add(item.BookName);
@@ -175,7 +175,7 @@ namespace Exam.Controllers
         {
             try
             {
-                if(ef.RuleDetails.Any(x=>x.BookID== ef.TextBooks.FirstOrDefault(a => a.BookName == te.BookIDName).BookID && x.QuestionCount==te.QuestionCount && x.QuestionLevel==te.QuestionLevel &&x.RuleID== ef.PaperRules.FirstOrDefault(b => b.RuleName == te.RuleIDName).RuleID))
+                if(ef.RuleDetails.Any(x=>x.BookID== ef.TextBooks.FirstOrDefault(a => a.BookName == te.BookIDName && a.Shan==false).BookID && x.QuestionCount==te.QuestionCount && x.QuestionLevel==te.QuestionLevel && x.Shan==false &&x.RuleID== ef.PaperRules.FirstOrDefault(b => b.RuleName == te.RuleIDName && b.Shan==false).RuleID))
                 {
                     return Content("已经存在了，请重新添加");
                 }

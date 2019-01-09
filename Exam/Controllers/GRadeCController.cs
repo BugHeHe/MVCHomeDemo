@@ -19,16 +19,24 @@ namespace Exam.Controllers
         }
         public ActionResult List()
         {
-            ef.Configuration.ProxyCreationEnabled = false;
-            return Json(ef.Grades.Where(x=>x.Shan==false).ToList(), JsonRequestBehavior.AllowGet);
+            try
+            {
+                ef.Configuration.LazyLoadingEnabled = false;
+                return Json(ef.Grades.Where(x => x.Shan == false).ToList(), JsonRequestBehavior.AllowGet);
+            }catch(Exception ex)
+            {
+                return Content(ex.ToString());
+            }
+
+
         }
         [HttpPost]
         public ActionResult Select(string Name)
         {
-            ef.Configuration.ProxyCreationEnabled = false;
+            ef.Configuration.LazyLoadingEnabled = false;
             if (!string.IsNullOrEmpty(Name))
             {
-                return Json(ef.Grades.Where(x => x.GradeName == Name && x.Shan==false).ToList(), JsonRequestBehavior.AllowGet);
+                return Json(ef.Grades.Where(x => x.GradeName.Contains(Name) && x.Shan==false).ToList(), JsonRequestBehavior.AllowGet);
             }
             return Content("失败");
 
@@ -42,20 +50,32 @@ namespace Exam.Controllers
         [HttpPost]
         public ActionResult ADD(string GradeNme)
         {
-            ef.Configuration.ProxyCreationEnabled = false;
             string an = GradeNme;
             List<Grade> list = ef.Grades.ToList();
             if (list.Any(i => i.GradeName == GradeNme))
-                return Content("已经存在");
-            Grade ad = new Grade() {GradeName= GradeNme };
-            ad.Shan = false;
-            ef.Entry(ad).State = EntityState.Added;
-            if(ef.SaveChanges()>0)
             {
-                return Content("添加成功");
+                if(list.Any(x=>x.GradeName==GradeNme && x.Shan == true))
+                {
+                    Grade ad1 = ef.Grades.FirstOrDefault(x => x.GradeName == GradeNme);
+                    ad1.Shan = false; ;
+                    ef.Entry(ad1).State = EntityState.Modified;
+                    if (ef.SaveChanges() > 0)
+                        return Content("添加成功");
+                }
+                else
+                    return Content("已经存在");
+            }
+            else
+            {
+                Grade ad = new Grade() { GradeName = GradeNme, Shan = false };
+                ef.Entry(ad).State = EntityState.Added;
+                if (ef.SaveChanges() > 0)
+                {
+                    return Content("添加成功");
+                }
             }
             return Content("失败");
-            
+
         }
         /// <summary>
         /// 根据年级名称 删除指定的年级对象
@@ -65,7 +85,6 @@ namespace Exam.Controllers
         [HttpPost]
         public ActionResult Clear(string GradeN)
         {
-            ef.Configuration.ProxyCreationEnabled = false;
             List<Grade> list = ef.Grades.ToList();
             Grade lis = ef.Grades.FirstOrDefault(x => x.GradeName == GradeN);
             lis.Shan = true;
@@ -88,7 +107,7 @@ namespace Exam.Controllers
             ef.Configuration.ProxyCreationEnabled = false;
             if (ef.Grades.Any(x => x.GradeName == GradeNam))
                 return Content("已经存在");
-            Grade gr = new Grade() { GradeID = Convert.ToInt32(GradeID), GradeName = GradeNam };
+            Grade gr = new Grade() { GradeID = Convert.ToInt32(GradeID), GradeName = GradeNam,Shan=false};
             ef.Entry(gr).State = EntityState.Modified;
             if (ef.SaveChanges() > 0)
             {

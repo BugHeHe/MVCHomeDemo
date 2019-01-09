@@ -40,7 +40,7 @@ namespace Exam.Controllers
             List<PaperType> pagedList = null;
             if (!string.IsNullOrEmpty(Name))
             {
-                pagedList = li.Where(x => x.TypeName == Name).ToList();
+                pagedList = li.Where(x => x.TypeName.Contains(Name)).ToList();
             }
             else
                 pagedList = li;
@@ -53,11 +53,22 @@ namespace Exam.Controllers
         {
             try
             {
-                ef.Entry(te).State = EntityState.Added;
-                if (ef.SaveChanges() > 0)
-                    return Content("添加成功");
+                if (ef.PaperTypes.FirstOrDefault(x => x.TypeName == te.TypeName && x.Shan==true) != null)
+                {
+                    PaperType ta = ef.PaperTypes.FirstOrDefault(x => x.TypeName == te.TypeName);
+                    ta.Shan = false;
+                    ef.Entry(ta).State = EntityState.Modified;
+                    if (ef.SaveChanges() > 0)
+                        return Content("添加成功");
+                }
                 else
-                    return Content("失败");
+                {
+                    te.Shan = false;
+                    ef.Entry(te).State = EntityState.Added;
+                    if (ef.SaveChanges() > 0)
+                        return Content("添加成功");
+                }
+                return Content("");
             }
             catch
             {
@@ -69,11 +80,19 @@ namespace Exam.Controllers
         {
             try
             {
-                ef.Entry(te).State = EntityState.Modified;
-                if (ef.SaveChanges() > 0)
-                    return Content("修改成功");
+                if(ef.PaperTypes.FirstOrDefault(x=>x.TypeName==te.TypeName) != null)
+                {
+
+                    return Content("已经拥有了该名称");
+                }
                 else
-                    return Content("失败");
+                {
+                    ef.Entry(te).State = EntityState.Modified;
+                    if (ef.SaveChanges() > 0)
+                        return Content("修改成功"); 
+                }
+                return Content("");
+               
             }
             catch
             {
@@ -85,7 +104,9 @@ namespace Exam.Controllers
         {
             try
             {
-                ef.PaperTypes.Remove(ef.PaperTypes.FirstOrDefault(x=>x.TypeID==te.TypeID && x.TypeName==te.TypeName));
+                PaperType ta = ef.PaperTypes.FirstOrDefault(x => x.TypeID == te.TypeID && x.TypeName == te.TypeName);
+                ta.Shan = true;
+                ef.Entry(ta).State = EntityState.Modified;
                 if (ef.SaveChanges() > 0)
                     return Content("删除成功");
                 else
@@ -100,7 +121,7 @@ namespace Exam.Controllers
         public List<PaperType> Show()
         {
             List<PaperType> li = new List<PaperType>();
-            foreach (var item in ef.PaperTypes.ToList())
+            foreach (var item in ef.PaperTypes.Where(x=>x.Shan==false).ToList())
             {
                 li.Add(new PaperType() { TypeID=item.TypeID,TypeName=item.TypeName });
             }

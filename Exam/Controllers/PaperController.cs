@@ -33,7 +33,7 @@ namespace Exam.Controllers
         public ActionResult List(string page)
         {
             List<Grade> Gradli = new List<Grade>();
-            foreach (var item in ef.Grades.ToList())
+            foreach (var item in ef.Grades.Where(x=>x.Shan==false).ToList())
             {
                 Gradli.Add(new Grade()
                 {

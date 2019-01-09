@@ -93,38 +93,111 @@ namespace Exam.Controllers
         {
             try
             {
-                ef.Configuration.LazyLoadingEnabled = false;
-                ef.Configuration.ProxyCreationEnabled = false;
-                Teacher tea = Session["User"] as Teacher;
-                PaperRule ta = new PaperRule()
+                int grade = Convert.ToInt32(te.GradeIDName);
+                //首先判断是否有数据  
+                if(ef.PaperRules.FirstOrDefault(x=>x.RuleName==te.RuleName && x.Shan == true)!=null)
                 {
-                    GradeID = Convert.ToInt32(te.GradeIDName),
-                    CreateTime = DateTime.Now,
-                    RuleName = te.RuleName,
-                    CreatorID =1
-                };
-                ef.Entry(ta).State = EntityState.Added;
-                ef.SaveChanges();
-                Grade gr = ef.Grades.FirstOrDefault(x => x.GradeID == ta.GradeID);
-                List<TextBook> li = ef.TextBooks.Where(x => x.GradeID == gr.GradeID).ToList();
-                int chu = 50 % li.Count;
-                List<PaperRule> listPa = ef.PaperRules.ToList();
-                for (int i = 0; i < li.Count; i++)
-                {
-                    RuleDetail Ru = new RuleDetail();
-                    Ru.RuleID = listPa[listPa.Count-1].RuleID;
-                    Ru.BookID = li[i].BookID;
-                    Ru.QuestionCount = i == 0 ? ((50 - chu) / li.Count) + chu : (50 - chu) / li.Count;
-                    Ru.QuestionLevel = 1;
-                    ef.Entry(Ru).State = EntityState.Added;
-                    ef.SaveChanges();
+                    if (grade == ef.PaperRules.FirstOrDefault(x => x.RuleName == te.RuleName).GradeID)
+                    {
+                        PaperRule tae = ef.PaperRules.FirstOrDefault(x => x.RuleName == te.RuleName);
+                        tae.CreateTime = DateTime.Now;
+                        tae.Shan = false;
+                        ef.Entry(tae).State = EntityState.Modified;
+                        if (ef.SaveChanges() > 0)
+                            return Content("增加成功");
+                    }
+                    else
+                    {
+                       return Content(Updashow(grade,te));
+                    }
+                    return Content("数据库中有包含的数据");
                 }
-                
-                return Content("添加成功");
+                else
+                {
+                    //没有数据
+                    return Content(ADDshow(grade,te));
+                }
+                return Content("空");
+                #region MyRegion
+                //if (ef.PaperRules.Any(x => x.RuleName == te.RuleName))
+                //{
+                //    if (ef.PaperRules.FirstOrDefault(x => x.RuleName == te.RuleName && x.GradeID==grade && x.Shan==false)==null)
+                //    {
+                //        PaperRule Rule = ef.PaperRules.FirstOrDefault(x => x.RuleName == te.RuleName);
+                //        Rule.Shan = false;
+                //        Rule.CreateTime = DateTime.Now;
+                //        if (Rule.GradeID == grade)
+                //        {
+                //            ef.Entry(Rule).State = EntityState.Modified;
+                //            ef.SaveChanges();
+                //            return Content(ADDshow(grade, Rule));
+                //        }
+                //        else
+                //        {
+                //            return Content(ADDshow(grade, Rule));
+                //        }
+
+                //}
+                //    return Content("已经存在");
+
+                //}
+                //else
+                //    {
+                //        //计算拥有的题目数量
+                //        int suan = ef.Questions.Where(x => x.BookID == ef.TextBooks.FirstOrDefault(a => a.GradeID == grade && x.Shan == false).BookID && x.Shan == false).ToList().Count;
+                //        List<TextBook> TextBookCount = ef.TextBooks.Where(x => x.GradeID == grade && x.Shan == false).ToList();
+                //        int Ping = 50 % TextBookCount.Count;
+                //        bool flage = true;
+                //        int sum = 0;
+                //        for (int i = 0; i < TextBookCount.Count; i++)
+                //        {
+                //            int BookIDa = TextBookCount[i].BookID;
+                //            int jie = ef.Questions.Where(x => x.BookID == BookIDa && x.Shan == false).ToList().Count;
+                //            sum += jie;
+                //            if (sum < 50)
+                //                flage = false;
+                //        }
+                //        if (flage)
+                //        {
+                //            Teacher tea = Session["User"] as Teacher;
+                //            PaperRule ta = new PaperRule()
+                //            {
+                //                GradeID = Convert.ToInt32(te.GradeIDName),
+                //                CreateTime = DateTime.Now,
+                //                RuleName = te.RuleName,
+                //                CreatorID = 1
+                //            };
+                //            ef.Entry(ta).State = EntityState.Added;
+                //            ef.SaveChanges();
+                //            Grade gr = ef.Grades.FirstOrDefault(x => x.GradeID == ta.GradeID);
+                //            List<TextBook> li = ef.TextBooks.Where(x => x.GradeID == gr.GradeID).ToList();
+                //            int chu = 50 % li.Count;
+                //            List<PaperRule> listPa = ef.PaperRules.ToList();
+                //            for (int i = 0; i < li.Count; i++)
+                //            {
+                //                RuleDetail Ru = new RuleDetail();
+                //                Ru.RuleID = listPa[listPa.Count - 1].RuleID;
+                //                Ru.BookID = li[i].BookID;
+                //                Ru.QuestionCount = i == 0 ? ((50 - chu) / li.Count) + chu : (50 - chu) / li.Count;
+                //                Ru.QuestionLevel = 1;
+                //                Ru.Shan = false;
+                //                ef.Entry(Ru).State = EntityState.Added;
+                //                ef.SaveChanges();
+                //            }
+                //            return Content("增加成功");
+                //        }
+                //        else
+                //        {
+                //            return Content("题数量不够，不能进行抽题");
+                //        }
+                //    }
+                #endregion
+
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return Content("添加失败");
+                return Content(ex.ToString());
             }
             
         }
@@ -133,8 +206,6 @@ namespace Exam.Controllers
         {
             try
             {
-                ef.Configuration.LazyLoadingEnabled = false;
-                ef.Configuration.ProxyCreationEnabled = false;
                 string name = te.RuleName;
                PaperRule ga=ef.PaperRules.FirstOrDefault(x => x.RuleName == name);
                 ga.Shan = true;
@@ -176,26 +247,134 @@ namespace Exam.Controllers
             ef.Configuration.LazyLoadingEnabled = false;
             try
             {
-                PaperRule a = new PaperRule()
+                int grade = Convert.ToInt32(te.GradeIDName) ;
+                
+                if (ef.PaperRules.All(x => x.RuleName == te.RuleName))
                 {
-                    CreateTime = DateTime.Parse(te.CreateTime),
-                    CreatorID = ef.Teachers.FirstOrDefault(x => x.TeacherName == te.CreatorIDName).TeacherID,
-                    GradeID = Convert.ToInt32(te.GradeIDName),
-                    RuleID = te.RuleID,
-                    RuleName = te.RuleName
-                };
-                ef.Entry(a).State = EntityState.Modified;
-                if (ef.SaveChanges() > 0)
-                {
-                    return Content("修改成功");
+                    PaperRule a = ef.PaperRules.FirstOrDefault(x => x.RuleName == te.RuleName && x.Shan == false);
+                    ef.Entry(a).State = EntityState.Modified;
+                    if (ef.SaveChanges() > 0)
+                    {
+                        return Content("修改成功");
+                    }
+                    return Content("添加失败");
                 }
-                return Content("添加失败");
+                else
+                    return Content("策略名称已经有了");
             }
             catch
             {
                 return Content("请输入正确的姓名");
             }
             
+        }
+
+        public string ADDshow(int grade,PaperRuleS te)
+        {
+            int suan = ef.Questions.Where(x => x.BookID == ef.TextBooks.FirstOrDefault(a => a.GradeID == grade && x.Shan == false).BookID && x.Shan == false).ToList().Count;
+            List<TextBook> TextBookCount = ef.TextBooks.Where(x => x.GradeID == grade && x.Shan == false).ToList();
+            int Ping = 50 % TextBookCount.Count;
+            bool flage = true;
+            int sum = 0;
+            for (int i = 0; i < TextBookCount.Count; i++)
+            {
+                int BookIDa = TextBookCount[i].BookID;
+                int jie = ef.Questions.Where(x => x.BookID == BookIDa && x.Shan == false).ToList().Count;
+                sum += jie;
+                if (sum < 50)
+                    flage = false;
+            }
+            if (flage)
+            {
+                Teacher tea = Session["User"] as Teacher;
+                PaperRule ta = new PaperRule()
+                {
+                    GradeID = Convert.ToInt32(te.GradeIDName),
+                    CreateTime = DateTime.Now,
+                    RuleName = te.RuleName,
+                    CreatorID = 1
+                };
+                ef.Entry(ta).State = EntityState.Added;
+                ef.SaveChanges();
+                Grade gr = ef.Grades.FirstOrDefault(x => x.GradeID == ta.GradeID);
+                List<TextBook> li = ef.TextBooks.Where(x => x.GradeID == gr.GradeID).ToList();
+                int chu = 50 % li.Count;
+                List<PaperRule> listPa = ef.PaperRules.ToList();
+                for (int i = 0; i < li.Count; i++)
+                {
+                    RuleDetail Ru = new RuleDetail();
+                    Ru.RuleID = listPa[listPa.Count - 1].RuleID;
+                    Ru.BookID = li[i].BookID;
+                    Ru.QuestionCount = i == 0 ? ((50 - chu) / li.Count) + chu : (50 - chu) / li.Count;
+                    Ru.QuestionLevel = 1;
+                    Ru.Shan = false;
+                    ef.Entry(Ru).State = EntityState.Added;
+                    ef.SaveChanges();
+                }
+                return "增加成功";
+            }
+            else
+            {
+                return "题数量不够，不能进行抽题";
+            }
+        }
+
+        public string Updashow(int grade, PaperRuleS te)
+        {
+            int suan = ef.Questions.Where(x => x.BookID == ef.TextBooks.FirstOrDefault(a => a.GradeID == grade && x.Shan == false).BookID && x.Shan == false).ToList().Count;
+            List<TextBook> TextBookCount = ef.TextBooks.Where(x => x.GradeID == grade && x.Shan == false).ToList();
+            int Ping = 50 % TextBookCount.Count;
+            bool flage = true;
+            int sum = 0;
+            for (int i = 0; i < TextBookCount.Count; i++)
+            {
+                int BookIDa = TextBookCount[i].BookID;
+                int jie = ef.Questions.Where(x => x.BookID == BookIDa && x.Shan == false).ToList().Count;
+                sum += jie;
+                if (sum < 50)
+                    flage = false;
+            }
+            if (flage)
+            {
+                Teacher tea = Session["User"] as Teacher;
+                PaperRule ta = new PaperRule()
+                {
+                    GradeID = grade,
+                    CreateTime = DateTime.Now,
+                    RuleName = te.RuleName,
+                    CreatorID = 1,
+                    Shan = false,
+                    RuleID=te.RuleID
+                    
+                };
+                ef.Entry(ta).State = EntityState.Modified;
+                ef.SaveChanges();
+                List<RuleDetail> List = ef.RuleDetails.Where(x=>x.RuleID==ta.RuleID).ToList();
+                for (int i = 0; i <List.Count ; i++)
+                {
+                    ef.RuleDetails.Remove(List[i]);
+                    ef.SaveChanges();
+                }
+                Grade gr = ef.Grades.FirstOrDefault(x => x.GradeID == ta.GradeID);
+                List<TextBook> li = ef.TextBooks.Where(x => x.GradeID == gr.GradeID).ToList();
+                int chu = 50 % li.Count;
+                for (int i = 0; i < li.Count; i++)
+                {
+                    RuleDetail Ru = new RuleDetail();
+                    Ru.RuleID =ta.RuleID;
+                    Ru.BookID = li[i].BookID;
+                    Ru.QuestionCount = i == 0 ? ((50 - chu) / li.Count) + chu : (50 - chu) / li.Count;
+                    Ru.QuestionLevel = 1;
+                    Ru.Shan = false;
+                    ef.Entry(Ru).State = EntityState.Added;
+                    ef.SaveChanges();
+                }
+                return "增加成功";
+            }
+            else
+            {
+                return "题数量不够，不能进行抽题";
+            }
         }
     }
 }
