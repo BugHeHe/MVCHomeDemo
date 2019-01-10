@@ -168,9 +168,20 @@ namespace Exam.Controllers
             {
                 string TypeName = te.typeID.ToString();
                 string RuleName = te.RuleID.ToString();
+                List<Paper> PapA = ef.Papers.Where(x => x.Shan == false).ToList();
                 Paper ta = new Paper();
                 ta.CreateTime = DateTime.Now;
-                ta.PaperName = te.ClassList + "(1)";
+                if (PapA.Count == 0)
+                    ta.PaperName = te.ClassList + "(1)";
+                else
+                ta.PaperName = te.ClassList +"-"+PapA[PapA.Count-1].PaperID;
+                //foreach (var item in PapA)
+                //{
+                //    if (ta.PaperName == item.PaperName)
+                //    {
+                //        item.PaperName.Substring(item.PaperName.IndexOf('(')+1);
+                //    }
+                //}
                 ta.GradeID = ef.Grades.FirstOrDefault(x => x.GradeName == te.GradeIDName).GradeID;
                 ta.typeID = ef.PaperTypes.FirstOrDefault(x => x.TypeName == TypeName).TypeID;
                 ta.Duration = te.Duration;
@@ -178,49 +189,61 @@ namespace Exam.Controllers
                 ta.ClassList = te.ClassList;
                 ta.RuleID = ef.PaperRules.FirstOrDefault(x => x.RuleName == RuleName && x.Shan==false).RuleID;
                 ta.CreatorID = 1;
-
-                    ta.QuestionCount = 0; ;
+                ta.QuestionCount = 0; ;
                 ef.Entry(ta).State = EntityState.Added;
                 ef.SaveChanges();
                 List<Paper> PapeID = ef.Papers.ToList();
 
                 List<RuleDetail> list = ef.RuleDetails.Where(x => x.RuleID == ef.PaperRules.FirstOrDefault(a => a.RuleName == RuleName && a.Shan==false).RuleID).ToList();
-                for (int i = 0; i <list.Count ; i++)
+                //获取根据策略名称的抽屉策略的详细 获得
+                List<Question> ListNum = ef.Questions.Where(x => x.BookID == ef.RuleDetails.FirstOrDefault(a => a.RuleID == ef.PaperRules.FirstOrDefault(b => b.RuleName == RuleName).RuleID).BookID).ToList();
+                //策略名称的 使用策略的章节数量
+                for (int i = 0; i <50; i++)
                 {
-                    int questionLevel = list[i].QuestionLevel;
-                    int BookID = list[i].BookID;
-                    List<Question> QLi = ef.Questions.Where(x => x.QuestionLevel == questionLevel && x.BookID== BookID).ToList();
-                    //该章节所拥有的所有内容
-                    List<Question> QList = ef.Questions.Where(x => x.BookID == BookID).ToList();
-                    
-                    if (QLi.Count != list[i].QuestionCount)
-                    {
-                        int bian = list[i].QuestionCount-QLi.Count;
-                        for (int k = 0; k <bian; k++)
-                        {
-                            Random r = new Random(int.Parse(DateTime.Now.ToString("HHmmssfff")) +k);
-                            int num = r.Next(QList[0].QuestionID,QList[QList.Count-1].QuestionID);
-                            PaperDetail Xiang = new PaperDetail();
-                            Xiang.QuestionID = num;
-                            Xiang.PaperID = PapeID[PapeID.Count- 1].PaperID;
-                            ef.Entry(Xiang).State = EntityState.Added;
-                            ef.SaveChanges();
-                        }
-                    }
-                    else
-                    {
-                        for (int j = 0; j < QLi.Count; j++)
-                        {
-                            Random r = new Random(int.Parse(DateTime.Now.ToString("HHmmssfff")) +j);
-                            int num = r.Next(QLi[0].QuestionID, QLi[QLi.Count-1].QuestionID);
-                            PaperDetail Xiang = new PaperDetail();
-                            Xiang.QuestionID = num;
-                            Xiang.PaperID = PapeID[PapeID.Count - 1].PaperID;
-                            ef.Entry(Xiang).State = EntityState.Added;
-                            ef.SaveChanges();
-                        }
-                    }
-                    
+                    ////获取难度
+                    //int questionLevel = list[i].QuestionLevel;
+                    ////获取
+                    //int BookID = list[i].BookID;
+                    //List<Question> QLi = ef.Questions.Where(x => x.QuestionLevel == questionLevel && x.Shan==false && x.BookID== BookID).ToList();
+                    ////该章节所拥有的所有内容
+                    //List<Question> QList = ef.Questions.Where(x => x.BookID == BookID && x.Shan==false).ToList();
+                    Random r = new Random(int.Parse(DateTime.Now.ToString("HHmmssfff")) + i);
+                    int num = r.Next(ListNum[0].QuestionID, ListNum[ListNum.Count - 1].QuestionID);
+                    PaperDetail Xiang = new PaperDetail();
+                    Xiang.QuestionID = num;
+                    Xiang.PaperID = PapeID[PapeID.Count - 1].PaperID;
+                    ef.Entry(Xiang).State = EntityState.Added;
+                    ef.SaveChanges();
+                    //if (QLi.Count == list[i].QuestionCount)
+                    //{
+
+                    //    for (int j = 0; j < QLi.Count; j++)
+                    //    {
+                    //        Random r = new Random(int.Parse(DateTime.Now.ToString("HHmmssfff")) + i);
+                    //        int num = r.Next(QLi[0].QuestionID, QLi[QLi.Count - 1].QuestionID);
+                    //        PaperDetail Xiang = new PaperDetail();
+                    //        Xiang.QuestionID = num;
+                    //        Xiang.PaperID = PapeID[PapeID.Count - 1].PaperID;
+                    //        ef.Entry(Xiang).State = EntityState.Added;
+                    //        ef.SaveChanges();
+                    //    }
+
+                    //}
+                    //else
+                    //{
+                    //    int bian = list[i].QuestionCount - QLi.Count;
+                    //    for (int k = 0; k < bian; k++)
+                    //    {
+                    //        Random r = new Random(int.Parse(DateTime.Now.ToString("HHmmssfff")) + i);
+                    //        int num = r.Next(QList[0].QuestionID, QList[QList.Count - 1].QuestionID);
+                    //        PaperDetail Xiang = new PaperDetail();
+                    //        Xiang.QuestionID = num;
+                    //        Xiang.PaperID = PapeID[PapeID.Count - 1].PaperID;
+                    //        ef.Entry(Xiang).State = EntityState.Added;
+                    //        ef.SaveChanges();
+                    //    }
+                    //}
+
                 }
                 return Content("添加成功");
             }

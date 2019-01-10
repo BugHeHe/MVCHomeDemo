@@ -3,27 +3,39 @@
     ViewBag.Title = "Index";
     Layout = null;
 }
-
-<body class="login">
-    <div class="backlay" ></div>
-    <form action="front/student/login" method="post">
-        <div class="login-box col-xl-5  col-lg-5 col-md-6 col-sm-10" style="position: relative;">
-            <div style="position: absolute; right: 20px; top:10px;font-size:66px;color:#ddd;"><i class="fa fa-key"></i></div>
-            <h3 class="h3" style="font-weight:200">翱翔在线考试系统</h3>
-            <p class="hidden-xs" style="color:lightgray;font-family: 'Roboto', sans-serif;font-weight: lighter;">AOXIANG ONLINE EXAM SYSTEM</p>
-            <div style="background-color: #eee;padding:30px 15px; margin:0px -15px;">
-                <div class="form-group">
-                    <input type="text" autocomplete="off" autofocus name="studentNo" class="form-control" placeholder="请输入身份证号">
-                </div>
-                <div class="form-group">
-                    <input type="password" name="studentPwd" class="form-control" placeholder="请输入密码">
-                </div>
-                <div class="form-group">
-                    <button name="button" class="btn btn-success btn-block" >登录系统</button>
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<style>
+    .col-center-block {
+        float: none;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+<body class="login" style="">
+    <div class="backlay" style=""></div>
+    <div class="container" style="margin-top:130px;">
+        <div class="row myCenter">
+            <div class="col-xs-6 col-md-4 col-center-block login-box col-xl-5  col-lg-5 col-md-6  col-sm-10" style="">
+                <div style="position: absolute; right: 20px; top:10px;font-size:66px;"><i class="fa fa-key"></i></div>
+                
+                <div style="background-color:#ffffff; padding:30px 15px; margin:0px -15px;">
+                    <h3 class="h3" style="font-weight:200;text-align:center;margin-bottom:30px;">在线考试系统</h3>
+                    <div class="form-group">
+                        <input type="text" autocomplete="off" autofocus name="studentNo" class="form-control" placeholder="请输入身份证号">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="studentPwd" class="form-control" placeholder="请输入密码">
+                    </div>
+                    <div class="form-group">
+                        <button name="button" class="btn btn-success btn-block">登录系统</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </form>
-   </body>
+    </div>
+
+</body>
 
 

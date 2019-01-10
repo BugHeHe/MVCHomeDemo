@@ -172,6 +172,7 @@
     <Compile Include="Controllers\ExamHouController.cs" />
     <Compile Include="Controllers\FileShangController.cs" />
     <Compile Include="Controllers\GRadeCController.cs" />
+    <Compile Include="Controllers\KaoIndexController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\LoginExamGouController.cs" />
     <Compile Include="Controllers\MoKuaiController.cs" />
@@ -684,6 +685,7 @@
     <Content Include="Views\CreatorLu\Desc.cshtml" />
     <Content Include="Views\Check\Index.cshtml" />
     <Content Include="Views\Check\Desc.cshtml" />
+    <Content Include="Views\KaoIndex\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
