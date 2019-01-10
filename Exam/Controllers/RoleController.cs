@@ -62,8 +62,8 @@ namespace Exam.Controllers
                 }
                 else
                 {
-                    re.Shan = false;
-                    ef.Entry(re).State = EntityState.Added;
+                    Role ta = new Role() { Shan = false, RoleName = re.RoleName,Description="" };
+                    ef.Entry(ta).State = EntityState.Added;
                     if (ef.SaveChanges() > 0)
                         return Content("添加成功");
                 }
@@ -148,21 +148,95 @@ namespace Exam.Controllers
         [HttpPost]
         public ActionResult RoleList(string ID)
         {
-            List<string> li = new List<string>();
-            foreach (var item in ef.Menus)
+            try
             {
-                string[] jie = item.Roles.Split(',');
-                for (int i = 0; i < jie.Length; i++)
+                List<string> li = new List<string>();
+                List<string> list = new List<string>();
+                foreach (var item in ef.Menus)
                 {
-                    if (ID != jie[i])
+                    list.Add(item.MenuName);
+                    string[] jie = item.Roles.Split(',');
+                    for (int i = 0; i < jie.Length; i++)
                     {
-                        if (li.Any(x => x == item.MenuName)) { }
-                        else
-                            li.Add(item.MenuName);
+                        if (ID == jie[i])
+                        {
+                            if (li.Any(x => x == item.MenuName)) { }
+                            else
+                                li.Add(item.MenuName);
+                        }
+                    }
+
+                }
+                for (int i = 0; i <list.Count ; i++)
+                {
+                    for (int j = 0; j <li.Count ; j++)
+                    {
+                        if (list[i] == li[j])
+                        {
+                            string jie = li[j];
+                                list.Remove(jie);
+                        }
                     }
                 }
+                return Json(list, JsonRequestBehavior.AllowGet);
             }
-            return Json(li, JsonRequestBehavior.AllowGet);
+            catch(Exception ex)
+            {
+                return Content(ex.ToString());
+            }
+          
+        }
+
+        [HttpPost]
+        public ActionResult ADDQuan(string ID,string MenuName)
+        {
+            try
+            {
+               Menu Me=ef.Menus.FirstOrDefault(x => x.MenuName == MenuName);
+                Me.Roles =Me.Roles + "," + ID;
+                ef.Entry(Me).State = EntityState.Modified;
+                if (ef.SaveChanges() > 0)
+                    return Content("添加成功");
+            }
+            catch(Exception ex)
+            {
+                return Content(ex.ToString());
+            }
+            return Content("");
+        }
+
+        [HttpPost]
+        public ActionResult DeleteQuan(string ID,string MenuName)
+        {
+            Menu ta = ef.Menus.FirstOrDefault(x => x.MenuName == MenuName);
+            string[] li = ta.Roles.Split(',');
+            int sum=0;
+            for (int i = 0; i <li.Length; i++)
+            {
+                if (ID == li[i])
+                {
+                    sum = i;
+                }
+            }
+            List<string> list = li.ToList();
+            list.RemoveAt(sum);
+            string Num = "";
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (i == 0)
+                {
+                    Num += list[i];
+                }
+                else
+                {
+                    Num += "," + list[i];
+                }
+            }
+            ta.Roles = Num;
+            ef.Entry(ta).State = EntityState.Modified;
+            if (ef.SaveChanges() > 0)
+                return Content("删除成功");
+            return Content("为空");
         }
     }
 }

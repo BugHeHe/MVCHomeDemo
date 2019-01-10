@@ -58,14 +58,6 @@
                         </div>
 
                     </div>
-                    <div class="form-inline" style="margin-top:10px;">
-                        具体描述：
-                        <div class="form-group">
-                            <label class="sr-only" for="exampleInputEmail3">Email address</label>
-                            <input type="text" v-model="Role.Description" class="form-control" id="exampleInputEmail3" placeholder="请输人具体描述">
-                        </div>
-
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -126,7 +118,7 @@
                         </tr>
                         <tr v-for="s in RoleDe">
                             <td>{{s}}</td>
-                            <td><span class="glyphicon glyphicon-remove" style="margin-left:5px; cursor:pointer"></span></td>
+                            <td><span class="glyphicon glyphicon-remove" v-on:click="ShanQuan" style="margin-left:5px; cursor:pointer"></span></td>
                         </tr>
                     </table>
                 </div>
@@ -145,16 +137,19 @@
                 <h4 class="modal-title" id="myModalLabel">添加权限</h4>
             </div>
             <div class="modal-body">
-                <div class="form-inline">
+                <div id="Xiao" class="form-inline">
                     权限内容:
                     <select id="Zong" style="width:300px;height:30px">
                         <option v-for="s in MeiRole">{{s}}</option>
                     </select>
                 </div>
+                <div id="Xian" class="form-inline" style="display:none">
+                    <h3>你已经是最高权限了</h3>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" style="cursor:pointer" class="btn btn-default" v-on:click="ADQU" >关闭</button>
-                <button type="button" class="btn btn-primary">保存</button>
+                <button type="button" v-on:click="BaoQuan" class="btn btn-primary">保存</button>
             </div>
         </div>
     </div>
@@ -172,7 +167,7 @@
                 Description: ''
             },
             RoleDe: [],
-            MeiRole:[],
+            MeiRole: [],
         },
         created() {
             this.Init();
@@ -267,14 +262,17 @@
                 this.Role.Description = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(2)').text();
                 this.Role.RoleName = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(1)').text();
                 this.Role.RoleID = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(0)').text();
+                this.QuanXian();
+            },
+            //获取每个角色拥有的具体权限
+            QuanXian() {
                 axios.post('/Role/RoleShou', { ID: this.Role.RoleID }).then(Response => {
                     this.RoleDe = Response.data;
                 })
             },
             //修改章节
             Update() {
-                axios.post('/Role/Update', this.Role).then(Response =>
-                {
+                axios.post('/Role/Update', this.Role).then(Response => {
                     alert(Response.data);
                     this.Init();
                     ModuleQ();
@@ -297,13 +295,35 @@
                 $('body').removeClass('modal-open');
             },
             //点击显示新增加的
-            ADDQUXian()
-            {
-                alert(this.Role.RoleID);
+            ADDQUXian() {
                 axios.post("/Role/RoleList", { ID: this.Role.RoleID }).then(Response => {
-                    
                     this.MeiRole = Response.data;
+                    if (Response.data == "") {
+                        $('#Xiao').hide();
+                        $('#Xian').show();
+                    }
                 })
+            },
+            //添加权限
+            BaoQuan() {
+                axios.post('/Role/ADDQuan', { ID: this.Role.RoleID, MenuName: $('#Zong').val() }).then(Response => {
+                    alert(Response.data);
+                    this.QuanXian();
+                    this.ADQU();
+                })
+            },
+            //删除权限
+            ShanQuan(e) {
+                if (confirm("确定要删除该权限吗?"))
+                {
+                    var shuoName = $(' #Sum  tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(0)').text();
+               
+                    axios.post('/Role/DeleteQuan', { ID: this.Role.RoleID, MenuName: shuoName }).then(Response => {
+                        alert(Response.data);
+                        this.QuanXian();
+                        this.ADQU();
+                    })
+                }
             },
         }
     });

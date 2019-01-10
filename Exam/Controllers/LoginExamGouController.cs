@@ -18,14 +18,10 @@ namespace Exam.Controllers
         [HttpPost]
         public ActionResult Dian(string LoginDeng, string LognPwd)
         {
-            List<Teacher> li = ef.Teachers.ToList();
-            foreach (var item in li)
+            if(ef.Teachers.FirstOrDefault(x=>x.Password==LognPwd && x.UserName == LoginDeng) != null)
             {
-                if (item.UserName == LoginDeng && item.Password == LognPwd)
-                {
-                    Session["User"] = item;
-                    return Content("成功");
-                }
+                Session["User"] = ef.Teachers.FirstOrDefault(x => x.Password == LognPwd && x.UserName == LoginDeng);
+                return Content("成功");
             }
             return Content("账号或者密码错误");
         }

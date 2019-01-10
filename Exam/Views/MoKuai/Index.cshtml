@@ -73,24 +73,33 @@
                 //首先获取该用户的模块
                     foreach (var item in MoKuaiId)
                     {
-                       Module DaMoKuai=ef.Modules.ToList().Find(x=>x.ModuleID==item && x.Shan==false);
+                       Module DaMoKuai=ef.Modules.FirstOrDefault(x=>x.ModuleID==item && x.Shan==false);
                          <li>
                                 <a href="#">
                                     <i class="@DaMoKuai.Ico"></i> <span class="nav-label">@DaMoKuai.ModuleName</span> <span class="fa arrow"></span>
                                 </a>
-                            <ul class="nav nav-second-level">
+                                <ul class="nav nav-second-level">
+                                    @{
+                                        //根据模块判出具体的功能
+                                        foreach (var item1 in Menuli.Where(x => x.ModuleID == item && x.Shan == false))
+                                        {
+                                            //根据功能中的 roles 遍历属于哪个模块
+                                            string[] Fen = item1.Roles.Split(',');
+                                            foreach (var item2 in Fen)
+                                            {
+                                                //如果当前登录的用户角色拥有该功能 则保存他的模块ID
+                                                if (Convert.ToInt32(item2) == HuoDeng.RoleID)
+                                                {
+                                                    <li>
+                                                        <a class="J_menuItem" href="/@item1.Service/Index">@item1.MenuName</a>
+                                                    </li>
+                                                }
+                                            }
 
-                                @{
-                                    //根据模块判出具体的功能
-                                    foreach (var item1 in Menuli.Where(x => x.ModuleID == item && x.Shan==false))
-                                    {
-                                        <li>
-                                            <a class="J_menuItem" href="/@item1.Service/Index">@item1.MenuName</a>
-                                        </li>
+                                        }
                                     }
-                                }
 
-                            </ul>
+                                </ul>
                     </li>
                 }
             }

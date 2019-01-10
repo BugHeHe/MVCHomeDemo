@@ -93,6 +93,8 @@ namespace Exam.Controllers
         {
             try
             {
+
+
                 Teacher tea = new Teacher()
                 {
                     Password = te.Password,
@@ -104,11 +106,34 @@ namespace Exam.Controllers
                     tea.JoinTime = DateTime.Now;
                 else
                     tea.JoinTime = DateTime.Parse(te.JoinTime);
-                ef.Entry(tea).State = EntityState.Added;
-                if (ef.SaveChanges() > 0)
-                    return Content("添加成功");
+
+                if (ef.Teachers.FirstOrDefault(x =>  x.Shan == true && x.UserName==te.UserName) != null)
+                {
+                    Teacher taew = ef.Teachers.FirstOrDefault(x => x.Shan == true && x.UserName == te.UserName);
+                    taew.Shan = false;
+                    taew.RoleID = Convert.ToInt32(te.RoleName);
+                    if (string.IsNullOrEmpty(te.JoinTime))
+                        taew.JoinTime = DateTime.Now;
+                    else
+                        taew.JoinTime = DateTime.Parse(te.JoinTime);
+                    ef.Entry(taew).State = EntityState.Modified;
+                    if (ef.SaveChanges() > 0)
+                        return Content("添加成功");
+                }
                 else
-                    return Content("失败");
+                {
+                    tea.Shan = false;
+                    ef.Entry(tea).State = EntityState.Added;
+                    if (ef.SaveChanges() > 0)
+                        return Content("添加成功");
+                }
+                return Content("");
+
+                //ef.Entry(tea).State = EntityState.Added;
+                //if (ef.SaveChanges() > 0)
+                //    return Content("添加成功");
+                //else
+                //    return Content("失败");
             }
             catch
             {
@@ -121,8 +146,10 @@ namespace Exam.Controllers
         {
             try
             {
+                
                 Teacher tea = ef.Teachers.FirstOrDefault(x => te.TeacherID == x.TeacherID && te.TeacherName == x.TeacherName);
-                ef.Teachers.Remove(tea);
+                tea.Shan = true;
+                ef.Entry(tea).State = EntityState.Modified;
                 if (ef.SaveChanges() > 0)
                     return Content("删除成功");
                 else
@@ -165,7 +192,7 @@ namespace Exam.Controllers
         public List<TeacherS> Show()
         {
             List<TeacherS> li = new List<TeacherS>();
-            foreach (var item in ef.Teachers.ToList())
+            foreach (var item in ef.Teachers.Where(x=>x.Shan==false).ToList())
             {
                 li.Add(new TeacherS()
                 {

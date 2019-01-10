@@ -250,7 +250,10 @@
                 axios.post('/Teacher/Select', { page: 0, TextBookID: Grade, ChapterName: this.Name }).then(Response => {
                     this.Teacher = Response.data.Li;
                     $('#CuntYe').text(Response.data.Ye);
-                    $('#Ye').text(1);
+                    if (parseInt($('#CuntYe').text()) == 0) {
+                        $('#Ye').text("0");
+                    } else
+                        $('#Ye').text($('#CuntYe').text());
                 })
             },
             //添加章节
