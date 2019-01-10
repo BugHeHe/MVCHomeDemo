@@ -9,7 +9,7 @@
 <script src="~/Scripts/jquery-3.3.1.js"></script>
 <script src="~/Scripts/bootstrap.js"></script>
 <script src="~/Lis/ueditor/ueditor.config.js"></script>
-<script src="~/Lis/ueditor/ueditor.all.min.js"></script>
+<script src="~/Lis/ueditor/ueditor.all.js"></script>
 <script src="~/Lis/ueditor/lang/zh-cn/zh-cn.js"></script>
 <style>
     .form-inline {
@@ -89,16 +89,16 @@
 
     <div style="margin-top:30px;display:none" id="Duo">
         答案：<label class="checkbox-inline">
-            <input type="checkbox" id="inlineCheckbox1" value="option1">A
+            <input type="checkbox" name="inlineCheckbox1" id="inlineCheckbox1" value="option1">A
         </label>
         <label class="checkbox-inline">
-            <input type="checkbox" id="inlineCheckbox2" value="option2">B
+            <input type="checkbox" name="inlineCheckbox1" id="inlineCheckbox2" value="option2">B
         </label>
         <label class="checkbox-inline">
-            <input type="checkbox" id="inlineCheckbox3" value="option3">C
+            <input type="checkbox" name="inlineCheckbox1" id="inlineCheckbox3" value="option3">C
         </label>
         <label class="checkbox-inline">
-            <input type="checkbox" id="inlineCheckbox3" value="option3">D
+            <input type="checkbox" name="inlineCheckbox1" id="inlineCheckbox3" value="option3">D
         </label>
     </div>
     <div style="margin-top:30px;" id="Dan">
@@ -128,11 +128,11 @@
     </div>
     <div style="margin-top:10px;margin-bottom:30px;">
         <button class="btn btn-success" style="margin-left:700px;" v-on:click="fan">返回</button>
-        <button class="btn btn-success" v-on:click="fan">保存</button>
+        <button class="btn btn-success" v-on:click="Bao">通过审核</button>
     </div>
 </div>
 <script>
-    var hu=UE.getEditor('BianJi');
+    var teBian = UE.getEditor('BianJi');
     var a = new Vue({
         el: '.container',
         data: {
@@ -141,7 +141,7 @@
             BookList: [{ BookName: "全部" }],
             GradeList: [],
             Chapter: [{ ChapterName: "全部" }],
-            Answer:[],
+            Answer: [],
         },
         created() {
             this.In1();
@@ -150,8 +150,7 @@
         },
         methods: {
             Init() {
-                axios.post('/ShowQuextion/ListDe', { Bian: $('#bian').val() }).then(Response =>
-                {
+                axios.post('/ShowQuextion/ListDe', { Bian: $('#bian').val() }).then(Response => {
                     console.log(Response.data);
                     this.QuestionS = Response.data;
                     //题类型
@@ -164,7 +163,7 @@
                     this.BookList = [{ BookName: this.QuestionS.BookIDName }];
                     $('#Jie').val(this.QuestionS.Description);
                     this.Chapter = [{ ChapterName: this.QuestionS.ChapterIDName }];
-                        hu.setContent(this.QuestionS.QuestionTitle);
+                    teBian.setContent(this.QuestionS.QuestionTitle);
 
                 })
             },
@@ -172,22 +171,19 @@
                 axios.post('/ShowQuextion/GradeList').then(Response => {
                     this.GradeList = Response.data;
                 })
-                axios.post('/ShowQuextion/AnList',{ Bian: $('#bian').val() }).then(Response => {
+                axios.post('/ShowQuextion/AnList', { Bian: $('#bian').val() }).then(Response => {
                     this.Answer = Response.data;
                     $('#exampleInputEmailA1').val(this.Answer[0].AnswerContent);
                     $('#exampleInputEmailA2').val(this.Answer[1].AnswerContent);
                     $('#exampleInputEmailA3').val(this.Answer[2].AnswerContent);
                     $('#exampleInputEmailA4').val(this.Answer[3].AnswerContent);
                     var sum = 0;
-                    for (var i = 0; i < this.Answer.length; i++)
-                    {
-                        if (this.Answer[i].IsResult)
-                        {
+                    for (var i = 0; i < this.Answer.length; i++) {
+                        if (this.Answer[i].IsResult) {
                             sum = parseInt(sum) + 1;
                         }
                     }
-                    if (parseInt(sum) >1)
-                    {
+                    if (parseInt(sum) > 1) {
                         $('#Duo').show();
                         $('#Dan').hide();
                         for (var i = 0; i < this.Answer.length; i++) {
@@ -196,13 +192,11 @@
                             }
                         }
                     }
-                    else
-                    {
+                    else {
                         $('#Duo').hide();
                         $('#Dan').show();
                         for (var i = 0; i < this.Answer.length; i++) {
-                            if (this.Answer[i].IsResult)
-                            {
+                            if (this.Answer[i].IsResult) {
                                 $("#Dan input:eq(" + i + ")").attr('checked', 'true');
                             }
                         }
@@ -231,19 +225,90 @@
                 }
             },
             fan() {
-                location.href = "/CreatorLu/Index";
-               
+                location.href = "/Check/Index";
+            },
+            Bao() {
+                var zong = 0;
+                var te = teBian.getContent();
+                if ($('#ChapterName').val() == "全部" || $('#M-Nan').val() == 0 || te == "" || $('#exampleInputEmailA1').val() == "" || $('#exampleInputEmailA2').val() == "" || $('#exampleInputEmailA3').val() == "" || $('#exampleInputEmailA4').val() == "" || $('#Jie').val() == "") {
+                    alert("请填写完整");
+                    zong++;
+
+                }
+                else if ($('#M-Type').val() == "单选题") {
+                    var an = 0;
+                    $("input[name='inlineRadioOptions']").each(function (i) {
+                        if ($(this).is(":checked")) {
+                            an++;
+                        }
+                    });
+                    if (an > 0) {
+
+                    } else {
+                        alert("请选择正确的答案呀");
+                        zong++;
+                    }
+                }
+                else if ($('#M-Type').val() == "双选题") {
+                    var an1 = 0;
+                    $("input[name='inlineCheckbox1']").each(function (i) {
+                        if ($(this).is(":checked")) {
+                            an1++;
+                        }
+                    });
+                    if (an1 > 1) {
+
+                    } else {
+                        alert("请选择正确的答案呀");
+                        zong++;
+                    }
+                }
+                if (zong == 0) {
+                    alert(this.QuestionS.QuestionID);
+                    this.QuestionS.QuestionID = $('#bian').val();
+                    this.QuestionS.QuestionType = $('#M-Type').val();
+                    this.QuestionS.QuestionLevel = $('#M-Nan').val();
+                    this.QuestionS.GradeName = $('#GradeName').val();
+                    this.QuestionS.BookIDName = $('#BookName').val();
+                    this.QuestionS.ChapterIDName = $('#ChapterName').val();
+                    this.QuestionS.QuestionTitle = teBian.getContentTxt();
+                    this.QuestionS.Description = $('#Jie').val();
+                    axios.post('/Check/QuestionADD', this.QuestionS).then(Response => {
+                        if (Response.data != "失败") {
+                            for (var i = 0; i < 4; i++) {
+                                var shu = $('#Ti input:eq(' + i + ')').val();
+                                let de = 0;
+                                if ($('#M-Type').val() == "单选题") {
+                                    var huo = $('#Dan input:eq(' + i + '):radio:checked').val();
+                                    de = huo == undefined ? 0 : 1;
+                                }
+                                else {
+                                    let huoShuan = $('#Duo input:eq(' + i + '):checkbox:checked').val();
+                                    de = huoShuan == undefined ? 0 : 1;
+                                }
+                                axios.post('/Check/Anser', { xia: i, ID: $('#bian').val(), an: shu, b: de }).then(Response => {
+                                    console.log(Response.data);
+                                })
+                            }
+                            alert("审核通过");
+                            //location.href = "/Check/Index";
+                        }
+
+                    })
                 }
             },
+        }
     });
-    function select(id,shu) {
+    function select(id, shu) {
         var ops1 = document.getElementById(id).options;//取出下拉列表的项对象集合
         for (var i = 0; i < ops1.length; i++) {//遍历集合
             if (shu == ops1[i].value) {
-            document.getElementById(id).options[i].selected = "selected";//设定下拉列表相应的下拉项的选中
-            break;
+                document.getElementById(id).options[i].selected = "selected";//设定下拉列表相应的下拉项的选中
+                break;
+            }
         }
     }
-    }
 </script>
+
+
 

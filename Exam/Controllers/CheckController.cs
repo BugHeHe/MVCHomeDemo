@@ -17,6 +17,14 @@ namespace Exam.Controllers
         {
             return View();
         }
+
+        public ActionResult Desc(string bian)
+        {
+            ef.Configuration.ProxyCreationEnabled = false;
+            ViewData["bian"] = bian;
+            return View();
+        }
+
         [HttpPost]
         public ActionResult ListDe(string Bian)
         {
@@ -116,7 +124,61 @@ namespace Exam.Controllers
             return li;
         }
 
+        [HttpPost]
+        public ActionResult QuestionADD(QuestionS te)
+        {
+            Question queBin = ef.Questions.FirstOrDefault(x => x.QuestionID == te.QuestionID && x.Shan == false);
+            Teacher dong = Session["User"] as Teacher;
+            queBin.BookID = ef.TextBooks.FirstOrDefault(x => x.BookName == te.BookIDName && x.Shan == false).BookID;
+            queBin.QuestionTitle = te.QuestionTitle;
+            queBin.QuestionType = te.QuestionType == "单选题" ? false : true;
+            queBin.QuestionLevel = te.QuestionLevel;
+            queBin.ChapterID = ef.Chapters.FirstOrDefault(x => x.ChapterName == te.ChapterIDName && x.Shan == false).ChapterID;
+            queBin.IsCheck =true;
+            queBin.CheckTime = DateTime.Now;
+            queBin.CheckID = 2;
+            ef.Entry(queBin).State = EntityState.Modified;
+            if (ef.SaveChanges() > 0)
+                return Content("成功");
+            return Content("失败");
+        }
 
-    
-}
+        [HttpPost]
+        public ActionResult Anser(string xia,string ID, string an, string b)
+        {
+            try
+            {
+                int list = Convert.ToInt32(ID);
+                if (Convert.ToInt32(xia) == 0)
+                {
+                    int QuestionID = list;
+                    foreach (var item in ef.Answers.Where(x => x.QuestionID == list && x.Shan == false).ToList())
+                    {
+                        ef.Answers.Remove(item);
+                        ef.SaveChanges();
+                    }
+                    Answer tae = new Answer() { Shan = false, AnswerContent = an, IsResult = b == "0" ? false : true };
+                    tae.QuestionID =list;
+                    ef.Entry(tae).State = EntityState.Added;
+                    ef.SaveChanges();
+                }
+                else
+                {
+
+                    Answer tae = new Answer() { Shan = false, AnswerContent = an, IsResult = b == "0" ? false : true };
+                    tae.QuestionID = list;
+                    ef.Entry(tae).State = EntityState.Added;
+                    ef.SaveChanges();
+
+                }
+                return Content("");
+            }
+            catch (Exception ex)
+            {
+                return Content(ex.ToString());
+            }
+
+        }
+
+    }
 }

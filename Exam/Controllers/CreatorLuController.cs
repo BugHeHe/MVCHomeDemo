@@ -180,8 +180,8 @@ namespace Exam.Controllers
         {
             try
             {
-                List<Question> list = ef.Questions.ToList();
-                Answer tae = new Answer() { Shan = false, AnswerContent =an, IsResult =b=="0"?false:true};
+                List<Question> list = ef.Questions.Where(x=>x.Shan==false).ToList();
+                Answer tae = new Answer() { Shan = false, AnswerContent = an, IsResult = b == "0" ? false : true };
                 tae.QuestionID = list[list.Count - 1].QuestionID;
                 ef.Entry(tae).State = EntityState.Added;
                 ef.SaveChanges();

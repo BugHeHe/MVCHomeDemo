@@ -683,6 +683,7 @@
     <Content Include="Views\FileShang\List.cshtml" />
     <Content Include="Views\CreatorLu\Desc.cshtml" />
     <Content Include="Views\Check\Index.cshtml" />
+    <Content Include="Views\Check\Desc.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
