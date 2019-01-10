@@ -11,12 +11,17 @@ namespace Exam.Controllers
 {
     public class FileShangController : Controller
     {
+        ExamSysEntities1 ef = new ExamSysEntities1();
         // GET: FileShang
         public ActionResult Index()
         {
             return View();
         }
-
+        public ActionResult List()
+        {
+            List<Question> li = ef.Questions.Where(x=>x.QuestionID==113).ToList();
+            return View(li);
+        }
         [HttpPost]
         public ActionResult File()
         {

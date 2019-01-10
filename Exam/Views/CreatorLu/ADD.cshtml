@@ -124,12 +124,29 @@
         </div>
     </div>
     <div style="margin-top:10px;margin-bottom:30px;">
-        <button class="btn btn-success" style="margin-left:700px;">返回</button>
+        <button class="btn btn-success" v-on:click="Tui" style="margin-left:700px;">返回</button>
         <button class="btn btn-success" v-on:click="Bao">保存</button>
     </div>
 </div>
 <script>
-    var hu = UE.getEditor('BianJi');
+    var ue = UE.getEditor('BianJi', {
+        toolbars: [
+            ['fullscreen', 'source', '|', 'undo', 'redo', '|',
+                'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
+                'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
+                'customstyle', 'paragraph', 'fontfamily', 'fontsize', '|',
+                'directionalityltr', 'directionalityrtl', 'indent', '|',
+                'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',
+                'link', 'unlink', 'anchor', '|', 'imagenone', 'imageleft', 'imageright', 'imagecenter', '|',
+                'simpleupload', 'insertimage', 'emotion', 'scrawl', 'insertframe', 'insertcode', 'pagebreak', 'template', 'background', '|',
+                'horizontal', 'date', 'time', 'spechars', 'snapscreen', 'wordimage', '|',
+                'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
+                'print', 'preview', 'searchreplace', 'help', 'drafts']
+        ],
+        allHtmlEnabled: false,//提交到后台的数据是否包含整个html字符串
+        autoHeightEnabled: false,
+        autoFloatEnabled: true,
+    });
     var a = new Vue({
         el: '.container',
         data: {
@@ -189,13 +206,12 @@
                 }
             },
             Bao() {
-                var zong = 0;
-                var te = hu.getContent();
-               
-                var huo = $('#Dan input:eq(0):radio:checked').val();
-                var de = huo == undefined ? 0 : 1; 
-                var shu = $('#Ti input:eq(0)').val();
 
+                
+
+
+                var zong = 0;
+                var te = ue.getContent();
                 if ($('#ChapterName').val() == "全部" || $('#M-Nan').val() == 0 || te == "" || $('#exampleInputEmailA1').val() == "" || $('#exampleInputEmailA2').val() == "" || $('#exampleInputEmailA3').val() == "" || $('#exampleInputEmailA4').val() == "" || $('#Jie').val() == "")
                 {
                     alert("请填写完整");
@@ -225,7 +241,7 @@
                             an1++;
                         }
                     });
-                    if (an1 > 0) {
+                    if (an1 >1) {
 
                     } else {
                         alert("请选择正确的答案呀");
@@ -238,14 +254,38 @@
                     this.QuestionS.GradeName = $('#GradeName').val();
                     this.QuestionS.BookIDName = $('#BookName').val();
                     this.QuestionS.ChapterIDName = $('#ChapterName').val();
-                    this.QuestionS.QuestionTitle = te;
+                    this.QuestionS.QuestionTitle = ue.getContentTxt();
                     this.QuestionS.Description = $('#Jie').val();
+
                     axios.post('/CreatorLu/QuestionADD', this.QuestionS).then(Response => {
-                        alert(Response.data);
+                        if (Response.data != "失败")
+                        {
+                            for (var i = 0; i < 4; i++)
+                            {
+                                var shu = $('#Ti input:eq(' + i + ')').val();
+                                let de = 0;
+                                if ($('#M-Type').val() == "单选题")
+                                {
+                                    var huo = $('#Dan input:eq(' + i + '):radio:checked').val();
+                                    de = huo == undefined ? 0 : 1;
+                                }
+                                else {
+                                    let huoShuan = $('#Duo input:eq(' + i + '):checkbox:checked').val();
+                                    de = huoShuan == undefined ? 0 : 1;
+                                }
+                                axios.post('/CreatorLu/Anser', { an: shu, b: de }).then(Response => {
+                                    console.log(Response.data);
+                                })
+                            }
+                        }
+
                     })
                 }
                
-            }
+            },
+            Tui() {
+                location.href = "/CreatorLu/Index";
+            },
         }
     });
 

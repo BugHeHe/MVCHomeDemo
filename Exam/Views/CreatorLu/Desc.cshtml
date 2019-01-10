@@ -12,25 +12,29 @@
 <script src="~/Lis/ueditor/ueditor.all.min.js"></script>
 <script src="~/Lis/ueditor/lang/zh-cn/zh-cn.js"></script>
 <style>
-    .form-inline{
-        margin-top:10px;
+    .form-inline {
+        margin-top: 10px;
     }
-    #exampleInputEmail3{
-        width:300px;
+
+    #exampleInputEmail3 {
+        width: 300px;
     }
+
     #exampleInputEmail3 {
         width: 500px;
     }
-    .form-group{
-        width:500px;
+
+    .form-group {
+        width: 500px;
     }
-    .form-group .form-control{
-        width:500px;
-    }
+
+        .form-group .form-control {
+            width: 500px;
+        }
 </style>
 <div class="container">
     <input type="text" id="bian" name="name" value="@ViewData["bian"]" hidden="hidden" />
-    <h3>查看</h3>
+    <h3>查看试题</h3>
     <hr />
     类型：
     <select id="M-Type" style="height:30px; margin-left:10px;"><option>单选题</option><option>双选题</option></select>
@@ -57,28 +61,28 @@
             A:
             <div class="form-group" style="margin-left:10px;">
                 <label class="sr-only" for="exampleInputEmail3"></label>
-                <input type="text"  class="form-control" id="exampleInputEmailA1">
+                <input type="text" class="form-control" id="exampleInputEmailA1">
             </div>
         </div>
         <div class="form-inline">
             B:
             <div class="form-group" style="margin-left:10px;">
                 <label class="sr-only" for="exampleInputEmail3"></label>
-                <input type="text" class="form-control"  id="exampleInputEmailA2">
+                <input type="text" class="form-control" id="exampleInputEmailA2">
             </div>
         </div>
         <div class="form-inline">
             C:
             <div class="form-group" style="margin-left:10px;">
                 <label class="sr-only" for="exampleInputEmail3"></label>
-                <input type="text"  class="form-control" id="exampleInputEmailA3">
+                <input type="text" class="form-control" id="exampleInputEmailA3">
             </div>
         </div>
         <div class="form-inline">
             D:
             <div class="form-group" style="margin-left:10px;">
                 <label class="sr-only" for="exampleInputEmail3"></label>
-                <input type="text"  class="form-control" id="exampleInputEmailA4">
+                <input type="text" class="form-control" id="exampleInputEmailA4">
             </div>
         </div>
     </div>
@@ -142,7 +146,7 @@
         created() {
             this.In1();
             this.Init();
-            
+
         },
         methods: {
             Init() {
@@ -227,7 +231,7 @@
                 }
             },
             fan() {
-                location.href="/ShowQuextion/Index";
+                location.href ="/CreatorLu/Index";
             }
         }
     });

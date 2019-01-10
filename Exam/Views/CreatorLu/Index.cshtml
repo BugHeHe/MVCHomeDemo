@@ -39,7 +39,8 @@
     </div>
     <table class="table table-bordered" style="margin-top:10px;">
         <tr>
-            <td style="width:700px;">题干</td>
+            <td style="width:30px;">编号</td>
+            <td style="width:600px;">题干</td>
             <td style="width:100px;">试题类别</td>
             <td>教材</td>
             <td>年级</td>
@@ -47,10 +48,11 @@
             <td style="width:90px;">录题人</td>
             <td>难易度</td>
             <td>审核时间</td>
-            <td style="width:30px;">操作</td>
+            <td style="width:70px;">操作</td>
         </tr>
         <tr v-for="s in QuestionS">
-            <td style="width:700px;">{{s.QuestionTitle}}</td>
+            <td style="width:30px;">{{s.QuestionID}}</td>
+            <td style="width:600px;">{{s.QuestionTitle}}</td>
             <td style="width:100px;">{{s.QuestionType}}</td>
             <td>{{s.BookIDName}}</td>
             <td>{{s.GradeName}}</td>
@@ -58,7 +60,7 @@
             <td style="width:90px;">{{s.CreatorName}}</td>
             <td>{{s.QuestionLevel}}</td>
             <td>{{s.CheckTime}}</td>
-            <td style="width:30px;"><i class="glyphicon glyphicon-sunglasses" data-toggle="modal" data-target="#AddModal" style="cursor:pointer"></i></td>
+            <td style="width:50px;"><span v-on:click="Dian" data-toggle="modal" data-target="#AddModal" style="cursor:pointer">查看</span></td>
         </tr>
     </table>
     每页 10 条记录，共<span id="CuntYe"></span>页，当前第<span id="Ye">0</span>页
@@ -186,6 +188,10 @@
             },
             ADD() {
                 location.href = "/CreatorLu/ADD";
+            },
+            Dian(e) {
+                var huo = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(0)').text();
+                location.href = "/CreatorLu/Desc?bian=" + huo;
             }
         }
     });

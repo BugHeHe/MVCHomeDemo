@@ -17,6 +17,7 @@ namespace Exam.Models.ViewModels
         public string ChapterIDName { get; set; }//章节名称
         public string CreatorName { get; set; }//创建人
         public string CheckTime { get; set; }//审核时间
+        public DateTime CreateTime { get; set; }
         public string Description { get; set; }
 
     }

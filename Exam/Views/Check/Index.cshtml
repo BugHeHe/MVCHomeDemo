@@ -11,29 +11,23 @@
 <script src="~/Lis/ueditor/ueditor.config.js"></script>
 <script src="~/Lis/ueditor/ueditor.all.min.js"></script>
 <script src="~/Lis/ueditor/lang/zh-cn/zh-cn.js"></script>
+
+<script src="~/Lis/My97DatePicker/WdatePicker.js"></script>
 <div class="container">
 
-    <h3>试题列表</h3>
+    <h3>试题审核</h3>
     <hr />
     <div class="form-inline">
-        题干：
+        开始时间：
         <div class="form-group" style="margin-left:10px;">
             <label class="sr-only" for="exampleInputEmail3"></label>
-            <input type="text" class="form-control" id="exampleInputEmail3" placeholder="请输入题干名称">
+            <input type="text" onfocus="WdatePicker()" class="form-control" v-model="Date1" id="exampleInputEmail3" placeholder="请输入选择开始时间">
         </div>
-
-        年级:
-        <select id="GradeName" style="height:30px;width:80px;" v-on:change="GradeBian">
-            <option v-for="a in GradeList">{{a.GradeName}}</option>
-        </select>
-        教材:
-        <select id="BookName" style="height:30px;" v-on:change="BookBian">
-            <option v-for="a in BookList">{{a.BookName}}</option>
-        </select>
-        章节:
-        <select id="ChapterName" style="height:30px;">
-            <option v-for="a in Chapter">{{a.ChapterName}}</option>
-        </select>
+        结束时间：
+        <div class="form-group" style="margin-left:10px;">
+            <label class="sr-only" for="exampleInputEmail3"></label>
+            <input type="text" onfocus="WdatePicker()" class="form-control" v-model="Date2" id="exampleInputEmail4" placeholder="请输入选择开始时间">
+        </div>
         @*操作*@
         <button class="btn btn-primary" v-on:click="Select" style="margin-left:10px;">查询</button>
         <button class="btn btn-primary" v-on:click="Resule" style="margin-left:10px;">重置</button>
@@ -43,23 +37,17 @@
             <td style="width:30px;">编号</td>
             <td style="width:700px;">题干</td>
             <td style="width:100px;">试题类别</td>
-            <td>教材</td>
-            <td>年级</td>
-            <td style="width:90px;">章节</td>
             <td style="width:90px;">录题人</td>
             <td>难易度</td>
-            <td style="width:50px;">操作</td>
+            <td style="width:100px;">操作</td>
         </tr>
         <tr v-for="s in QuestionS">
             <td style="width:30px;">{{s.QuestionID}}</td>
             <td style="width:700px;"><p></p>{{s.QuestionTitle}}</td>
             <td style="width:100px;">{{s.QuestionType}}</td>
-            <td>{{s.BookIDName}}</td>
-            <td>{{s.GradeName}}</td>
-            <td style="width:90px;">{{s.ChapterIDName}}</td>
             <td style="width:90px;">{{s.CreatorName}}</td>
             <td>{{s.QuestionLevel}}</td>
-            <td style="width:50px;"><span v-on:click="Dian" style="cursor:pointer">查看</span></td>
+            <td style="width:100px;"><span v-on:click="Dian" style="cursor:pointer">审核</span></td>
         </tr>
     </table>
     每页 10 条记录，共<span id="CuntYe"></span>页，当前第<span id="Ye">0</span>页
@@ -77,49 +65,25 @@
         data: {
             QuestionS: [],
             Name: '',
-            BookList: [{ BookName: "全部" }],
             GradeList: [],
-            Chapter: [{ ChapterName: "全部" }]
+            Date1: '',
+            Date2:'',
         },
         created() {
             this.Init();
-            this.In1();
         },
         methods: {
             Init() {
-                axios.post('/ShowQuextion/List', { page: '0' }).then(Response => {
+                axios.post('/Check/List', { page: '0' }).then(Response => {
                     this.QuestionS = Response.data.Li;
                     $('#CuntYe').text(Response.data.Ye);
                     $('#Ye').text("1");
                 })
             },
-            In1() {
-                axios.post('/ShowQuextion/GradeList').then(Response => {
-                    this.GradeList = Response.data;
-                })
-            },
-            GradeBian() {
-                if ($('#GradeName').val() == "全部" || $('#GradeName').val() == "全部") {
-                    this.Chapter = [{ ChapterName: "全部" }];
-                    this.BookList = [{ BookName: "全部" }];
-                } else {
-                    axios.post('/ShowQuextion/BookList', { GradeID: $('#GradeName').val() }).then(Response => {
-                        this.BookList = Response.data;
-                    })
-                }
-
-            },
-            BookBian() {
-                if ($('#GradeName').val() == "全部") {
-                    this.Chapter = [{ ChapterName: "全部" }];
-                } else {
-                    axios.post('/ShowQuextion/ChapterList', { Chapter: $('#BookName').val() }).then(Response => {
-                        this.Chapter = Response.data;
-                    })
-                }
-            },
             Select() {
-                axios.post('/ShowQuextion/Select', { page: 0, Title: $('#exampleInputEmail3').val(), GradeName: $('#GradeName').val(), BookName: $('#BookName').val(), ChapterName: $('#ChapterName').val() }).then(Response => {
+                this.Date1 = $('#exampleInputEmail3').val();
+                this.Date2 = $('#exampleInputEmail4').val();
+                axios.post('/Check/Select', { page: 0, DateQian: this.Date1, dateHou: this.Date2  }).then(Response => {
                     this.QuestionS = Response.data.Li;
                     $('#CuntYe').text(Response.data.Ye);
                     if ($('#CuntYe').text() == "0")
@@ -130,20 +94,24 @@
             },
             //首页
             ShouYe() {
+                this.Date1 = $('#exampleInputEmail3').val();
+                this.Date2 = $('#exampleInputEmail4').val();
                 var a = "1";
-                axios.post('/ShowQuextion/Select', { page: a, Title: $('#exampleInputEmail3').val(), GradeName: $('#GradeName').val(), BookName: $('#BookName').val(), ChapterName: $('#ChapterName').val() }).then(Response => {
+                axios.post('/Check/Select', { page: a, DateQian: this.Date1, dateHou: this.Date2 }).then(Response => {
                     this.QuestionS = Response.data.Li;
                 })
                 $('#Ye').text(a);
             },
             //分页的下一页
             XiaYe() {
+                this.Date1 = $('#exampleInputEmail3').val();
+                this.Date2 = $('#exampleInputEmail4').val();
                 var a = parseInt($('#Ye').text()) + 1;
                 if (parseInt($('#Ye').text()) >= parseInt($('#CuntYe').text())) {
                     alert("已经是最后一页了");
                 }
                 else {
-                    axios.post('/ShowQuextion/Select', { page: parseInt($('#Ye').text()) + 1, Title: $('#exampleInputEmail3').val(), GradeName: $('#GradeName').val(), BookName: $('#BookName').val(), ChapterName: $('#ChapterName').val() }).then(Response => {
+                    axios.post('/Check/Select', { page: parseInt($('#Ye').text()) + 1, DateQian: this.Date1, dateHou: this.Date2}).then(Response => {
                         this.QuestionS = Response.data.Li;
                     })
                     $('#Ye').text(a);
@@ -151,13 +119,15 @@
             },
             //分页的上一页
             ShangYe() {
+                this.Date1 = $('#exampleInputEmail3').val();
+                this.Date2 = $('#exampleInputEmail4').val();
                 var a = parseInt($('#Ye').text()) - 1;
                 if (a <= 0) {
                     alert("已经是第一页了");
                     $('#Ye').text(1);
                 }
                 else {
-                    axios.post('/ShowQuextion/Select', { page: a, Title: $('#exampleInputEmail3').val(), GradeName: $('#GradeName').val(), BookName: $('#BookName').val(), ChapterName: $('#ChapterName').val() }).then(Response => {
+                    axios.post('/Check/Select', { page: a, DateQian: this.Date1, dateHou: this.Date2}).then(Response => {
                         this.QuestionS = Response.data.Li;
                     })
                     $('#Ye').text(a);
@@ -165,31 +135,25 @@
             },
             //最后一页
             MoYe() {
+                this.Date1 = $('#exampleInputEmail3').val();
+                this.Date2 = $('#exampleInputEmail4').val();
                 var a = $('#CuntYe').text();
-                axios.post('/ShowQuextion/Select', { page: a, Title: $('#exampleInputEmail3').val(), GradeName: $('#GradeName').val(), BookName: $('#BookName').val(), ChapterName: $('#ChapterName').val() }).then(Response => {
+                axios.post('/Check/Select', { page: a, DateQian: this.Date1, dateHou: this.Date2}).then(Response => {
                     this.QuestionS = Response.data.Li;
                 })
                 $('#Ye').text(a);
             },
             Resule() {
-                $('#exampleInputEmail3').val("");
+                this.Date1 = '';
+                this.Date2 = '';
                 this.Init();
-                var ops = document.getElementById("GradeName").options;//取出下拉列表的项对象集合
-                for (var i = 0; i < ops.length; i++) {//遍历集合
-                    if ("全部" == ops[i].text) {//如果该项的value等于文本框填写的值
-                        document.getElementById("GradeName").options[i].selected = "selected";//设定下拉列表相应的下拉项的选中
-                        break;
-                    }
-                }
-                this.Chapter = [{ ChapterName: "全部" }];
-                this.BookList = [{ BookName: "全部" }];
             },
             Dian(e) {
                 var huo = $('.table tr:eq(' + $(e.currentTarget.parentElement.parentElement).index() + ') td:eq(0)').text();
-                location.href="/ShowQuextion/Dese?bian="+ huo;
+                location.href = "/Check/Dese?bian=" + huo;
             }
         }
     });
-    
+
 </script>
 

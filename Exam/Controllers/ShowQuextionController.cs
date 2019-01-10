@@ -71,7 +71,7 @@ namespace Exam.Controllers
             return Json(Tili, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public ActionResult Select(string page,string Title,string GradeName,string BookName,string ChapterName)
+        public ActionResult Select(string page, string Title, string GradeName,string BookName, string ChapterName )
         {
             int ye = Convert.ToInt32(page) == 0 ? 1 : Convert.ToInt32(page);
             List<QuestionS> li = Show();
@@ -80,13 +80,13 @@ namespace Exam.Controllers
             if (!string.IsNullOrEmpty(Title))
             {
                 if (GradeName == "全部")
-                    pagedList = li.Where(x => x.QuestionTitle == Title).ToList();
+                    pagedList = li.Where(x => x.QuestionTitle.Contains(Title)).ToList();
                 else if (BookName == "全部")
-                    pagedList = li.Where(x => x.QuestionTitle == Title && x.GradeName==GradeName).ToList();
+                    pagedList = li.Where(x => x.QuestionTitle.Contains(Title) && x.GradeName==GradeName).ToList();
                 else if(ChapterName == "全部")
-                    pagedList = li.Where(x => x.QuestionTitle == Title && x.GradeName == GradeName && x.BookIDName==BookName).ToList();
+                    pagedList = li.Where(x => x.QuestionTitle.Contains(Title) && x.GradeName == GradeName && x.BookIDName==BookName).ToList();
                 else
-                    pagedList = li.Where(x => x.QuestionTitle == Title && x.GradeName == GradeName && x.BookIDName == BookName && x.ChapterIDName == ChapterName).ToList();
+                    pagedList = li.Where(x => x.QuestionTitle.Contains(Title) && x.GradeName == GradeName && x.BookIDName == BookName && x.ChapterIDName == ChapterName).ToList();
             }
             else
             {

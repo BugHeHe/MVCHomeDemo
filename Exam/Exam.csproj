@@ -164,6 +164,7 @@
     <Compile Include="Controllers\BookController.cs" />
     <Compile Include="Controllers\CeShiController.cs" />
     <Compile Include="Controllers\ChapterController.cs" />
+    <Compile Include="Controllers\CheckController.cs" />
     <Compile Include="Controllers\CheckCountController.cs" />
     <Compile Include="Controllers\ClassController.cs" />
     <Compile Include="Controllers\CreatorController.cs" />
@@ -679,6 +680,9 @@
     <Content Include="Views\Paper\Yu.cshtml" />
     <Content Include="Views\FileShang\Index.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\FileShang\List.cshtml" />
+    <Content Include="Views\CreatorLu\Desc.cshtml" />
+    <Content Include="Views\Check\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
