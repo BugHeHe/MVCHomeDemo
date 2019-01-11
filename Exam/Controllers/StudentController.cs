@@ -85,16 +85,53 @@ namespace Exam.Controllers
             try
             {
                 ef.Configuration.EnsureTransactionsForFunctionsAndCommands = false;
-                ef.Entry(s).State = EntityState.Modified;
-                if (ef.SaveChanges() > 0)
+                if (ef.Students.Any(x =>x.CardID ==s.CardID.Trim()))
                 {
-                    return Content("增加成功");
+                    if(ef.Students.FirstOrDefault(x=>x.CardID==s.CardID && x.Shan == true) != null)
+                    {
+                        Student tae = ef.Students.FirstOrDefault(x => x.CardID == s.CardID);
+                        tae.StudentName = s.StudentName;
+                        tae.Shan = false;
+                        tae.ClassID = Convert.ToInt32(s.ClassName);
+                        tae.Password = s.Password;
+                        ef.Entry(tae).State = EntityState.Modified;
+                        if (ef.SaveChanges() > 0)
+                            return Content("增加成功");
+                    }
+                    else
+                    {
+                        return Content("已经存在了");
+                    }
+                       
+                }
+                else
+                {
+                    Student st = new Student()
+                    {
+                        CardID = s.CardID,
+                        Address = "",
+                        Borndate = DateTime.Now,
+                        ClassID = Convert.ToInt32(s.ClassName),
+                        Email = "",
+                        Gender = false,
+                        Phone = "",
+                        CreateTime = DateTime.Now,
+                        StudentName=s.StudentName,
+                        Password=s.Password,
+                        Shan=false,
+                        
+                    };
+                    ef.Entry(st).State = EntityState.Added;
+                    if (ef.SaveChanges() > 0)
+                    {
+                        return Content("增加成功");
+                    }
                 }
                 return Content("失败");
             }
-            catch
+            catch(Exception ex)
             {
-                return Content("已经存在");
+                return Content(ex.ToString());
             }
         }
 
@@ -105,7 +142,7 @@ namespace Exam.Controllers
         public List<StudentS> show()
         {
             List<StudentS> li = new List<StudentS>();
-            foreach (var item in ef.Students.ToList())
+            foreach (var item in ef.Students.Where(x=>x.Shan==false).ToList())
             {
                 li.Add(new StudentS()
                 {
@@ -124,6 +161,57 @@ namespace Exam.Controllers
                 });
             }
             return li;
+        }
+
+        [HttpPost]
+        public ActionResult Delete(string ID)
+        {
+            try
+            {
+                int Id = Convert.ToInt32(ID);
+                Student ta = ef.Students.FirstOrDefault(x => x.StudentID == Id && x.Shan == false);
+                ta.Shan = true;
+                ef.Entry(ta).State = EntityState.Modified;
+                if (ef.SaveChanges() > 0)
+                    return Content("删除成功");
+                return Content("");
+            }
+            catch(Exception ex)
+            {
+                return Content(ex.ToString());
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Update(StudentS s)
+        {
+            try
+            {
+                
+                Student st = new Student()
+                {
+                    CardID = s.CardID,
+                    Address = "",
+                    Borndate = DateTime.Now,
+                    ClassID = Convert.ToInt32(s.ClassName),
+                    Email = "",
+                    Gender = false,
+                    Phone = "",
+                    CreateTime = DateTime.Now,
+                    StudentName = s.StudentName,
+                    Password = s.Password,
+                    Shan = false,
+                    StudentID=s.StudentID
+                };
+                ef.Entry(st).State = EntityState.Modified;
+                if (ef.SaveChanges() > 0)
+                    return Content("修改成功");
+                return Content("");
+            }
+            catch(Exception ex)
+            {
+                return Content("身份证号已经存在了");
+            }
         }
     }
 }

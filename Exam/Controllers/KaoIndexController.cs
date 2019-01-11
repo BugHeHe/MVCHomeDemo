@@ -22,6 +22,10 @@ namespace Exam.Controllers
         [Login]
         public ActionResult Kao(string id)
         {
+            if (string.IsNullOrEmpty(id))
+            {
+                return  RedirectToAction("Index", "Login");
+            }
             ViewData["Num"] =id.ToString();
             Student bian= Session["Student"] as Student;
             int Id1 = Convert.ToInt32(id);
@@ -81,7 +85,7 @@ namespace Exam.Controllers
                 li.RecordID = RecordID;
                 ef.Entry(li).State = EntityState.Added;
                 ef.SaveChanges();
-                return Content("");
+                return Content("1");
             }
             catch(Exception ex)
             {

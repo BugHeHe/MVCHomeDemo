@@ -128,6 +128,7 @@
         methods: {
             Init() {
                 axios.post('/Book/List', { page: '0' }).then(Response => {
+                    alert(Response.data);
                     this.TextBooks = Response.data.Li;
                     $('#CuntYe').text(Response.data.Ye);
                     $('#Ye').text("1");
@@ -200,8 +201,6 @@
                 if (parseInt(GradeID) > 0) {
                     this.TextBook.GradeID = GradeID;
                     axios.post('/Book/ADD', this.TextBook).then(Response => {
-
-                        alert(Response.data);
                             this.Init();
                         ModuleQ();
 

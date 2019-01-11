@@ -112,6 +112,8 @@
             </div>
         </div>
     </div>
+
+
     @*模态框 用来修改教师信息*@
     <div class="modal fade" id="AddModa2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
@@ -303,13 +305,17 @@
             },
             Update() {
                 this.TeacherS.RoleName = $('#BookGrade2').val();
-                axios.post('/Teacher/Update', this.TeacherS).then(Response =>
-                {
-                    alert(Response.data);
-                    ModuleQ();
-                    this.Init();
-                    this.Kong();
-                })
+                if ($('#BookGrade2').val() == "-1") {
+                    alert("请选择身份");
+                } else {
+                    axios.post('/Teacher/Update', this.TeacherS).then(Response => {
+                        alert(Response.data);
+                        ModuleQ();
+                        this.Init();
+                        this.Kong();
+                    })
+                }
+                
             },
             //重置
             Result() {

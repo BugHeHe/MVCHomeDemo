@@ -97,43 +97,66 @@
                                         }
                                     </ol>
                                     @{
-                                        <div style="margin-left:40px;" id="XuanFou">
-                                            @{
-                                                Question aq = ef.Questions.FirstOrDefault(x => x.QuestionID == item.QuestionID);
-                                                List<Answer> AnList = ef.Answers.Where(x => x.QuestionID == aq.QuestionID).ToList();
-                                                if (aq.QuestionType)
-                                                {
-                                                    <label class="checkbox-inline">
-                                                        <input type="checkbox" name=@sum id="inlineCheckbox1" value=@AnList[0].AnswerID> A
-                                                    </label>
-                                                    <label class="checkbox-inline">
-                                                        <input type="checkbox" name=@sum id="inlineCheckbox2" value=@AnList[1].AnswerID> B
-                                                    </label>
-                                                    <label class="checkbox-inline">
-                                                        <input type="checkbox" name=@sum id="inlineCheckbox3" value=@AnList[2].AnswerID> C
-                                                    </label>
-                                                    <label class="checkbox-inline">
-                                                        <input type="checkbox" name=@sum id="inlineCheckbox3" value=@AnList[3].AnswerID> D
-                                                    </label>
-                                                }
-                                                else
-                                                {
-                                                    <label class="radio-inline">
-                                                        <input type="radio" name=@sum id="inlineRadio1" value=@AnList[0].AnswerID> A
-                                                    </label>
-                                                    <label class="radio-inline">
-                                                        <input type="radio" name=@sum id="inlineRadio2" value=@AnList[1].AnswerID> B
-                                                    </label>
-                                                    <label class="radio-inline">
-                                                        <input type="radio" name=@sum id="inlineRadio3" value=@AnList[2].AnswerID> C
-                                                    </label>
-                                                    <label class="radio-inline">
-                                                        <input type="radio" name=@sum id="inlineRadio3" value=@AnList[3].AnswerID> D
-                                                    </label>
-                                                }
+                                    <div style="margin-left:40px;" id="XuanFou">
+                                        @{
+                                            Question aq = ef.Questions.FirstOrDefault(x => x.QuestionID == item.QuestionID);
+                                            List<Answer> AnList = ef.Answers.Where(x => x.QuestionID == aq.QuestionID).ToList();
+                                            if (aq.QuestionType)
+                                            {
+                                                <label class="checkbox-inline">
+                                                    @{
+                                                        int suanfe = AnList[0].IsResult == true ? 1 : 0;
+                                                    }@suanfe
+                                                    <input type="checkbox" name=@sum id="inlineCheckbox1" value=@suanfe> A
+                                                </label>
+                                                <label class="checkbox-inline">
+                                                    @{
+                                                        int suanfe1 = AnList[1].IsResult == true ? 1 : 0;
+                                                    }@suanfe1
+                                                    <input type="checkbox" name=@sum id="inlineCheckbox2" value=@suanfe1> B
+                                                </label>
+                                                <label class="checkbox-inline">
+                                                    @{
+                                                        int suanfe2 = AnList[2].IsResult == true ? 1 : 0;
+                                                    }@suanfe2
+                                                    <input type="checkbox" name=@sum id="inlineCheckbox3" value=@suanfe2> C
+                                                </label>
+                                                <label class="checkbox-inline">
+                                                    @{
+                                                        int suanfe3 = AnList[3].IsResult == true ? 1 : 0;
+                                                    }@suanfe3
+                                                    <input type="checkbox" name=@sum id="inlineCheckbox3" value=@suanfe3> D
+                                                </label>
                                             }
+                                            else
+                                            {
 
-                                        </div>
+                                                <label class="radio-inline">
+                                                    @{ int suanfen4 = AnList[0].IsResult == true ? 1 : 0;
+                                                    }@suanfen4
+                                                    <input type="radio" name=@sum id="inlineRadio3" value=@suanfen4> A
+                                                </label>
+                                                <label class="radio-inline">
+                                                    @{ int suanfen5 = AnList[1].IsResult == true ? 1 : 0;
+                                                    }@suanfen5
+                                                    <input type="radio" name=@sum id="inlineRadio3" value=@suanfen5> B
+                                                </label>
+                                                <label class="radio-inline">
+                                                    @{ int suanfen6 = AnList[2].IsResult == true ? 1 : 0;
+                                                    }
+                                                        @suanfen6
+                                                    <input type="radio" name=@sum id="inlineRadio3" value=@suanfen6> C
+                                                </label>
+                                                <label class="radio-inline">
+                                                    @{ int suanfen7 = AnList[3].IsResult == true ? 1 : 0;
+                                                    }@suanfen7
+                                                    <input type="radio" name=@sum id="inlineRadio3" value=@suanfen7> D
+                                                </label>
+
+                                            }
+                                        }
+
+                                    </div>
                                     }
                                 </div>
 
@@ -177,7 +200,7 @@
             }
             if (m <= 0) {
 
-                alert("时间到，提交试卷");
+                //alert("时间到，提交试卷");
             }
         }, 1000);
     });
@@ -192,19 +215,58 @@
             Submit1() {
                 if (confirm("确定要提交试卷吗？")) {
                     //点击提交 进行提交事件 保存数据
-                    for (var i = 0; i < 50; i++) {
-                        let queID = $('#LiBegin li:eq(' + i + ') #ZongID input').val();
-                        for (var i = 0; i < 4; i++) {
-                            let ShouVal = $('#LiBegin li:eq(0) #XuanFou input:eq(' + i + '):checked').val();
-                            if (ShouVal == undefined) {
-
-                            } else {
-                                axios.post('/KaoIndex/Detail', { QuestionID: queID, Answer: ShouVal }).then(Response => {
-                                    console.log(Response.date)
-                                })
+                    var an1 = 0;
+                    for (var i=0; i<50; i++)
+                    {
+                        //var queID = $('#LiBegin li:eq(' + i + ') #ZongID input').val();
+                        for (var j = 0; j < 4; j++)
+                        {
+                            let dan = 0;
+                            var huo=$('#LiBegin li:eq(' + i + ') #XuanFou input:eq(0)').attr('type');
+                            let ShouVal = $('#LiBegin li:eq(' + i + ') #XuanFou input:eq(' + j + '):checked').val();
+                            if (huo == "radio")
+                            {
+                                if (ShouVal == "1")
+                                {
+                                    an1++;
+                                }
+                            }
+                            else
+                            {
+                                if (ShouVal == "1") {
+                                    dan++;
+                                }
+                                if (dan == 2) {
+                                    an1++;
+                                }
                             }
                         }
+                        //$("input[name="+(j-1)+"]").each(function (k) {
+                        //    if ($(this).is(":checked")) {
+                                
+                        //        if ($(this).val() == "1") {
+                        //            an1++;
+                        //            an1++;
+                        //        }
+                        //        //$.post('/KaoIndex/Detail', { QuestionID: queID, Answer: $(this).val() }, function (result) { console.log(result) });
+                        //       // axios.post('/KaoIndex/Detail', { QuestionID: queID, Answer: $(this).val()}).then(Response => {
+
+                        //       //})
+                        //    }
+                        //});
+                        //for (var j = 0; j < 4; j++) {
+                        //    let ShouVal = $('#LiBegin li:eq(' + i + ') #XuanFou input:eq(' + j + '):checked').val();
+                        //    console.log(ShouVal);
+                        //    if (ShouVal == undefined)
+                        //    {
+                        //    }
+                        //    else
+                        //    {
+                        //        
+                        //    }
+                        //}
                     }
+                    console.log(an1);
                     alert("成功");
                    
 

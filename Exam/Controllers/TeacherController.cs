@@ -178,6 +178,7 @@ namespace Exam.Controllers
                 else
                     tea.JoinTime = DateTime.Parse(te.JoinTime);
                 tea.TeacherID = te.TeacherID;
+                tea.Shan = false;
                 ef.Entry(tea).State = EntityState.Modified;
                 if (ef.SaveChanges() > 0)
                     return Content("修改成功");
