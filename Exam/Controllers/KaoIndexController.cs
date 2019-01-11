@@ -22,5 +22,10 @@ namespace Exam.Controllers
         {
             return View();
         }
+        public ActionResult Exit()
+        {
+            Session["Student"] = null;
+            return RedirectToAction("Index", "Login");
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿@using Exam.Models;
 @{
     ViewBag.Title = "考试";
-Layout = null;
+    Layout = null;
 }
 @*<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>*@
@@ -19,6 +19,7 @@ Layout = null;
 <body style="background-color: #f3f3f4;">
     @{ 
         ExamSysEntities1 ef = new ExamSysEntities1();
+        Student stu = Session["Student"] as Student;
     }
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
@@ -27,7 +28,13 @@ Layout = null;
                     <li><h3>在线考试系统</h3></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right" id="bianhua">
-                    <li><h3>欢迎xxx班级学生</h3></li>
+                    <li><h3>欢迎
+                        @{
+                            string ban = ef.Classes.FirstOrDefault(x => x.ClassID == stu.ClassID).ClassName + "班级";
+                            string xue = stu.StudentName + "学生";
+                            string zong = ban + xue;
+                        }@zong</h3></li>
+                    <li style="margin:0px 10px 0px 30px;cursor:pointer"><h3>@Html.ActionLink("安全退出", "Exit","",new {@OnClick="reutrn confrim('确定要退出吗？')" })</h3></li>
                 </ul>
             </div>
 
@@ -70,14 +77,49 @@ Layout = null;
                                                 }
                                             }
                                         </div>
-                                        <button class="btn btn-warning btn-block" type="button"
-                                                name="button">
-                                            进入考场
-                                        </button>
-                                        <button class="btn btn-warning btn-block" type="button"
-                                                name="button" disabled>
-                                            进入考场
-                                        </button>
+                                        @{
+                                            bool flag = false;
+                                            string[] Class1 = item.ClassList.Split('T');
+                                            for (int i = 0; i < Class1.Length; i++)
+                                            {
+                                                string Ban = "";
+                                                if (i == 0)
+                                                {
+                                                    Ban = Class1[i];
+                                                }
+                                                else
+                                                {
+                                                    Ban = "T" + Class1[i];
+                                                }
+                                                if (Ban == ef.Classes.FirstOrDefault(x => x.ClassID == stu.ClassID).ClassName)
+                                                {
+                                                    flag = true;
+
+                                                }
+                                                else
+                                                {
+                                                    flag = false;
+
+                                                }
+
+                                            }
+                                            if (flag)
+                                            {
+                                                <button class="btn btn-warning btn-block" type="button"
+                                                        name="button">
+                                                    进入考场
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button class="btn btn-warning btn-block" type="button"
+                                                        name="button" disabled>
+                                                    进入考场
+                                                </button>
+                                            }
+                                        }
+
+
 
                                     </div>
                                 </div>
