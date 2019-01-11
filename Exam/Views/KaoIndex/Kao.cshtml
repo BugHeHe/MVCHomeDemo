@@ -1,4 +1,5 @@
 ﻿@using Exam.Models;
+@using System.Web.Mvc;
 @{
     ViewBag.Title = "Kao";
     Layout = null;
@@ -10,6 +11,8 @@
 <script src="~/Scripts/bootstrap.js"></script>
 <script src="~/Lis/My97DatePicker/WdatePicker.js"></script>
 <script src="~/Lis/jquery-1.11.0.js"></script>
+<script src="~/Lis/vue.js"></script>
+<script src="~/Lis/axios.js"></script>
 <style>
     ul li {
         /*list-style: none;*/
@@ -22,86 +25,125 @@
     }
 </style>
 <body style="background-color:#fbfbfb">
-    <div class="container">
-        @{
-            ExamSysEntities1 ef = new ExamSysEntities1();
-            //string jie = ViewData["Bian"].ToString();
-            int bian = Convert.ToInt32("60");
-            string Title = ef.Papers.FirstOrDefault(x => x.PaperID == 59 && x.Shan == false).PaperName;
-        }
-        <div class="container border">
-            <ul style="list-style:none;margin-top:20px;">
-                @{
-                    int sum = 0;
-                    foreach (var item in ef.PaperDetails.Where(x => x.PaperID == bian))
+    <div class="container" id="APP">
+        <div class="container" style="margin-bottom:60px;">
+            @{
+                ExamSysEntities1 ef = new ExamSysEntities1();
+                string jie = ViewData["Num"].ToString();
+                Student studen = Session["Student"] as Student;
+                int bian = Convert.ToInt32(jie);
+                //判断是否包含 以防止出错
+                string BanBao = ef.Papers.FirstOrDefault(x => x.PaperID == bian && x.Shan == false).ClassList;
+                string[] Class1 = BanBao.Split('T');
+                List<string> Suan = new List<string>();
+                for (int i = 0; i < Class1.Length; i++)
+                {
+                    string Ban = "";
+                    if (i == 0)
                     {
-                        sum++;
-                        string tile = ef.Questions.FirstOrDefault(x => x.QuestionID == item.QuestionID).QuestionTitle;
-                        string Shi = ef.Questions.FirstOrDefault(x => x.QuestionID == item.QuestionID).Description;
-                        <li style="margin-top:20px;">
-                            <div class="question-title">
-                                <span style="float: left;font-size:18px;"></span>
-                                <div style="float:left;margin-left:10px;"><span style="font-size:18px;">@sum</span>。 @tile<br></div>
-                                <div style="clear: both;"></div>
-                            </div>
-                            <div class="question-block" style="margin-top:10px;">
-                                <ol type="A" style="margin-left:20px;">
-                                    @{
-                                        List<int> listInt = new List<int>();
-                                        foreach (var item1 in ef.Answers.Where(x => x.QuestionID == item.QuestionID))
-                                        {
-                                            <li><p>@item1.AnswerContent<br></p></li>
-                                            listInt.Add(item1.IsResult == false ? 0 : 1);
-                                        }
-                                    }
-                                </ol>
-                                @{
-                                    <div style="margin-left:40px;">
-                                        @{
-                                            Question aq = ef.Questions.FirstOrDefault(x => x.QuestionID == item.QuestionID);
-                                            if (aq.QuestionType)
-                                            {
-                                                <label class="checkbox-inline">
-                                                    <input type="checkbox" id="inlineCheckbox1" value="option1"> A
-                                                </label>
-                                                <label class="checkbox-inline">
-                                                    <input type="checkbox" id="inlineCheckbox2" value="option2"> B
-                                                </label>
-                                                <label class="checkbox-inline">
-                                                    <input type="checkbox" id="inlineCheckbox3" value="option3"> C
-                                                </label>
-                                                <label class="checkbox-inline">
-                                                    <input type="checkbox" id="inlineCheckbox3" value="option3"> D
-                                                </label>
-                                            }
-                                            else
-                                            {
-                                                <label class="radio-inline">
-                                                    <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> A
-                                                </label>
-                                                <label class="radio-inline">
-                                                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> B
-                                                </label>
-                                                <label class="radio-inline">
-                                                    <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> C
-                                                </label>
-                                                <label class="radio-inline">
-                                                    <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> D
-                                                </label>
-                                            }
-                                        }
-
-                                    </div>
-                                }
-                            </div>
-
-                        </li>
+                        Ban = Class1[i];
                     }
+                    else
+                    {
+                        Ban = "T" + Class1[i];
+                    }
+                    Suan.Add(Ban);
                 }
+                if (!Suan.Any(x => x == ef.Classes.FirstOrDefault(a => a.ClassID == studen.ClassID).ClassName))
+                {
+                    <script>location.href = '/KaoIndex/Index';</script>
+                }
+                string Title = ef.Papers.FirstOrDefault(x => x.PaperID == bian && x.Shan == false).PaperName;
 
-            </ul>
+                //进入考试的时间
+                DateTime Jin = ef.StuQueRecords.FirstOrDefault(x => x.PaperID == bian && x.StudetnID == studen.StudentID).RecordTime;
+                DateTime JieSuan = DateTime.Now;
+                TimeSpan ts1 = new TimeSpan(Jin.Ticks);
+                TimeSpan ts2 = new TimeSpan(JieSuan.Ticks);
+                TimeSpan ts = ts1.Subtract(ts2).Duration();
+                int fen = ts.Minutes;//分钟
+                int miao = ts.Seconds;//秒钟
+            }
+            <div class="container border">
+                <input type="text" name="name" value=@fen id="date1" hidden="hidden" />
+                <input type="text" id="date2" name="name" value=@miao hidden="hidden" />
+                <ul style="list-style:none;margin-top:20px;" id="LiBegin">
+                    @{
+                        int sum = 0;
+                        foreach (var item in ef.PaperDetails.Where(x => x.PaperID == bian))
+                        {
+                            sum++;
+
+                            string tile = ef.Questions.FirstOrDefault(x => x.QuestionID == item.QuestionID).QuestionTitle;
+                            string Shi = ef.Questions.FirstOrDefault(x => x.QuestionID == item.QuestionID).Description;
+                            <li style="margin-top:20px;">
+                                <div style="display:none" id="ZongID">
+                                    <input type="text" name="name" value=@item.QuestionID hidden="hidden" />
+                                </div>
+                                <div class="question-title">
+                                    <span style="float: left;font-size:18px;"></span>
+                                    <div style="float:left;margin-left:10px;"><span style="font-size:18px;">@sum</span>。 @tile<br></div>
+                                    <div style="clear: both;"></div>
+                                </div>
+                                <div class="question-block" style="margin-top:10px;">
+                                    <ol type="A" style="margin-left:20px;">
+                                        @{
+                                            List<int> listInt = new List<int>();
+                                            foreach (var item1 in ef.Answers.Where(x => x.QuestionID == item.QuestionID))
+                                            {
+                                                <li><p>@item1.AnswerContent<br></p></li>
+                                                listInt.Add(item1.IsResult == false ? 0 : 1);
+                                            }
+                                        }
+                                    </ol>
+                                    @{
+                                        <div style="margin-left:40px;" id="XuanFou">
+                                            @{
+                                                Question aq = ef.Questions.FirstOrDefault(x => x.QuestionID == item.QuestionID);
+                                                List<Answer> AnList = ef.Answers.Where(x => x.QuestionID == aq.QuestionID).ToList();
+                                                if (aq.QuestionType)
+                                                {
+                                                    <label class="checkbox-inline">
+                                                        <input type="checkbox" name=@sum id="inlineCheckbox1" value=@AnList[0].AnswerID> A
+                                                    </label>
+                                                    <label class="checkbox-inline">
+                                                        <input type="checkbox" name=@sum id="inlineCheckbox2" value=@AnList[1].AnswerID> B
+                                                    </label>
+                                                    <label class="checkbox-inline">
+                                                        <input type="checkbox" name=@sum id="inlineCheckbox3" value=@AnList[2].AnswerID> C
+                                                    </label>
+                                                    <label class="checkbox-inline">
+                                                        <input type="checkbox" name=@sum id="inlineCheckbox3" value=@AnList[3].AnswerID> D
+                                                    </label>
+                                                }
+                                                else
+                                                {
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name=@sum id="inlineRadio1" value=@AnList[0].AnswerID> A
+                                                    </label>
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name=@sum id="inlineRadio2" value=@AnList[1].AnswerID> B
+                                                    </label>
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name=@sum id="inlineRadio3" value=@AnList[2].AnswerID> C
+                                                    </label>
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name=@sum id="inlineRadio3" value=@AnList[3].AnswerID> D
+                                                    </label>
+                                                }
+                                            }
+
+                                        </div>
+                                    }
+                                </div>
+
+                            </li>
+                        }
+                    }
+
+                </ul>
+            </div>
         </div>
-
         <nav class="navbar navbar-default navbar-fixed-bottom">
             <div class="container">
                 <ul class="nav navbar-nav" style="list-style:none;">
@@ -109,22 +151,21 @@
                     <li style="margin:0px 20px 0px 20px"><h3>剩余时间：<span style="color:#ff0000" class="red1"></span></h3></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right" id="bianhua">
-                    <li><button style="margin-top:15px;" class="btn btn-primary" onclick="DianTi()">提交试卷</button></li>
+                    <li><button style="margin-top:15px;" class="btn btn-primary" v-on:click='Submit1'>提交试卷</button></li>
                 </ul>
             </div>
         </nav>
-    </div>
 
-</body>
+
+    </div></body>
 <script>
-    $(function ()
-    {
-        var m = 59;
-        var s = 59;
+    $(function () {
+        var m = parseInt($('#date1').val()) == 0 ? 59 : 59 - parseInt($('#date1').val());
+        var s = parseInt($('#date2').val()) == 0 ? 59 : 59 - parseInt($('#date2').val());
         setInterval(function () {
             if (s < 10) {
                 //如果秒数少于10在前面加上0
-                $('.red1').html(m + '分钟' + s + '秒');
+                $('.red1').html(m + '分钟0' + s + '秒');
             } else {
                 $('.red1').html(m + '分钟' + s + '秒');
             }
@@ -135,16 +176,41 @@
                 m--;
             }
             if (m <= 0) {
+
                 alert("时间到，提交试卷");
             }
         }, 1000);
     });
-    
-    function DianTi() {
-        if (confirm("确定要提交试卷吗？")) {
-            alert("提交了");
-        } else {
-            alert("没有");
-        }
-    }
+   
+</script>
+<script>
+    var Bian = new Vue({
+        el: '#APP',
+        date: {
+        },
+        methods: {
+            Submit1() {
+                if (confirm("确定要提交试卷吗？")) {
+                    //点击提交 进行提交事件 保存数据
+                    for (var i = 0; i < 50; i++) {
+                        let queID = $('#LiBegin li:eq(' + i + ') #ZongID input').val();
+                        for (var i = 0; i < 4; i++) {
+                            let ShouVal = $('#LiBegin li:eq(0) #XuanFou input:eq(' + i + '):checked').val();
+                            if (ShouVal == undefined) {
+
+                            } else {
+                                axios.post('/KaoIndex/Detail', { QuestionID: queID, Answer: ShouVal }).then(Response => {
+                                    console.log(Response.date)
+                                })
+                            }
+                        }
+                    }
+                    alert("成功");
+                   
+
+                } else {
+                }
+            }
+        },
+    });
 </script>

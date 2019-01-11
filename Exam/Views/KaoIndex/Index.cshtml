@@ -105,10 +105,10 @@
                                             }
                                             if (flag)
                                             {
-                                                <button class="btn btn-warning btn-block" type="button"
-                                                        name="button">
-                                                    进入考场
-                                                </button>
+
+                                        <button class="btn btn-warning btn-block" type="button" name="button">
+                                            @Html.ActionLink("进入考场", "Kao", new { id = item.PaperID })
+                                        </button>
                                             }
                                             else
                                             {
