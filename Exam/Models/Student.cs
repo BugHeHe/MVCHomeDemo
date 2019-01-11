@@ -18,6 +18,7 @@ namespace Exam.Models
         public Student()
         {
             this.StuQueRecords = new HashSet<StuQueRecord>();
+            this.JinRuKaiShis = new HashSet<JinRuKaiShi>();
         }
     
         public int StudentID { get; set; }
@@ -36,5 +37,7 @@ namespace Exam.Models
         public virtual Class Class { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StuQueRecord> StuQueRecords { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<JinRuKaiShi> JinRuKaiShis { get; set; }
     }
 }

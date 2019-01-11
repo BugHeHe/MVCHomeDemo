@@ -1,0 +1,150 @@
+﻿@using Exam.Models;
+@{
+    ViewBag.Title = "Kao";
+    Layout = null;
+}
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<script src="~/Lis/axios.js"></script>
+<script src="~/Lis/vue.js"></script>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="~/Lis/My97DatePicker/WdatePicker.js"></script>
+<script src="~/Lis/jquery-1.11.0.js"></script>
+<style>
+    ul li {
+        /*list-style: none;*/
+    }
+
+    #collapseExample1 {
+        padding: 10px;
+        background-color: aliceblue;
+        color: #000;
+    }
+</style>
+<body style="background-color:#fbfbfb">
+    <div class="container">
+        @{
+            ExamSysEntities1 ef = new ExamSysEntities1();
+            //string jie = ViewData["Bian"].ToString();
+            int bian = Convert.ToInt32("60");
+            string Title = ef.Papers.FirstOrDefault(x => x.PaperID == 59 && x.Shan == false).PaperName;
+        }
+        <div class="container border">
+            <ul style="list-style:none;margin-top:20px;">
+                @{
+                    int sum = 0;
+                    foreach (var item in ef.PaperDetails.Where(x => x.PaperID == bian))
+                    {
+                        sum++;
+                        string tile = ef.Questions.FirstOrDefault(x => x.QuestionID == item.QuestionID).QuestionTitle;
+                        string Shi = ef.Questions.FirstOrDefault(x => x.QuestionID == item.QuestionID).Description;
+                        <li style="margin-top:20px;">
+                            <div class="question-title">
+                                <span style="float: left;font-size:18px;"></span>
+                                <div style="float:left;margin-left:10px;"><span style="font-size:18px;">@sum</span>。 @tile<br></div>
+                                <div style="clear: both;"></div>
+                            </div>
+                            <div class="question-block" style="margin-top:10px;">
+                                <ol type="A" style="margin-left:20px;">
+                                    @{
+                                        List<int> listInt = new List<int>();
+                                        foreach (var item1 in ef.Answers.Where(x => x.QuestionID == item.QuestionID))
+                                        {
+                                            <li><p>@item1.AnswerContent<br></p></li>
+                                            listInt.Add(item1.IsResult == false ? 0 : 1);
+                                        }
+                                    }
+                                </ol>
+                                @{
+                                    <div style="margin-left:40px;">
+                                        @{
+                                            Question aq = ef.Questions.FirstOrDefault(x => x.QuestionID == item.QuestionID);
+                                            if (aq.QuestionType)
+                                            {
+                                                <label class="checkbox-inline">
+                                                    <input type="checkbox" id="inlineCheckbox1" value="option1"> A
+                                                </label>
+                                                <label class="checkbox-inline">
+                                                    <input type="checkbox" id="inlineCheckbox2" value="option2"> B
+                                                </label>
+                                                <label class="checkbox-inline">
+                                                    <input type="checkbox" id="inlineCheckbox3" value="option3"> C
+                                                </label>
+                                                <label class="checkbox-inline">
+                                                    <input type="checkbox" id="inlineCheckbox3" value="option3"> D
+                                                </label>
+                                            }
+                                            else
+                                            {
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> A
+                                                </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> B
+                                                </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> C
+                                                </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> D
+                                                </label>
+                                            }
+                                        }
+
+                                    </div>
+                                }
+                            </div>
+
+                        </li>
+                    }
+                }
+
+            </ul>
+        </div>
+
+        <nav class="navbar navbar-default navbar-fixed-bottom">
+            <div class="container">
+                <ul class="nav navbar-nav" style="list-style:none;">
+                    <li><h3>考试时间：60分钟</h3> </li>
+                    <li style="margin:0px 20px 0px 20px"><h3>剩余时间：<span style="color:#ff0000" class="red1"></span></h3></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right" id="bianhua">
+                    <li><button style="margin-top:15px;" class="btn btn-primary" onclick="DianTi()">提交试卷</button></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+</body>
+<script>
+    $(function ()
+    {
+        var m = 59;
+        var s = 59;
+        setInterval(function () {
+            if (s < 10) {
+                //如果秒数少于10在前面加上0
+                $('.red1').html(m + '分钟' + s + '秒');
+            } else {
+                $('.red1').html(m + '分钟' + s + '秒');
+            }
+            s--;
+            if (s < 0) {
+                //如果秒数少于0就变成59秒
+                s = 59;
+                m--;
+            }
+            if (m <= 0) {
+                alert("时间到，提交试卷");
+            }
+        }, 1000);
+    });
+    
+    function DianTi() {
+        if (confirm("确定要提交试卷吗？")) {
+            alert("提交了");
+        } else {
+            alert("没有");
+        }
+    }
+</script>

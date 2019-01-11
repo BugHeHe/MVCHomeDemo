@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ExamSysModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ExamSysModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Answer">
           <Key>
             <PropertyRef Name="AnswerID" />
@@ -43,6 +43,15 @@
           <Property Name="GradeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="GradeName" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="Shan" Type="bit" />
+        </EntityType>
+        <EntityType Name="JinRuKaiShi">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StudetnID" Type="int" Nullable="false" />
+          <Property Name="PaperID" Type="int" Nullable="false" />
+          <Property Name="KaiTime" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Menu">
           <Key>
@@ -282,6 +291,30 @@
             </Principal>
             <Dependent Role="Class">
               <PropertyRef Name="TeacharID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__JinRuKaiS__Paper__17036CC0">
+          <End Role="Paper" Type="Self.Paper" Multiplicity="1" />
+          <End Role="JinRuKaiShi" Type="Self.JinRuKaiShi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Paper">
+              <PropertyRef Name="PaperID" />
+            </Principal>
+            <Dependent Role="JinRuKaiShi">
+              <PropertyRef Name="PaperID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__JinRuKaiS__Stude__160F4887">
+          <End Role="Student" Type="Self.Student" Multiplicity="1" />
+          <End Role="JinRuKaiShi" Type="Self.JinRuKaiShi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="StudentID" />
+            </Principal>
+            <Dependent Role="JinRuKaiShi">
+              <PropertyRef Name="StudetnID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -590,6 +623,7 @@
           <EntitySet Name="Chapter" EntityType="Self.Chapter" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Class" EntityType="Self.Class" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Grade" EntityType="Self.Grade" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="JinRuKaiShi" EntityType="Self.JinRuKaiShi" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Menu" EntityType="Self.Menu" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Module" EntityType="Self.Module" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Paper" EntityType="Self.Paper" Schema="dbo" store:Type="Tables" />
@@ -625,6 +659,14 @@
           <AssociationSet Name="FK__Class__TeacharID__24927208" Association="Self.FK__Class__TeacharID__24927208">
             <End Role="Teacher" EntitySet="Teacher" />
             <End Role="Class" EntitySet="Class" />
+          </AssociationSet>
+          <AssociationSet Name="FK__JinRuKaiS__Paper__17036CC0" Association="Self.FK__JinRuKaiS__Paper__17036CC0">
+            <End Role="Paper" EntitySet="Paper" />
+            <End Role="JinRuKaiShi" EntitySet="JinRuKaiShi" />
+          </AssociationSet>
+          <AssociationSet Name="FK__JinRuKaiS__Stude__160F4887" Association="Self.FK__JinRuKaiS__Stude__160F4887">
+            <End Role="Student" EntitySet="Student" />
+            <End Role="JinRuKaiShi" EntitySet="JinRuKaiShi" />
           </AssociationSet>
           <AssociationSet Name="FK__Menu__ModuleID__6383C8BA" Association="Self.FK__Menu__ModuleID__6383C8BA">
             <End Role="Module" EntitySet="Module" />
@@ -727,8 +769,7 @@
             <End Role="TextBook" EntitySet="TextBook" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ExamSysModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -830,6 +871,7 @@
           <NavigationProperty Name="PaperType" Relationship="Self.FK__Paper__typeID__48CFD27E" FromRole="Paper" ToRole="PaperType" />
           <NavigationProperty Name="PaperDetails" Relationship="Self.FK__PaperDeta__Paper__03F0984C" FromRole="Paper" ToRole="PaperDetail" />
           <NavigationProperty Name="StuQueRecords" Relationship="Self.FK__StuQueRec__Paper__52593CB8" FromRole="Paper" ToRole="StuQueRecord" />
+          <NavigationProperty Name="JinRuKaiShis" Relationship="ExamSysModel.FK__JinRuKaiS__Paper__17036CC0" FromRole="Paper" ToRole="JinRuKaiShi" />
         </EntityType>
         <EntityType Name="PaperDetail">
           <Key>
@@ -943,6 +985,7 @@
           <Property Name="Shan" Type="Boolean" />
           <NavigationProperty Name="Class" Relationship="Self.FK__Student__ClassID__2A4B4B5E" FromRole="Student" ToRole="Class" />
           <NavigationProperty Name="StuQueRecords" Relationship="Self.FK__StuQueRec__Stude__5165187F" FromRole="Student" ToRole="StuQueRecord" />
+          <NavigationProperty Name="JinRuKaiShis" Relationship="ExamSysModel.FK__JinRuKaiS__Stude__160F4887" FromRole="Student" ToRole="JinRuKaiShi" />
         </EntityType>
         <EntityType Name="StuQueRecord">
           <Key>
@@ -1513,7 +1556,51 @@
             <End Role="StuQueRecord" EntitySet="StuQueRecords" />
             <End Role="StuQueRecordDetail" EntitySet="StuQueRecordDetails" />
           </AssociationSet>
+          <EntitySet Name="JinRuKaiShis" EntityType="ExamSysModel.JinRuKaiShi" />
+          <AssociationSet Name="FK__JinRuKaiS__Paper__17036CC0" Association="ExamSysModel.FK__JinRuKaiS__Paper__17036CC0">
+            <End Role="Paper" EntitySet="Papers" />
+            <End Role="JinRuKaiShi" EntitySet="JinRuKaiShis" />
+          </AssociationSet>
+          <AssociationSet Name="FK__JinRuKaiS__Stude__160F4887" Association="ExamSysModel.FK__JinRuKaiS__Stude__160F4887">
+            <End Role="Student" EntitySet="Students" />
+            <End Role="JinRuKaiShi" EntitySet="JinRuKaiShis" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="JinRuKaiShi">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StudetnID" Type="Int32" Nullable="false" />
+          <Property Name="PaperID" Type="Int32" Nullable="false" />
+          <Property Name="KaiTime" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Paper" Relationship="ExamSysModel.FK__JinRuKaiS__Paper__17036CC0" FromRole="JinRuKaiShi" ToRole="Paper" />
+          <NavigationProperty Name="Student" Relationship="ExamSysModel.FK__JinRuKaiS__Stude__160F4887" FromRole="JinRuKaiShi" ToRole="Student" />
+        </EntityType>
+        <Association Name="FK__JinRuKaiS__Paper__17036CC0">
+          <End Type="ExamSysModel.Paper" Role="Paper" Multiplicity="1" />
+          <End Type="ExamSysModel.JinRuKaiShi" Role="JinRuKaiShi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Paper">
+              <PropertyRef Name="PaperID" />
+            </Principal>
+            <Dependent Role="JinRuKaiShi">
+              <PropertyRef Name="PaperID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__JinRuKaiS__Stude__160F4887">
+          <End Type="ExamSysModel.Student" Role="Student" Multiplicity="1" />
+          <End Type="ExamSysModel.JinRuKaiShi" Role="JinRuKaiShi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="StudentID" />
+            </Principal>
+            <Dependent Role="JinRuKaiShi">
+              <PropertyRef Name="StudetnID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1757,6 +1844,16 @@
                 <ScalarProperty Name="BookName" ColumnName="BookName" />
                 <ScalarProperty Name="GradeID" ColumnName="GradeID" />
                 <ScalarProperty Name="Shan" ColumnName="Shan" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="JinRuKaiShis">
+            <EntityTypeMapping TypeName="ExamSysModel.JinRuKaiShi">
+              <MappingFragment StoreEntitySet="JinRuKaiShi">
+                <ScalarProperty Name="KaiTime" ColumnName="KaiTime" />
+                <ScalarProperty Name="PaperID" ColumnName="PaperID" />
+                <ScalarProperty Name="StudetnID" ColumnName="StudetnID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

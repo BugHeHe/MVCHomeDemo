@@ -15,5 +15,10 @@ namespace Exam.Controllers
         {
             return View();
         }
+        
+        public ActionResult Kao()
+        {
+            return View();
+        }
     }
 }

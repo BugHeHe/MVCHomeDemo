@@ -19,6 +19,7 @@ namespace Exam.Models
         {
             this.PaperDetails = new HashSet<PaperDetail>();
             this.StuQueRecords = new HashSet<StuQueRecord>();
+            this.JinRuKaiShis = new HashSet<JinRuKaiShi>();
         }
     
         public int PaperID { get; set; }
@@ -42,5 +43,7 @@ namespace Exam.Models
         public virtual ICollection<PaperDetail> PaperDetails { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StuQueRecord> StuQueRecords { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<JinRuKaiShi> JinRuKaiShis { get; set; }
     }
 }

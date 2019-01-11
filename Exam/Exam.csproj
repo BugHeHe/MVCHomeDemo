@@ -208,6 +208,9 @@
     <Compile Include="Models\Grade.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\JinRuKaiShi.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\LeiFen.cs" />
     <Compile Include="Models\Menu.cs">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -686,6 +689,7 @@
     <Content Include="Views\Check\Index.cshtml" />
     <Content Include="Views\Check\Desc.cshtml" />
     <Content Include="Views\KaoIndex\Index.cshtml" />
+    <Content Include="Views\KaoIndex\Kao.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

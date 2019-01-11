@@ -45,5 +45,6 @@ namespace Exam.Models
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<Teacher> Teachers { get; set; }
         public virtual DbSet<TextBook> TextBooks { get; set; }
+        public virtual DbSet<JinRuKaiShi> JinRuKaiShis { get; set; }
     }
 }

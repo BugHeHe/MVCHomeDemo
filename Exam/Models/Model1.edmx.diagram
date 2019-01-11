@@ -55,6 +55,9 @@
         <AssociationConnector Association="ExamSysModel.FK__RuleDetai__BookI__3F466844" ManuallyRouted="false" />
         <AssociationConnector Association="ExamSysModel.FK__StuQueRec__Stude__5165187F" ManuallyRouted="false" />
         <AssociationConnector Association="ExamSysModel.FK__StuQueRec__Recor__5629CD9C" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="ExamSysModel.JinRuKaiShi" Width="1.5" PointX="13.5" PointY="11" />
+        <AssociationConnector Association="ExamSysModel.FK__JinRuKaiS__Paper__17036CC0" />
+        <AssociationConnector Association="ExamSysModel.FK__JinRuKaiS__Stude__160F4887" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

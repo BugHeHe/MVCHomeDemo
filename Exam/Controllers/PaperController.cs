@@ -73,7 +73,7 @@ namespace Exam.Controllers
                     CreateTime=item.CreateTime.ToString(),
                     CreatorID=item.CreatorID,
                     Duration=item.Duration,
-                    IsOpen=item.IsOpen==false?1:0,
+                    IsOpen=item.IsOpen==false?0:1,
                     PaperID=item.PaperID,
                     PaperName=item.PaperName,
                     QuestionCount=item.QuestionCount,
