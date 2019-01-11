@@ -6,6 +6,7 @@ using System.Data.Entity;
 using Exam.Models;
 using Exam.Models.ViewModels;
 using System.Web.Mvc;
+using Exam.Filter;
 
 namespace Exam.Controllers
 {
@@ -13,6 +14,7 @@ namespace Exam.Controllers
     {
         ExamSysEntities1 ef = new ExamSysEntities1();
         // GET: PaperRule
+        [LoginHou]
         public ActionResult Index()
         {
             var li = new List<SelectListItem>();
@@ -342,7 +344,7 @@ namespace Exam.Controllers
                     GradeID = grade,
                     CreateTime = DateTime.Now,
                     RuleName = te.RuleName,
-                    CreatorID = 1,
+                    CreatorID =tea.TeacherID,
                     Shan = false,
                     RuleID=te.RuleID
                     

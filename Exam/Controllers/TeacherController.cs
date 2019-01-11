@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Exam.Models;
 using Exam.Models.ViewModels;
 using System.Data.Entity;
+using Exam.Filter;
 
 namespace Exam.Controllers
 {

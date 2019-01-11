@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Exam.Models;
 using Exam.Models.ViewModels;
 using System.Data.Entity;
+using Exam.Filter;
 
 namespace Exam.Controllers
 {
@@ -16,6 +17,7 @@ namespace Exam.Controllers
         /// </summary>
         ExamSysEntities1 ef = new ExamSysEntities1();
         // GET: CreatorLu
+        [LoginHou]
         public ActionResult Index()
         {
             
@@ -109,7 +111,7 @@ namespace Exam.Controllers
         {
             Teacher te = Session["User"] as Teacher;
             List<QuestionS> li = new List<QuestionS>();
-            foreach (var item in ef.Questions.ToList().Where(x=>x.CreatorID==2 && x.Shan==false))
+            foreach (var item in ef.Questions.ToList().Where(x=>x.CreatorID==te.TeacherID && x.Shan==false))
             {
                 li.Add(new QuestionS()
                 {

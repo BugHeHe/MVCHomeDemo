@@ -125,7 +125,7 @@
                                 }
                             }
 
-                            
+
 
                         </select>
 
@@ -362,8 +362,7 @@
                 this.PaperS.IsOpen = $('#Kai').val();
                 this.PaperS.ClassList = $('#dl_chose2_chosen .chosen-choices .search-choice span').text();
                 this.PaperS.RuleID = $('#Ce').val();
-                axios.post('/Paper/ADDPaper', this.PaperS).then(Response =>
-                {
+                axios.post('/Paper/ADDPaper', this.PaperS).then(Response => {
                     alert(Response.data);
                     ModuleQ();
                     this.Init();

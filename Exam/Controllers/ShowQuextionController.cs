@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Data.Entity;
 using Exam.Models;
 using Exam.Models.ViewModels;
+using Exam.Filter;
 
 namespace Exam.Controllers
 {
@@ -16,6 +17,7 @@ namespace Exam.Controllers
     {
         ExamSysEntities1 ef = new ExamSysEntities1();
         // GET: ShowQuextion
+        [LoginHou]
         public ActionResult Index()
         {
           

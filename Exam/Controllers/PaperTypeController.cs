@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Exam.Models;
 using System.Data.Entity;
+using Exam.Filter;
 
 namespace Exam.Controllers
 {
@@ -12,6 +13,7 @@ namespace Exam.Controllers
     {
         ExamSysEntities1 ef = new ExamSysEntities1();
         // GET: PaperType
+        [LoginHou]
         public ActionResult Index()
         {
             return View();

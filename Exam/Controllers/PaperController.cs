@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Exam.Models;
 using Exam.Models.ViewModels;
 using System.Data.Entity;
+using Exam.Filter;
 
 namespace Exam.Controllers
 {
@@ -16,6 +17,7 @@ namespace Exam.Controllers
     {
         ExamSysEntities1 ef = new ExamSysEntities1();
         // GET: Paper
+        [LoginHou]
         public ActionResult Index()
         {
             List<Class> GradeListSum = ef.Classes.ToList();
@@ -33,11 +35,11 @@ namespace Exam.Controllers
         public ActionResult List(string page)
         {
             List<Grade> Gradli = new List<Grade>();
-            foreach (var item in ef.Grades.Where(x=>x.Shan==false).ToList())
+            foreach (var item in ef.Grades.Where(x => x.Shan == false).ToList())
             {
                 Gradli.Add(new Grade()
                 {
-                    GradeName=item.GradeName
+                    GradeName = item.GradeName
                 });
             }
             Gradli.Insert(0, new Grade() { GradeName = "全部" });
@@ -70,24 +72,24 @@ namespace Exam.Controllers
             {
                 li.Add(new PaperS()
                 {
-                    CreateTime=item.CreateTime.ToString(),
-                    CreatorID=item.CreatorID,
-                    Duration=item.Duration,
-                    IsOpen=item.IsOpen==false?0:1,
-                    PaperID=item.PaperID,
-                    PaperName=item.PaperName,
-                    QuestionCount=item.QuestionCount,
-                    RuleID=item.RuleID.ToString(),
-                    typeID=item.typeID.ToString(),
-                    GradeIDName=ef.Grades.FirstOrDefault(x=>x.GradeID==item.GradeID).GradeName,
-                    ClassList=item.ClassList,
+                    CreateTime = item.CreateTime.ToString(),
+                    CreatorID = item.CreatorID,
+                    Duration = item.Duration,
+                    IsOpen = item.IsOpen == false ? 0 : 1,
+                    PaperID = item.PaperID,
+                    PaperName = item.PaperName,
+                    QuestionCount = item.QuestionCount,
+                    RuleID = item.RuleID.ToString(),
+                    typeID = item.typeID.ToString(),
+                    GradeIDName = ef.Grades.FirstOrDefault(x => x.GradeID == item.GradeID).GradeName,
+                    ClassList = item.ClassList,
                 });
             }
             return li;
         }
 
         [HttpPost]
-        public ActionResult Update(string id,string Shi)
+        public ActionResult Update(string id, string Shi)
         {
             int ID = Convert.ToInt32(id);
             bool flag = Shi == "0" ? true : false;
@@ -110,7 +112,7 @@ namespace Exam.Controllers
                 ef.Configuration.ProxyCreationEnabled = false;
                 int ID = Convert.ToInt32(id);
                 Paper te = ef.Papers.FirstOrDefault(x => x.PaperID == ID);
-                
+
                 ef.Papers.Remove(te);
                 if (ef.SaveChanges() > 0)
                 {
@@ -118,26 +120,26 @@ namespace Exam.Controllers
                 }
                 return Content("失败！");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Content(ex.ToString());
             }
-            
+
         }
 
 
 
-       /// <summary>
-       /// 返回 策略类型 年级信息  考试类型
-       /// </summary>
-       /// <returns></returns>
+        /// <summary>
+        /// 返回 策略类型 年级信息  考试类型
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult ShowListJie()
         {
             List<string> GradeLi = new List<string>();
             List<string> TypeLi = new List<string>();
             List<string> CeLve = new List<string>();
-            List<string> GradeListSum= new List<string>();
+            List<string> GradeListSum = new List<string>();
             foreach (var item in ef.Grades.ToList())
             {
                 GradeLi.Add(item.GradeName);
@@ -146,7 +148,7 @@ namespace Exam.Controllers
             {
                 TypeLi.Add(item.TypeName);
             }
-            
+
             foreach (var item in ef.PaperRules.ToList())
             {
                 CeLve.Add(item.RuleName);
@@ -156,7 +158,7 @@ namespace Exam.Controllers
                 GradeListSum.Add(item.ClassName);
             }
             CeLve.Add("自定义策略");
-            var Sum = new { Grad = GradeLi,Ty= TypeLi, CL = CeLve,GradeLi=GradeListSum};
+            var Sum = new { Grad = GradeLi, Ty = TypeLi, CL = CeLve, GradeLi = GradeListSum };
             return Json(Sum, JsonRequestBehavior.AllowGet);
         }
 
@@ -171,10 +173,11 @@ namespace Exam.Controllers
                 List<Paper> PapA = ef.Papers.Where(x => x.Shan == false).ToList();
                 Paper ta = new Paper();
                 ta.CreateTime = DateTime.Now;
+                ta.PaperName = te.ClassList + "(1)";
                 if (PapA.Count == 0)
                     ta.PaperName = te.ClassList + "(1)";
                 else
-                ta.PaperName = te.ClassList +"-"+PapA[PapA.Count-1].PaperID;
+                    ta.PaperName = te.ClassList + "-" + PapA[PapA.Count - 1].PaperID;
                 //foreach (var item in PapA)
                 //{
                 //    if (ta.PaperName == item.PaperName)
@@ -187,26 +190,22 @@ namespace Exam.Controllers
                 ta.Duration = te.Duration;
                 ta.IsOpen = te.IsOpen == 0 ? false : true;
                 ta.ClassList = te.ClassList;
-                ta.RuleID = ef.PaperRules.FirstOrDefault(x => x.RuleName == RuleName && x.Shan==false).RuleID;
+                ta.RuleID = ef.PaperRules.FirstOrDefault(x => x.RuleName == RuleName && x.Shan == false).RuleID;
                 ta.CreatorID = 1;
+
+                ta.QuestionCount = 0; ;
                 ta.QuestionCount = 0; ;
                 ef.Entry(ta).State = EntityState.Added;
                 ef.SaveChanges();
                 List<Paper> PapeID = ef.Papers.ToList();
 
-                List<RuleDetail> list = ef.RuleDetails.Where(x => x.RuleID == ef.PaperRules.FirstOrDefault(a => a.RuleName == RuleName && a.Shan==false).RuleID).ToList();
-                //获取根据策略名称的抽屉策略的详细 获得
-                List<Question> ListNum = ef.Questions.Where(x => x.BookID == ef.RuleDetails.FirstOrDefault(a => a.RuleID == ef.PaperRules.FirstOrDefault(b => b.RuleName == RuleName).RuleID).BookID).ToList();
+                //List<RuleDetail> list = ef.RuleDetails.Where(x => x.RuleID == ef.PaperRules.FirstOrDefault(a => a.RuleName == RuleName && a.Shan == false).RuleID).ToList();
+                //for (int i = 0; i < list.Count; i++)
+                    //获取根据策略名称的抽屉策略的详细 获得
+                 List<Question> ListNum = ef.Questions.Where(x => x.BookID == ef.RuleDetails.FirstOrDefault(a => a.RuleID == ef.PaperRules.FirstOrDefault(b => b.RuleName == RuleName).RuleID).BookID).ToList();
                 //策略名称的 使用策略的章节数量
-                for (int i = 0; i <50; i++)
+                for (int i = 0; i < 50; i++)
                 {
-                    ////获取难度
-                    //int questionLevel = list[i].QuestionLevel;
-                    ////获取
-                    //int BookID = list[i].BookID;
-                    //List<Question> QLi = ef.Questions.Where(x => x.QuestionLevel == questionLevel && x.Shan==false && x.BookID== BookID).ToList();
-                    ////该章节所拥有的所有内容
-                    //List<Question> QList = ef.Questions.Where(x => x.BookID == BookID && x.Shan==false).ToList();
                     Random r = new Random(int.Parse(DateTime.Now.ToString("HHmmssfff")) + i);
                     int num = r.Next(ListNum[0].QuestionID, ListNum[ListNum.Count - 1].QuestionID);
                     PaperDetail Xiang = new PaperDetail();
@@ -214,35 +213,6 @@ namespace Exam.Controllers
                     Xiang.PaperID = PapeID[PapeID.Count - 1].PaperID;
                     ef.Entry(Xiang).State = EntityState.Added;
                     ef.SaveChanges();
-                    //if (QLi.Count == list[i].QuestionCount)
-                    //{
-
-                    //    for (int j = 0; j < QLi.Count; j++)
-                    //    {
-                    //        Random r = new Random(int.Parse(DateTime.Now.ToString("HHmmssfff")) + i);
-                    //        int num = r.Next(QLi[0].QuestionID, QLi[QLi.Count - 1].QuestionID);
-                    //        PaperDetail Xiang = new PaperDetail();
-                    //        Xiang.QuestionID = num;
-                    //        Xiang.PaperID = PapeID[PapeID.Count - 1].PaperID;
-                    //        ef.Entry(Xiang).State = EntityState.Added;
-                    //        ef.SaveChanges();
-                    //    }
-
-                    //}
-                    //else
-                    //{
-                    //    int bian = list[i].QuestionCount - QLi.Count;
-                    //    for (int k = 0; k < bian; k++)
-                    //    {
-                    //        Random r = new Random(int.Parse(DateTime.Now.ToString("HHmmssfff")) + i);
-                    //        int num = r.Next(QList[0].QuestionID, QList[QList.Count - 1].QuestionID);
-                    //        PaperDetail Xiang = new PaperDetail();
-                    //        Xiang.QuestionID = num;
-                    //        Xiang.PaperID = PapeID[PapeID.Count - 1].PaperID;
-                    //        ef.Entry(Xiang).State = EntityState.Added;
-                    //        ef.SaveChanges();
-                    //    }
-                    //}
 
                 }
                 return Content("添加成功");
@@ -252,6 +222,6 @@ namespace Exam.Controllers
                 return Content(ex.ToString());
             }
         }
-        
+
     }
 }

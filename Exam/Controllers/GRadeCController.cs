@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Exam.Controllers;
 using Exam.Models;
 using System.Data.Entity;
+using Exam.Filter;
 
 namespace Exam.Controllers
 {
@@ -13,6 +14,7 @@ namespace Exam.Controllers
     {
         ExamSysEntities1 ef = new ExamSysEntities1();
         // GET: GRadeC
+        [LoginHou]
         public ActionResult Index()
         {
             return View();

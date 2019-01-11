@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Data.Entity;
 using Exam.Models;
 using Exam.Models.ViewModels;
+using Exam.Filter;
 namespace Exam.Controllers
 {
     public class ShenHeShiController : Controller
@@ -16,12 +17,10 @@ namespace Exam.Controllers
         /// </summary>
         /// <returns></returns>
         // GET: ShenHeShi
+        [LoginHou]
         public ActionResult Index()
         {
-            if (Session["User"] == null)
-            {
-                return RedirectToAction("Index", "LoginExamGou");
-            }
+            
             return View();
         }
         /// <summary>

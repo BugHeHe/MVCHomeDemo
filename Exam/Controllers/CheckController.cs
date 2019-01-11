@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Exam.Models;
 using System.Data.Entity;
 using Exam.Models.ViewModels;
+using Exam.Filter;
 
 namespace Exam.Controllers
 {
@@ -13,6 +14,7 @@ namespace Exam.Controllers
     {
         ExamSysEntities1 ef = new ExamSysEntities1();
         // GET: Check
+        [LoginHou]
         public ActionResult Index()
         {
             return View();
@@ -136,7 +138,7 @@ namespace Exam.Controllers
             queBin.ChapterID = ef.Chapters.FirstOrDefault(x => x.ChapterName == te.ChapterIDName && x.Shan == false).ChapterID;
             queBin.IsCheck =true;
             queBin.CheckTime = DateTime.Now;
-            queBin.CheckID = 2;
+            queBin.CheckID =dong.TeacherID;
             queBin.Description = te.Description;
             ef.Entry(queBin).State = EntityState.Modified;
             if (ef.SaveChanges() > 0)

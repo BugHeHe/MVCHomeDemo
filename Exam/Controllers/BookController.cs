@@ -9,6 +9,7 @@ using Exam.Controllers;
 using Exam.Models.ViewModels;
 using PagedList;
 using System.Data.Entity;
+using Exam.Filter;
 
 namespace Exam.Controllers
 {
@@ -20,6 +21,7 @@ namespace Exam.Controllers
         ExamSysEntities1 ef = new ExamSysEntities1();
         
         // GET: Book
+        [LoginHou]
         public ActionResult Index()
         {
             

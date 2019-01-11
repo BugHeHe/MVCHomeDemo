@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Exam.Models.ViewModels;
 using Exam.Models;
 using System.Data.Entity;
+using Exam.Filter;
 
 namespace Exam.Controllers
 {
@@ -13,6 +14,7 @@ namespace Exam.Controllers
     {
         ExamSysEntities1 ef = new ExamSysEntities1();
         // GET: Student
+        [LoginHou]
         public ActionResult Index()
         {
             var li = new List<SelectListItem>();
