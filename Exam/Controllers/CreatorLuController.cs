@@ -119,7 +119,7 @@ namespace Exam.Controllers
                     QuestionID = item.QuestionID,
                     QuestionLevel = item.QuestionLevel,
                     QuestionTitle = item.QuestionTitle,
-                    QuestionType = item.QuestionType == true ? "单选题" : "双选题",
+                    QuestionType = item.QuestionType == true ?  "双选题":"单选题" ,
                     GradeName = ef.Grades.FirstOrDefault(a => a.GradeID == ef.TextBooks.FirstOrDefault(x => x.BookID == item.BookID && x.Shan == false).GradeID && a.Shan == false).GradeName,
                     CheckTime = item.CheckTime.ToString()
                 });

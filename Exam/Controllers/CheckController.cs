@@ -137,6 +137,7 @@ namespace Exam.Controllers
             queBin.IsCheck =true;
             queBin.CheckTime = DateTime.Now;
             queBin.CheckID = 2;
+            queBin.Description = te.Description;
             ef.Entry(queBin).State = EntityState.Modified;
             if (ef.SaveChanges() > 0)
                 return Content("成功");
@@ -144,33 +145,53 @@ namespace Exam.Controllers
         }
 
         [HttpPost]
-        public ActionResult Anser(string xia,string ID, string an, string b)
+        public ActionResult Anser(string Yaun,string An,string xia,string ID, string Name, string Xuan)
         {
             try
             {
                 int list = Convert.ToInt32(ID);
-                if (Convert.ToInt32(xia) == 0)
-                {
-                    int QuestionID = list;
-                    foreach (var item in ef.Answers.Where(x => x.QuestionID == list && x.Shan == false).ToList())
-                    {
-                        ef.Answers.Remove(item);
-                        ef.SaveChanges();
-                    }
-                    Answer tae = new Answer() { Shan = false, AnswerContent = an, IsResult = b == "0" ? false : true };
-                    tae.QuestionID =list;
-                    ef.Entry(tae).State = EntityState.Added;
-                    ef.SaveChanges();
-                }
-                else
-                {
+                 Answer tae= ef.Answers.FirstOrDefault(x => x.AnswerContent == Yaun && x.QuestionID==list);
+                tae.AnswerContent = Name;
+                tae.IsResult = Xuan == "0" ? false : true;
+                ef.Entry(tae).State = EntityState.Modified;
+                   ef.SaveChanges();
+                //int Bian= ef.Answers.FirstOrDefault(x => x.AnswerContent == Yaun && x.QuestionID==list).AnswerID;
+                //Answer Dong = new Answer();
+                //Dong.AnswerID = Bian;
+                //Dong.AnswerContent = an;
+                //Dong.IsResult = b == "0" ? false : true;
+                //Dong.QuestionID = list;
 
-                    Answer tae = new Answer() { Shan = false, AnswerContent = an, IsResult = b == "0" ? false : true };
-                    tae.QuestionID = list;
-                    ef.Entry(tae).State = EntityState.Added;
-                    ef.SaveChanges();
+                //    ef.Entry(Dong).State = EntityState.Modified;
+                //    ef.SaveChanges();
+                //return Content("");
+                //int xiabiao = Convert.ToInt32(xia);
+                //if (xiabiao == 0)
+                //{
+                //    foreach (var item in ef.Answers.Where(x=>x.QuestionID==list).ToList())
+                //    {
+                //        ef.Answers.Remove(item);
+                //        ef.SaveChanges();
+                //    }
+                //    Answer Dong = new Answer();
+                //    Dong.AnswerContent = an;
+                //    Dong.IsResult = b == "0" ? false : true;
+                //    Dong.QuestionID = list;
+                //    Dong.Shan = false;
 
-                }
+                //    ef.Entry(Dong).State = EntityState.Added;
+                //    ef.SaveChanges();
+                //}
+                //else
+                //{
+                //    Answer Dong = new Answer();
+                //    Dong.AnswerContent = an;
+                //    Dong.IsResult = b == "0" ? false : true;
+                //    Dong.QuestionID = list;
+                //    Dong.Shan = false;
+                //    ef.Entry(Dong).State = EntityState.Added;
+                //    ef.SaveChanges();
+                //}
                 return Content("");
             }
             catch (Exception ex)

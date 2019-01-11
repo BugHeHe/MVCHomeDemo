@@ -56,7 +56,7 @@
     <div style="margin-top:20px;">
         题干：<textarea id="BianJi"></textarea>
     </div>
-    <div style="margin-top:20px;">
+    <div style="margin-top:20px;" id="Ti">
         <div class="form-inline">
             A:
             <div class="form-group" style="margin-left:10px;">
@@ -130,6 +130,18 @@
         <button class="btn btn-success" style="margin-left:700px;" v-on:click="fan">返回</button>
         <button class="btn btn-success" v-on:click="Bao">通过审核</button>
     </div>
+    <div id="BianDong" style="display:none">
+        <input type="text" name="name" value="" />
+        <input type="text" name="name" value="" />
+        <input type="text" name="name" value="" />
+        <input type="text" name="name" value="" />
+    </div>
+    <div id="BianMi" style="display:none">
+        <input type="text" name="name" value="" />
+        <input type="text" name="name" value="" />
+        <input type="text" name="name" value="" />
+        <input type="text" name="name" value="" />
+    </div>
 </div>
 <script>
     var teBian = UE.getEditor('BianJi');
@@ -177,6 +189,15 @@
                     $('#exampleInputEmailA2').val(this.Answer[1].AnswerContent);
                     $('#exampleInputEmailA3').val(this.Answer[2].AnswerContent);
                     $('#exampleInputEmailA4').val(this.Answer[3].AnswerContent);
+                    $('#BianDong input:eq(0)').val(this.Answer[0].AnswerContent);
+                    $('#BianDong input:eq(1)').val(this.Answer[1].AnswerContent);
+                    $('#BianDong input:eq(2)').val(this.Answer[2].AnswerContent);
+                    $('#BianDong input:eq(3)').val(this.Answer[3].AnswerContent);
+
+                    $('#BianMi input:eq(0)').val(this.Answer[0].IsResult);
+                    $('#BianMi input:eq(1)').val(this.Answer[1].IsResult);
+                    $('#BianMi input:eq(2)').val(this.Answer[2].IsResult);
+                    $('#BianMi input:eq(3)').val(this.Answer[3].IsResult);
                     var sum = 0;
                     for (var i = 0; i < this.Answer.length; i++) {
                         if (this.Answer[i].IsResult) {
@@ -264,7 +285,6 @@
                     }
                 }
                 if (zong == 0) {
-                    alert(this.QuestionS.QuestionID);
                     this.QuestionS.QuestionID = $('#bian').val();
                     this.QuestionS.QuestionType = $('#M-Type').val();
                     this.QuestionS.QuestionLevel = $('#M-Nan').val();
@@ -286,12 +306,12 @@
                                     let huoShuan = $('#Duo input:eq(' + i + '):checkbox:checked').val();
                                     de = huoShuan == undefined ? 0 : 1;
                                 }
-                                axios.post('/Check/Anser', { xia: i, ID: $('#bian').val(), an: shu, b: de }).then(Response => {
-                                    console.log(Response.data);
-                                })
+                                let YuanBan = $('#BianDong input:eq(' + i + ')').val();
+                                let DaAn = $('#BianMi input:eq(' + i + ')').val();
+                                $.post('/Check/Anser', { Yaun: YuanBan, An: DaAn, xia: i, ID: $('#bian').val(),Name: shu,Xuan: de }, function (resu) {  });
                             }
                             alert("审核通过");
-                            //location.href = "/Check/Index";
+                            location.href = "/Check/Index";
                         }
 
                     })
